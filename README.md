@@ -11,9 +11,7 @@ Simulation of Genetic Sequencing Data using Statistically Similar Distributions 
 ![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/caterer-z-t/SOM_Seq_Sim)
 
 ## Course:
-- [CSCI 6118](https://github.com/swe4s): 
-
-Software Engineering for Scientists at the [University of Colorado Boulder](https://www.colorado.edu/)
+- [CSCI 6118](https://github.com/swe4s): Software Engineering for Scientists at the [University of Colorado Boulder](https://www.colorado.edu/)
 
 ## Project Overview
 This project aims to develop a method for simulating genetic sequencing data using Self-Organizing Maps (SOMs). We leverage SOMs to capture and model the underlying statistical distributions of genetic data and use them to generate new datasets that are statistically similar to the original genetic sequences. This approach could be highly useful in areas like population genetics, personalized medicine, and genomic data analysis, where having access to large, synthetic, yet realistic datasets is crucial.
@@ -149,8 +147,8 @@ Preliminary results suggest that the simulated data retains significant statisti
       <b>Nattapat</b>
     </td>
     <td align="center">
-      <a href="https://github.com/johndoe">
-        <img src="https://github.com/johndoe.png" width="200" />
+      <a href="https://github.com/victoria-hurd">
+        <img src="https://github.com/victoria-hurd.png" width="200" />
       </a>
       <br />
       <b>Viki</b>
