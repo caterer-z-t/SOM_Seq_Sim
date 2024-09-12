@@ -182,8 +182,4 @@ This image will not work as long as the repo is private, commenting out for now
 -->
 
 ## Changelog
-[Version 0.0.0] - 2024-09-12
-- Added readthedocs, used base template from [wrmXpress_gui](https://github.com/wheelerlab_uwec/wrmXpress_gui) repo
-- Initializing a `README.md ` template to be updated and solidified later.
-  - Updated `README.md` file to have proper md formatting. 
-- Created a template `env.yml` file for the virtual environment for this project.
+Please refer to the `changlog.md` file for any updates and changes
