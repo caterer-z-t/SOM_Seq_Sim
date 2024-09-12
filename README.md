@@ -1,1 +1,158 @@
 # SOM_Seq_Sim
+
+Implementation for Self-Organizing Maps on Simulated Genetic Sequencing Datasets
+
+## Title
+Simulation of Genetic Sequencing Data using Statistically Similar Distributions from Original Datasets
+
+## Releases & Builds
+
+![GitHub release (with filter)](https://img.shields.io/github/v/release/caterer-z-t/SOM_Seq_Sim)
+![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/caterer-z-t/SOM_Seq_Sim)
+
+## Course:
+- [CSCI 6118](https://github.com/swe4s): 
+
+Software Engineering for Scientists at the [University of Colorado Boulder](https://www.colorado.edu/)
+
+## Project Overview
+This project aims to develop a method for simulating genetic sequencing data using Self-Organizing Maps (SOMs). We leverage SOMs to capture and model the underlying statistical distributions of genetic data and use them to generate new datasets that are statistically similar to the original genetic sequences. This approach could be highly useful in areas like population genetics, personalized medicine, and genomic data analysis, where having access to large, synthetic, yet realistic datasets is crucial.
+
+### Key Objectives:
+- Self-Organizing Maps (SOMs): Implement SOMs to learn the structure of genetic sequencing data.
+- Simulation: Develop a method to generate new genetic sequences based on statistically similar distributions learned from the SOMs.
+- Evaluation: Measure the statistical similarity between the simulated and original genetic sequencing data using metrics such as Kullback–Leibler divergence and others.
+
+## Table of Contents
+1. [Project Setup](#project-setup)
+2. [Installation](#installation)
+3. [Usage](#usage)
+4. [Project Structure](#project-structure)
+5. [Methodology](#methodology)
+6. [Technologies Used](#technologies-used)
+7. [Results and Evaluation](#results-and-evaluation)
+8. [Future Work](#future-work)
+9. [Contributions](#contributions)
+10. [License](#license)
+
+## Project Setup
+### Requirements
+The project requires the following software and libraries: 
+- see the 'env.yml` file.
+
+## Installation
+1. Clone the repository:
+
+```{bash}
+git clone https://github.com/caterer-z-t/SOM_Seq_Sim.git
+cd  SOM_Seq_Sim
+```
+
+2. Create a virtual environment (optional but recommended):
+
+If you're using `conda` or `mamba`, you can create the environment directly from the `env.yml` file:
+```{bash}
+conda env create -f env.yml
+```
+Alternatively if you are using `mamba` for faster environment solving:
+```{bash}
+mamba env create -f env.yml
+```
+
+3. Activate environment:
+```{bash}
+conda activate som-sim-env
+```
+
+4. Run the SOM genetic sequencing simulation:
+```{bash}
+python som_genetic_simulation.py --input data/original_genetic_data.csv
+```
+
+## Usage
+Command-line Arguments
+
+    --input : Path to the original genetic sequencing dataset (CSV file).
+    --output : Path to store the simulated data (default: output/simulated_genetic_data.csv).
+    --som-size : Size of the SOM grid (e.g., 20x20).
+
+### Example:
+```{bash}
+python som_genetic_simulation.py --input data/original_genetic_data.csv --output data/simulated_data.csv --som-size 20x20
+```
+
+## Project Structure
+```{bash}
+
+├── data/
+│   ├── original_genetic_data.csv  # Example input data
+│   ├── simulated_data.csv         # Output of the simulation
+├── src/
+│   ├── som_genetic_simulation.py  # Main script to run the simulation
+│   ├── utils.py                   # Helper functions (data processing, evaluation)
+│   └── visualize.py               # Visualization scripts for results
+├── notebooks/
+│   ├── SOM_Exploration.ipynb      # Jupyter Notebook for exploring SOMs
+├── tests/
+│   ├── test_som.py                # Unit tests for SOM implementation
+├── README.md                      # This README file
+├── requirements.txt               # List of dependencies
+└── LICENSE                        # License for the project
+```
+
+## Methodology
+### Self-Organizing Maps (SOMs)
+Self-Organizing Maps are a type of artificial neural network trained using unsupervised learning to produce a lower-dimensional (typically 2D) representation of high-dimensional data. In this project, SOMs are used to learn and capture the structure of genetic sequencing data, which is then used to generate statistically similar data points.
+
+### Simulation Approach
+1. Data Preprocessing: The original genetic data is preprocessed (e.g., normalization, feature selection) before being fed into the SOM.
+Training the SOM: The SOM learns the topological relationships between different genetic sequences.
+2. Data Generation: New synthetic data points are generated based on the learned distribution.
+3. Evaluation: The synthetic data is compared with the original dataset using statistical similarity metrics.
+
+## Technologies Used
+- Python: Programming language for implementing the algorithm.
+- NumPy/Pandas: Libraries for data processing.
+- SOMPY: A Python library for creating and training Self-Organizing Maps.
+- Scikit-learn: Used for auxiliary machine learning tasks and model evaluation.
+- Matplotlib: For visualizing the results of the SOM and data simulation.
+
+## Results and Evaluation
+We evaluate the synthetic genetic sequences by comparing them to the original dataset using various statistical measures, including:
+
+- Kullback-Leibler Divergence: Measures the difference between probability distributions.
+- Mean Squared Error (MSE): Compares the original and simulated genetic data features.
+
+Preliminary results suggest that the simulated data retains significant statistical similarity to the original genetic dataset, indicating that SOMs can effectively learn the underlying distribution.
+
+## Future Work
+- Improved Feature Representation: Experiment with different feature representations of genetic data to improve the fidelity of the simulation.
+- Larger Datasets: Apply the method to larger and more diverse genetic sequencing datasets.
+- Evaluation Metrics: Explore additional metrics to assess the quality of the generated data.
+
+## Contributions
+- [Your Name 1]: SOM implementation and data simulation
+- [Your Name 2]: Data preprocessing and evaluation
+- [Your Name 3]: Visualization and reporting
+- [Your Name 4]: Unit testing and documentation
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgements
+
+We would like to thank the contributors and open-source community for their valuable contributions to this project.
+
+<!-- 
+
+This image will not work as long as the repo is private, commenting out for now
+
+<a href="https://github.com/caterer-z-t/SOM_Sim_Seq/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=caterer-z-t/SOM_Sim_Seq" />
+</a>
+-->
+
+## Changelog
+[Version 0.0.0] - 2024-09-12
+- Initializing a `README.md ` template to be updated and solidified later.
+- Created a template `env.yml` file for the virtual environment for this project.
