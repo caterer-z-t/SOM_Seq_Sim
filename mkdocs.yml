@@ -1,0 +1,22 @@
+site_name: SOM Sequence Simulation
+# site_url: https://example.com  # Customize with your project URL
+site_description: >
+  A collection of tools for simulating and analyzing sequence data, using the template from wrmXpress-gui found at https://github.com/wheelerlab-uwec/wrmXpress-gui
+
+theme: readthedocs
+
+nav:
+  - Home: index.md
+  - Pipelines:
+    - Motility: pipelines/motility.md
+
+plugins:
+  - search
+  - mkdocstrings
+
+markdown_extensions:
+  - admonition  # Enables 'Note' and 'Warning' blocks
+  - codehilite  # Enables syntax highlighting for code blocks
+  - toc         # Generates a table of contents for each page
+  - attr_list
+
