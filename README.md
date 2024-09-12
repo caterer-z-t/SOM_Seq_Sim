@@ -38,7 +38,7 @@ This project aims to develop a method for simulating genetic sequencing data usi
 ## Project Setup
 ### Requirements
 The project requires the following software and libraries: 
-- see the 'env.yml` file.
+- see the `env.yml` file.
 
 ## Installation
 1. Clone the repository:
@@ -155,4 +155,5 @@ This image will not work as long as the repo is private, commenting out for now
 ## Changelog
 [Version 0.0.0] - 2024-09-12
 - Initializing a `README.md ` template to be updated and solidified later.
+  - Updated `README.md` file to have proper md formatting. 
 - Created a template `env.yml` file for the virtual environment for this project.
