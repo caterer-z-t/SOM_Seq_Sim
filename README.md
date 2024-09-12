@@ -11,9 +11,7 @@ Simulation of Genetic Sequencing Data using Statistically Similar Distributions 
 ![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/caterer-z-t/SOM_Seq_Sim)
 
 ## Course:
-- [CSCI 6118](https://github.com/swe4s): 
-
-Software Engineering for Scientists at the [University of Colorado Boulder](https://www.colorado.edu/)
+- [CSCI 6118](https://github.com/swe4s): Software Engineering for Scientists at the [University of Colorado Boulder](https://www.colorado.edu/)
 
 ## Project Overview
 This project aims to develop a method for simulating genetic sequencing data using Self-Organizing Maps (SOMs). We leverage SOMs to capture and model the underlying statistical distributions of genetic data and use them to generate new datasets that are statistically similar to the original genetic sequences. This approach could be highly useful in areas like population genetics, personalized medicine, and genomic data analysis, where having access to large, synthetic, yet realistic datasets is crucial.
@@ -43,7 +41,7 @@ The project requires the following software and libraries:
 ## Installation
 1. Clone the repository:
 
-```{bash}
+``` bash
 git clone https://github.com/caterer-z-t/SOM_Seq_Sim.git
 cd  SOM_Seq_Sim
 ```
@@ -51,21 +49,21 @@ cd  SOM_Seq_Sim
 2. Create a virtual environment (optional but recommended):
 
 If you're using `conda` or `mamba`, you can create the environment directly from the `env.yml` file:
-```{bash}
+``` bash 
 conda env create -f env.yml
 ```
 Alternatively if you are using `mamba` for faster environment solving:
-```{bash}
+``` bash 
 mamba env create -f env.yml
 ```
 
 3. Activate environment:
-```{bash}
+``` bash
 conda activate som-sim-env
 ```
 
 4. Run the SOM genetic sequencing simulation:
-```{bash}
+``` bash 
 python som_genetic_simulation.py --input data/original_genetic_data.csv
 ```
 
@@ -77,12 +75,12 @@ Command-line Arguments
     --som-size : Size of the SOM grid (e.g., 20x20).
 
 ### Example:
-```{bash}
+``` bash 
 python som_genetic_simulation.py --input data/original_genetic_data.csv --output data/simulated_data.csv --som-size 20x20
 ```
 
 ## Project Structure
-```{bash}
+``` bash 
 
 ├── data/
 │   ├── original_genetic_data.csv  # Example input data
@@ -130,14 +128,43 @@ Preliminary results suggest that the simulated data retains significant statisti
 - Larger Datasets: Apply the method to larger and more diverse genetic sequencing datasets.
 - Evaluation Metrics: Explore additional metrics to assess the quality of the generated data.
 
-## Contributions
-- [Your Name 1]: SOM implementation and data simulation
-- [Your Name 2]: Data preprocessing and evaluation
-- [Your Name 3]: Visualization and reporting
-- [Your Name 4]: Unit testing and documentation
+## Contributors
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/madrpernat">
+        <img src="https://github.com/madrpernat.png" width="200" />
+      </a>
+      <br />
+      <b>Maddie</b>
+    </td>
+    <td align="center">
+      <a href="https://github.com/pnnoc">
+        <img src="https://github.com/pnnoc.png" width="200" />
+      </a>
+      <br />
+      <b>Nattapat</b>
+    </td>
+    <td align="center">
+      <a href="https://github.com/victoria-hurd">
+        <img src="https://github.com/victoria-hurd.png" width="200" />
+      </a>
+      <br />
+      <b>Viki</b>
+    </td>
+    <td align="center">
+      <a href="https://github.com/caterer-z-t">
+        <img src="https://github.com/caterer-z-t.png" width="200" />
+      </a>
+      <br />
+      <b>Zac</b>
+    </td>
+  </tr>
+</table>
 
 ## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the `LICENSE` file for details.
 
 ## Acknowledgements
 
@@ -153,7 +180,4 @@ This image will not work as long as the repo is private, commenting out for now
 -->
 
 ## Changelog
-[Version 0.0.0] - 2024-09-12
-- Initializing a `README.md ` template to be updated and solidified later.
-  - Updated `README.md` file to have proper md formatting. 
-- Created a template `env.yml` file for the virtual environment for this project.
+Please refer to the `changlog.md` file for any updates and changes
