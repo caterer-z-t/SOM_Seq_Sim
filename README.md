@@ -142,8 +142,8 @@ Preliminary results suggest that the simulated data retains significant statisti
       <b>Maddie</b>
     </td>
     <td align="center">
-      <a href="https://github.com/johndoe">
-        <img src="https://github.com/johndoe.png" width="200" />
+      <a href="https://github.com/pnnoc">
+        <img src="https://github.com/pnnoc.png" width="200" />
       </a>
       <br />
       <b>Nattapat</b>
