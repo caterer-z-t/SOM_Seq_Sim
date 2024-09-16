@@ -3,26 +3,33 @@ name: Run Tests
 on:
   push:
     branches:
-      - main  # Run on pushes to main branch
+      - main
   pull_request:
     branches:
-      - main  # Run on pull requests to the main branch
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      # Checkout the repository
+      - name: Check out repository
+        uses: actions/checkout@v3
 
-    - name: Set up Conda environment
-      uses: conda-incubator/setup-miniconda@v2
-      with:
-        environment-file: env.yml  # Point to your env.yml file
-        auto-activate-base: false
+      # Set up Python version
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
 
-    - name: Activate environment and run tests
-      run: |
-        conda activate base  # Activate the conda environment
-        pytest test/seq_test.py  # Run your tests
+      # Install dependencies using requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Run tests
+      - name: Run tests with pytest
+        run: |
+          pytest test/seq_test.py
