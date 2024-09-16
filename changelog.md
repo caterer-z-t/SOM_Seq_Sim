@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Version 0.0.0] - 2024-09-16 @caterer-z-t
+- Added github/workflows to automatically test the code as it is being pushed and commited to the repo.
+- Added code to `utils.py` to create genetic sequencing data and plot the new sequencing data compared to the original data.
 - Updated `dev_sequencing_code.py` to take positional arguments and allow for help argumengts for usage. Modified `README.md` to show usage and implementation of this.
 - Converted `utils.py` to be a class rather than multiple functions, subsequently changed `dev_sequencing_code.py` to implement this change
 - added `__init__.py` files for easier referencing files and functions

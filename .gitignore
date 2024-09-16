@@ -13,8 +13,9 @@
 
 # Generated Sequencing Data
 Seq_Sim/gen_seq_data
+Seq_Sim/config.yaml
 
 # Generated cache files from running the code
 __pycache__
 .pytest_cache
-
+.DS_Store
