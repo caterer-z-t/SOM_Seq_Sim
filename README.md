@@ -48,16 +48,20 @@ cd  SOM_Seq_Sim
 
 2. Create a virtual environment (optional but recommended):
 
-If you're using `conda` or `mamba`, you can create the environment directly from the `env.yml` file:
+If you're using `conda`, `mamba`, or `micromamba`, you can create the environment directly from the `env.yml` file:
 ``` bash 
 conda env create -f env.yml
 ```
-Alternatively if you are using `mamba` for faster environment solving:
+If you are using `mamba` for environment solving:
 ``` bash 
 mamba env create -f env.yml
 ```
+If you are using `micromamba` for environment solving:
+``` bash
+micromamba env create -f env.yml
+```
 
-3. Activate environment:
+3. Activate environment using conda (please change {conda} to be whatever used to create the environemnt):
 ``` bash
 conda activate som-sim-env
 ```
@@ -78,11 +82,10 @@ Command-line Arguments
 
     --input : Path to the original genetic sequencing dataset (CSV file).
     --output : Path to store the simulated data (default: output/simulated_genetic_data.csv).
-    --som-size : Size of the SOM grid (e.g., 20x20).
 
 ### Example:
 ``` bash 
-python som_genetic_simulation.py --input data/original_genetic_data.csv --output data/simulated_data.csv --som-size 20x20
+python dev_sequencing_code.py --input data/original_genetic_data.csv --output data/simulated_data.csv
 ```
 
 ## Project Structure
