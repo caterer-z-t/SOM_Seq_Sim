@@ -48,21 +48,31 @@ cd  SOM_Seq_Sim
 
 2. Create a virtual environment (optional but recommended):
 
-If you're using `conda` or `mamba`, you can create the environment directly from the `env.yml` file:
+If you're using `conda`, `mamba`, or `micromamba`, you can create the environment directly from the `env.yml` file:
 ``` bash 
 conda env create -f env.yml
 ```
-Alternatively if you are using `mamba` for faster environment solving:
+If you are using `mamba` for environment solving:
 ``` bash 
 mamba env create -f env.yml
 ```
+If you are using `micromamba` for environment solving:
+``` bash
+micromamba env create -f env.yml
+```
 
-3. Activate environment:
+3. Activate environment using conda (please change {conda} to be whatever used to create the environemnt):
 ``` bash
 conda activate som-sim-env
 ```
 
-4. Run the SOM genetic sequencing simulation:
+4. Pull example data from github into Seq_Sim Directory:
+``` bash
+cd Seq_Sim
+git clone https://github.com/borenstein-lab/microbiome-metabolome-curated-data.git
+```
+
+5. Run the SOM genetic sequencing simulation:
 ``` bash 
 python som_genetic_simulation.py --input data/original_genetic_data.csv
 ```
@@ -72,30 +82,36 @@ Command-line Arguments
 
     --input : Path to the original genetic sequencing dataset (CSV file).
     --output : Path to store the simulated data (default: output/simulated_genetic_data.csv).
-    --som-size : Size of the SOM grid (e.g., 20x20).
+    --rows: Number of rows for the synthetic data (int).
+    --output-dir: Directory to save comparison plots. Will create it if it does not exist. 
 
 ### Example:
 ``` bash 
-python som_genetic_simulation.py --input data/original_genetic_data.csv --output data/simulated_data.csv --som-size 20x20
+python dev_sequencing_code.py --input data/original_genetic_data.csv --output data/simulated_data.csv --rows 1000 --output-dir data/results
 ```
 
 ## Project Structure
 ``` bash 
-
-├── data/
-│   ├── original_genetic_data.csv  # Example input data
-│   ├── simulated_data.csv         # Output of the simulation
-├── src/
-│   ├── som_genetic_simulation.py  # Main script to run the simulation
-│   ├── utils.py                   # Helper functions (data processing, evaluation)
-│   └── visualize.py               # Visualization scripts for results
-├── notebooks/
-│   ├── SOM_Exploration.ipynb      # Jupyter Notebook for exploring SOMs
-├── tests/
-│   ├── test_som.py                # Unit tests for SOM implementation
-├── README.md                      # This README file
-├── requirements.txt               # List of dependencies
-└── LICENSE                        # License for the project
+SOM_Seq_Sim/
+├── docs/
+│   ├── img/                     # Contains images used in Read the Docs
+│   ├── pipelines/               # Additional MD files for pipelines and packages
+│   ├── index.md                 # Initial page for Read the Docs
+│   ├── requirements.txt         # Dependencies for Read the Docs 
+├── Seq_Sim/
+│   ├── dev_sequencing_code.py   # Main script to run the simulation (refer to README.md for usage)
+│   ├── utils.py                # Helper functions (data processing, evaluation)
+│   ├── unimodal_example.py     # Example use for unimodal distribution
+│   ├── bimodal_example.py      # Example use for bimodal distribution
+│   └── trimodal_example.py     # Example use for trimodal distribution
+├── test/
+│   └── seq_test.py             # Testing script for utils functions in Seq_Sim
+├── .gitignore                  # Git ignore file to exclude files and directories from Git
+├── .readthedocs.yaml           # YAML file specifying dependencies for Read the Docs
+├── changelog.md                # MD file documenting changes made in the development process
+├── env.yml                     # YAML file specifying dependencies for the entire package
+├── README.md                   # README file
+└── LICENSE                     # License for the project
 ```
 
 ## Methodology

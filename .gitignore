@@ -1,4 +1,20 @@
+# data and files from R and R projects
 .Rproj.user
 .RData
 .Rhistory
 *.Rproj
+
+# Example data, people should download this themselves from github
+# please follow the information in the README.md file
+/microbiome-metabolome-curated-data
+
+# Generated figures 
+/figures
+
+# Generated Sequencing Data
+Seq_Sim/gen_seq_data
+
+# Generated cache files from running the code
+__pycache__
+.pytest_cache
+
