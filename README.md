@@ -82,10 +82,12 @@ Command-line Arguments
 
     --input : Path to the original genetic sequencing dataset (CSV file).
     --output : Path to store the simulated data (default: output/simulated_genetic_data.csv).
+    --rows: Number of rows for the synthetic data (int).
+    --output-dir: Directory to save comparison plots. Will create it if it does not exist. 
 
 ### Example:
 ``` bash 
-python dev_sequencing_code.py --input data/original_genetic_data.csv --output data/simulated_data.csv
+python dev_sequencing_code.py --input data/original_genetic_data.csv --output data/simulated_data.csv --rows 1000 --output-dir data/results
 ```
 
 ## Project Structure

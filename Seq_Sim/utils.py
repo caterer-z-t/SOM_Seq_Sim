@@ -9,8 +9,39 @@ from matplotlib.backends.backend_pdf import PdfPages
 import math
 
 
+def generate_synthetic_data(original_df, num_rows):
+    """
+    Generate a synthetic DataFrame with the same column distributions as the original DataFrame.
+
+    Args:
+        original_df (pd.DataFrame): The original DataFrame to base the synthetic data on.
+        num_rows (int): The number of rows for the synthetic DataFrame.
+
+    Returns:
+        pd.DataFrame: A synthetic DataFrame with the specified number of rows.
+    """
+    synthetic_df = pd.DataFrame()
+
+    for column in original_df.columns:
+        if (
+            original_df[column].dtype == "object"
+            or original_df[column].dtype.name == "category"
+        ):
+            # Categorical data
+            proportions = original_df[column].value_counts(normalize=True)
+            synthetic_df[column] = np.random.choice(
+                proportions.index, size=num_rows, p=proportions.values
+            )
+        else:
+            # Numerical data
+            kde = gaussian_kde(original_df[column].dropna())
+            synthetic_df[column] = kde.resample(num_rows).T.flatten()
+
+    return synthetic_df
+
+
 class DataPlotter:
-    def __init__(self, metadata, target_row=None):
+    def __init__(self, metadata, target_row=None, synthetic_metadata=None):
         """
         Initializes the DataPlotter with metadata and an optional target row.
 
@@ -20,6 +51,7 @@ class DataPlotter:
         """
         self.metadata = metadata
         self.target_row = target_row
+        self.synthetic_metadata = synthetic_metadata
 
     @staticmethod
     def remainder(dividend, divisor):
@@ -255,3 +287,146 @@ class DataPlotter:
                 plt.show()
 
             plt.close()
+
+    def generate_synthetic_data(self, num_rows):
+        """
+        Generates a new DataFrame with the same distributions or proportions as the original dataset.
+
+        Args:
+            num_rows (int): Number of rows for the new DataFrame.
+
+        Returns:
+            pd.DataFrame: A new DataFrame with synthetic data.
+        """
+        synthetic_data = pd.DataFrame()
+
+        # Numerical columns
+        numerical_metadata = self.metadata.select_dtypes(include=["int64", "float64"])
+        for column in numerical_metadata.columns:
+            data = numerical_metadata[column].dropna()
+            kde = gaussian_kde(data)
+            x = np.linspace(data.min(), data.max(), 1000)
+            y = kde(x)
+            synthetic_data[column] = np.random.choice(x, size=num_rows, p=y / y.sum())
+
+        # Categorical columns
+        categorical_metadata = self.metadata.select_dtypes(
+            include=["object", "category"]
+        )
+        for column in categorical_metadata.columns:
+            proportions = self.metadata[column].value_counts(normalize=True)
+            synthetic_data[column] = np.random.choice(
+                proportions.index, size=num_rows, p=proportions.values
+            )
+
+        return synthetic_data
+
+    def plot_comparisons(self, output_dir=None):
+        """
+        Plots comparisons between the original and synthetic data for numerical columns.
+
+        Args:
+            output_dir (str, optional): The directory to save the plot. Defaults to None.
+        """
+        if self.synthetic_metadata is None:
+            raise ValueError("No synthetic data provided for comparison.")
+
+        numerical_metadata = self.metadata.select_dtypes(include=["int64", "float64"])
+        numerical_synthetic = self.synthetic_metadata.select_dtypes(
+            include=["int64", "float64"]
+        )
+
+        if numerical_metadata.empty or numerical_synthetic.empty:
+            raise ValueError("No numerical columns found in one or both DataFrames.")
+
+        num_numerical = len(numerical_metadata.columns)
+        num_plots = num_numerical * 2
+
+        num_rows, num_cols = self.optimal_subplot_layout(num_plots)
+
+        fig, axs = plt.subplots(num_rows, num_cols, figsize=(18, num_rows * 5))
+        axs = axs.flatten()
+
+        for i, column in enumerate(numerical_metadata.columns):
+            # Plot original data
+            sns.histplot(
+                numerical_metadata[column].dropna(),
+                kde=True,
+                ax=axs[2 * i],
+                color="blue",
+                label="Original",
+            )
+            sns.histplot(
+                numerical_synthetic[column].dropna(),
+                kde=True,
+                ax=axs[2 * i],
+                color="red",
+                label="Synthetic",
+                alpha=0.5,
+            )
+
+            axs[2 * i].set_title(f"Histogram & KDE: {column}")
+            axs[2 * i].legend()
+
+            # Plot KDE with peaks
+            kde_original = gaussian_kde(numerical_metadata[column].dropna())
+            kde_synthetic = gaussian_kde(numerical_synthetic[column].dropna())
+            x = np.linspace(
+                min(
+                    numerical_metadata[column].min(), numerical_synthetic[column].min()
+                ),
+                max(
+                    numerical_metadata[column].max(), numerical_synthetic[column].max()
+                ),
+                1000,
+            )
+            y_original = kde_original(x)
+            y_synthetic = kde_synthetic(x)
+            peaks_original, _ = find_peaks(y_original)
+            peaks_synthetic, _ = find_peaks(y_synthetic)
+
+            axs[2 * i + 1].plot(x, y_original, label="Original KDE", color="blue")
+            axs[2 * i + 1].plot(x, y_synthetic, label="Synthetic KDE", color="red")
+            axs[2 * i + 1].hist(
+                numerical_metadata[column].dropna(),
+                bins=20,
+                density=True,
+                alpha=0.5,
+                color="blue",
+            )
+            axs[2 * i + 1].hist(
+                numerical_synthetic[column].dropna(),
+                bins=20,
+                density=True,
+                alpha=0.5,
+                color="red",
+            )
+            axs[2 * i + 1].plot(
+                x[peaks_original],
+                y_original[peaks_original],
+                "bo",
+                label="Original Peaks",
+            )
+            axs[2 * i + 1].plot(
+                x[peaks_synthetic],
+                y_synthetic[peaks_synthetic],
+                "ro",
+                label="Synthetic Peaks",
+            )
+
+            axs[2 * i + 1].set_title(f"KDE with Peaks: {column}")
+            axs[2 * i + 1].legend()
+
+        for j in range(num_plots, len(axs)):
+            axs[j].axis("off")
+
+        plt.tight_layout(pad=3.0)
+
+        if output_dir:
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+            plt.savefig(os.path.join(output_dir, "comparison_plots.png"))
+        else:
+            plt.show()
+
+        plt.close()
