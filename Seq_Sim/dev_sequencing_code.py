@@ -1,45 +1,62 @@
 import pandas as pd
 import numpy as np
-from utils import DataPlotter
 import argparse
+import os
+from utils import DataPlotter, generate_synthetic_data
 
 
 def main():
-    # Set up argument parsing
     parser = argparse.ArgumentParser(
-        description="Run the genetic sequencing simulation and plot distributions."
+        description="Generate synthetic data and/or plot distributions."
     )
     parser.add_argument(
-        "--input",
-        type=str,
-        required=True,
-        help="Path to the original genetic sequencing dataset (CSV file).",
+        "--input", required=True, help="Path to the original dataset (CSV file)."
     )
     parser.add_argument(
-        "--output",
-        type=str,
-        default=None,
-        help="Path to store the simulated data (default: None).",
+        "--output", help="Path to store the generated synthetic data (CSV file)."
     )
+    parser.add_argument(
+        "--rows", type=int, help="Number of rows for the synthetic data."
+    )
+    parser.add_argument("--output-dir", help="Directory to save comparison plots.")
     args = parser.parse_args()
 
-    # Load the data
-    df = pd.read_csv(str(args.input), sep="\t")
+    if args.rows and not args.output:
+        parser.error("--output must be specified if --rows is specified.")
 
-    # Get a random row from the dataframe
-    random_row = df.iloc[np.random.randint(0, df.shape[0])]
+    # Read the input file
+    df = pd.read_csv(args.input, sep="\t")
+
+    synthetic_df = None
+    if args.rows:
+        # Generate synthetic data
+        synthetic_df = generate_synthetic_data(df, args.rows)
+
+        # Save the synthetic data to output file
+        if args.output:
+            # Ensure output directory exists
+            output_dir = os.path.dirname(args.output)
+            if not os.path.exists(output_dir) and output_dir:
+                os.makedirs(output_dir)
+            synthetic_df.to_csv(args.output, index=False)
 
     # Create an instance of DataPlotter
-    plotter_without_row = DataPlotter(metadata=df)
-    plotter_with_row = DataPlotter(metadata=df, target_row=random_row)
+    plotter = DataPlotter(metadata=df, synthetic_metadata=synthetic_df)
 
     # Plot numerical distributions
-    plotter_with_row.plot_numerical_distributors()  # No need to pass target_row here
-    plotter_without_row.plot_numerical_distributors()  # This already uses the target_row from initialization
+    plotter.plot_numerical_distributors()
 
-    # Uncomment the following lines to plot categorical distributions
-    # plotter.plot_categorical_distributions()
-    # plotter.plot_categorical_distributions()  # This already uses the target_row from initialization
+    # get a random row from the dataframe
+    random_row = df.iloc[np.random.randint(0, df.shape[0])]
+
+    plotter_with_rows = DataPlotter(metadata=df, target_row=random_row)
+
+    # Plot numerical distributions with a target row
+    plotter_with_rows.plot_numerical_distributors()
+
+    # Plot comparisons if synthetic data was generated
+    if synthetic_df is not None and args.output_dir:
+        plotter.plot_comparisons(output_dir=args.output_dir)
 
 
 if __name__ == "__main__":

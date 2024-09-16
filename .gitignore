@@ -11,6 +11,9 @@
 # Generated figures 
 /figures
 
+# Generated Sequencing Data
+Seq_Sim/gen_seq_data
+
 # Generated cache files from running the code
 __pycache__
 .pytest_cache
