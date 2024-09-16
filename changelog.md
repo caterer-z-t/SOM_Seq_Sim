@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Version 0.0.0] - 2024-09-16 @caterer-z-t
+- Converted `utils.py` to be a class rather than multiple functions, subsequently changed `dev_sequencing_code.py` to implement this change
 - added `__init__.py` files for easier referencing files and functions
 - added comments and files and directories to .gitignore to be left out from uploads to github
 - updated `README.md` file to contain proper structure of package and software thus far
