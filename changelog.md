@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Version 0.0.0] - 2024-09-16 @caterer-z-t
+- Updated `dev_sequencing_code.py` to take positional arguments and allow for help argumengts for usage. Modified `README.md` to show usage and implementation of this.
 - Converted `utils.py` to be a class rather than multiple functions, subsequently changed `dev_sequencing_code.py` to implement this change
 - added `__init__.py` files for easier referencing files and functions
 - added comments and files and directories to .gitignore to be left out from uploads to github
