@@ -1,0 +1,4 @@
+input: "{file_path_to_the_input_data}.{csv, tsv, txt, etc.}"        # to obtain the file path, right click on the file and select "Copy Path"
+output: "{file_path_to_the_output_data}.{csv, tsv, txt, etc.}"      # to obtain the file path, right click on the file and select "Copy Path"
+rows: {integer of number of rows to generate}                       # e.g. 1000
+output_dir: "{file_path_to_the_output_directory}"                   # please note that this is a directory and does not contain an extension of (.csv, .tsv, etc.)
