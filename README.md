@@ -9,6 +9,7 @@ Simulation of Genetic Sequencing Data using Statistically Similar Distributions 
 
 ![GitHub release (with filter)](https://img.shields.io/github/v/release/caterer-z-t/SOM_Seq_Sim)
 ![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/caterer-z-t/SOM_Seq_Sim)
+![Tests](https://img.shields.io/github/workflow/status/caterer-z-t/SOM_Seq_Sim/test?label=tests&logo=github)
 
 ## Course:
 - [CSCI 6118](https://github.com/swe4s): Software Engineering for Scientists at the [University of Colorado Boulder](https://www.colorado.edu/)
