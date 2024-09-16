@@ -13,11 +13,12 @@ def main():
     random_row = df.iloc[np.random.randint(0, df.shape[0])]
 
     # Create an instance of DataPlotter
-    plotter = DataPlotter(metadata=df, target_row=random_row)
+    plotter_without_row = DataPlotter(metadata=df)
+    plotter_with_row = DataPlotter(metadata=df, target_row=random_row)
 
     # Plot numerical distributions
-    plotter.plot_numerical_distributors()  # No need to pass target_row here
-    plotter.plot_numerical_distributors()  # This already uses the target_row from initialization
+    plotter_with_row.plot_numerical_distributors()  # No need to pass target_row here
+    plotter_without_row.plot_numerical_distributors()  # This already uses the target_row from initialization
 
     # Uncomment the following lines to plot categorical distributions
     # plotter.plot_categorical_distributions()
