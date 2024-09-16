@@ -62,7 +62,13 @@ mamba env create -f env.yml
 conda activate som-sim-env
 ```
 
-4. Run the SOM genetic sequencing simulation:
+4. Pull example data from github into Seq_Sim Directory:
+``` bash
+cd Seq_Sim
+git clone https://github.com/borenstein-lab/microbiome-metabolome-curated-data.git
+```
+
+5. Run the SOM genetic sequencing simulation:
 ``` bash 
 python som_genetic_simulation.py --input data/original_genetic_data.csv
 ```

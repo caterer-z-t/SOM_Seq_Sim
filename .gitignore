@@ -2,3 +2,7 @@
 .RData
 .Rhistory
 *.Rproj
+
+/microbiome-metabolome-curated-data
+/figures
+/Seq_Sim/__pycache__
