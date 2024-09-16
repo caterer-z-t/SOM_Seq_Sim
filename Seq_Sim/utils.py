@@ -321,7 +321,7 @@ class DataPlotter:
 
         return synthetic_data
 
-    def plot_comparisons(self, output_dir=None):
+    def plot_comparisons(self, output_dir=None, pdf=None):
         """
         Plots comparisons between the original and synthetic data for numerical columns.
 
@@ -426,6 +426,8 @@ class DataPlotter:
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
             plt.savefig(os.path.join(output_dir, "comparison_plots.png"))
+        elif pdf:
+            pdf.savefig()
         else:
             plt.show()
 
