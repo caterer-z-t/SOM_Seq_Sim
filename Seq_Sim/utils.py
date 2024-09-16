@@ -68,15 +68,16 @@ def optimal_subplot_layout(num_plots, max_cols=6):
     return best_rows, best_cols
 
 
-def plot_numerical_distributions(
-    metadata, output_dir=None, pdf=None, max_plots_per_page=12
+def plot_numerical_distributors(
+    metadata, target_row=None, output_dir=None, pdf=None, max_plots_per_page=12
 ):
     """
-    Plots histograms with KDE and KDE with peaks for numerical columns in the provided metadata,
-    splitting across multiple pages in the PDF if necessary.
+    Plots histograms and KDE with peaks for numerical columns in the provided metadata.
+    If target_row is provided, it highlights where the values from the target row fall in the distribution.
 
     Args:
         metadata (pd.DataFrame): The dataframe containing the metadata with numerical columns.
+        target_row (pd.Series, optional): The row containing the values to highlight. If None, no highlights are shown.
         output_dir (str, optional): The directory to save the plot. Defaults to None.
         pdf (PdfPages, optional): PdfPages object to save the plot in a PDF. Defaults to None.
         max_plots_per_page (int, optional): Maximum number of plots to display on each page. Defaults to 12.
@@ -88,8 +89,11 @@ def plot_numerical_distributions(
         raise ValueError("No numerical columns found in the DataFrame.")
 
     num_numerical = len(numerical_metadata.columns)
-    num_plots = num_numerical * 2  # Two plots per column: histogram + KDE with peaks
+    num_plots = (
+        num_numerical * 2
+    )  # Two plots per column: histogram + KDE, and KDE with peaks
 
+    # Calculate number of pages
     page_count = (num_plots + max_plots_per_page - 1) // max_plots_per_page
 
     for page in range(page_count):
@@ -104,10 +108,22 @@ def plot_numerical_distributions(
 
         for i, column in enumerate(numerical_metadata.columns[start_idx:end_idx]):
             # Plot histogram with KDE
-            sns.histplot(numerical_metadata[column].dropna(), kde=True, ax=axs[i])
-            axs[i].set_title(f"Histogram & KDE: {column}")
+            sns.histplot(numerical_metadata[column].dropna(), kde=True, ax=axs[2 * i])
 
-            # Calculate KDE and peaks for the second row
+            # If target_row is provided, add a vertical line to highlight the target value
+            if target_row is not None:
+                target_value = target_row[column]
+                axs[2 * i].axvline(
+                    target_value,
+                    color="red",
+                    linestyle="--",
+                    label=f"Target: {target_value}",
+                )
+                axs[2 * i].legend()
+
+            axs[2 * i].set_title(f"Histogram & KDE: {column}")
+
+            # KDE with peaks plot
             kde = gaussian_kde(numerical_metadata[column].dropna())
             x = np.linspace(
                 numerical_metadata[column].min(), numerical_metadata[column].max(), 1000
@@ -115,23 +131,27 @@ def plot_numerical_distributions(
             y = kde(x)
             peaks_kde, _ = find_peaks(y)
 
-            # Plot KDE with peaks
-            axs[i + (end_idx - start_idx)].plot(x, y, label="KDE", color="blue")
-            axs[i + (end_idx - start_idx)].hist(
+            axs[2 * i + 1].plot(x, y, label="KDE", color="blue")
+            axs[2 * i + 1].hist(
                 numerical_metadata[column].dropna(),
                 bins=20,
                 density=True,
                 alpha=0.5,
                 color="gray",
-                label="Histogram",
             )
-            axs[i + (end_idx - start_idx)].plot(
-                x[peaks_kde], y[peaks_kde], "ro", label="Peaks"
-            )
-            axs[i + (end_idx - start_idx)].set_title(f"KDE with Peaks: {column}")
-            axs[i + (end_idx - start_idx)].set_xlabel(column)
-            axs[i + (end_idx - start_idx)].set_ylabel("Density")
-            axs[i + (end_idx - start_idx)].legend()
+            axs[2 * i + 1].plot(x[peaks_kde], y[peaks_kde], "ro", label="Peaks")
+
+            # If target_row is provided, add a vertical line to highlight the target value
+            if target_row is not None:
+                axs[2 * i + 1].axvline(
+                    target_value,
+                    color="red",
+                    linestyle="--",
+                    label=f"Target: {target_value}",
+                )
+                axs[2 * i + 1].legend()
+
+            axs[2 * i + 1].set_title(f"KDE with Peaks: {column}")
 
         # Hide any unused subplots
         for j in range((end_idx - start_idx) * 2, len(axs)):
@@ -139,6 +159,7 @@ def plot_numerical_distributions(
 
         plt.tight_layout(pad=3.0)  # Adjust padding between subplots
 
+        # Save the plot as a file or show it
         if output_dir:
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
@@ -154,14 +175,16 @@ def plot_numerical_distributions(
 
 
 def plot_categorical_distributions(
-    metadata, output_dir=None, pdf=None, max_plots_per_page=12
+    metadata, target_row=None, output_dir=None, pdf=None, max_plots_per_page=12
 ):
     """
     Plots bar charts and pie charts (as proportions) for categorical columns in the provided metadata,
-    splitting across multiple pages in the PDF if necessary.
+    highlighting where the values from the target row fall in the distribution if provided.
+    Splits across multiple pages in the PDF if necessary.
 
     Args:
         metadata (pd.DataFrame): The dataframe containing the metadata with categorical columns.
+        target_row (pd.Series, optional): The row containing the values to highlight. Defaults to None.
         output_dir (str, optional): The directory to save the plot. Defaults to None.
         pdf (PdfPages, optional): PdfPages object to save the plot in a PDF. Defaults to None.
         max_plots_per_page (int, optional): Maximum number of plots to display on each page. Defaults to 12.
@@ -212,12 +235,28 @@ def plot_categorical_distributions(
                 colors=sns.color_palette("viridis", len(proportions)),
             )
 
+            # Highlight the target value in the bar chart if target_row is provided
+            if target_row is not None:
+                target_value = target_row[column]
+
+                # Highlight the target category with a red line
+                if target_value in proportions.index:
+                    target_idx = list(proportions.index).index(target_value)
+                    axs[2 * i].axvline(
+                        target_idx,
+                        color="red",
+                        linestyle="--",
+                        label=f"Target: {target_value}",
+                    )
+                    axs[2 * i].legend()
+
         # Hide any unused subplots
         for j in range((end_idx - start_idx) * 2, len(axs)):
             axs[j].axis("off")
 
         plt.tight_layout(pad=3.0)  # Adjust padding between subplots
 
+        # Save the plot as a file or show it
         if output_dir:
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)

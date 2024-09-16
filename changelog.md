@@ -1,6 +1,14 @@
 # Changelog
 
-## [Version 0.0.1] - 2024-09-15 @caterer-z-t
+## [Version 0.0.0] - 2024-09-16 @caterer-z-t
+- added `__init__.py` files for easier referencing files and functions
+- added comments and files and directories to .gitignore to be left out from uploads to github
+- updated `README.md` file to contain proper structure of package and software thus far
+- modified `utils.py` to take the arguments of random_row which will highlight the row in the distributions and proportions figures, if not specified (FALSE) the traditional distributions are still generates
+- updated `dev_sequencing_code.py` to take the argument from the command line for the file path of the data used, and updated the use of the functions in `utils.py` to correctly call each function with updated parameters and usage
+- created `tests/seq_tests.py` to test the base functions of `utils.py` and initiated the testing scripts for this project.
+
+## [Version 0.0.0] - 2024-09-15 @caterer-z-t
 - Added dependencies to the `env.yml` file
 - Added directory of data to `.gitignore` file
 - Included how to obtain example data in `README.md` file

@@ -87,21 +87,26 @@ python som_genetic_simulation.py --input data/original_genetic_data.csv --output
 
 ## Project Structure
 ``` bash 
-
-├── data/
-│   ├── original_genetic_data.csv  # Example input data
-│   ├── simulated_data.csv         # Output of the simulation
-├── src/
-│   ├── som_genetic_simulation.py  # Main script to run the simulation
-│   ├── utils.py                   # Helper functions (data processing, evaluation)
-│   └── visualize.py               # Visualization scripts for results
-├── notebooks/
-│   ├── SOM_Exploration.ipynb      # Jupyter Notebook for exploring SOMs
-├── tests/
-│   ├── test_som.py                # Unit tests for SOM implementation
-├── README.md                      # This README file
-├── requirements.txt               # List of dependencies
-└── LICENSE                        # License for the project
+SOM_Seq_Sim/
+├── docs/
+│   ├── img/                     # Contains images used in Read the Docs
+│   ├── pipelines/               # Additional MD files for pipelines and packages
+│   ├── index.md                 # Initial page for Read the Docs
+│   ├── requirements.txt         # Dependencies for Read the Docs 
+├── Seq_Sim/
+│   ├── dev_sequencing_code.py   # Main script to run the simulation (refer to README.md for usage)
+│   ├── utils.py                # Helper functions (data processing, evaluation)
+│   ├── unimodal_example.py     # Example use for unimodal distribution
+│   ├── bimodal_example.py      # Example use for bimodal distribution
+│   └── trimodal_example.py     # Example use for trimodal distribution
+├── test/
+│   └── seq_test.py             # Testing script for utils functions in Seq_Sim
+├── .gitignore                  # Git ignore file to exclude files and directories from Git
+├── .readthedocs.yaml           # YAML file specifying dependencies for Read the Docs
+├── changelog.md                # MD file documenting changes made in the development process
+├── env.yml                     # YAML file specifying dependencies for the entire package
+├── README.md                   # README file
+└── LICENSE                     # License for the project
 ```
 
 ## Methodology
