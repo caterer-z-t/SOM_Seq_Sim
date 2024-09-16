@@ -1,13 +1,30 @@
 import pandas as pd
 import numpy as np
 from utils import DataPlotter
-import sys
+import argparse
 
 
 def main():
-    input_file = sys.argv[1]
+    # Set up argument parsing
+    parser = argparse.ArgumentParser(
+        description="Run the genetic sequencing simulation and plot distributions."
+    )
+    parser.add_argument(
+        "--input",
+        type=str,
+        required=True,
+        help="Path to the original genetic sequencing dataset (CSV file).",
+    )
+    parser.add_argument(
+        "--output",
+        type=str,
+        default=None,
+        help="Path to store the simulated data (default: None).",
+    )
+    args = parser.parse_args()
 
-    df = pd.read_csv(str(input_file), sep="\t")
+    # Load the data
+    df = pd.read_csv(str(args.input), sep="\t")
 
     # Get a random row from the dataframe
     random_row = df.iloc[np.random.randint(0, df.shape[0])]
