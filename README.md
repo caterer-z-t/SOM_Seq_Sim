@@ -168,7 +168,7 @@ Preliminary results suggest that the simulated data retains significant statisti
         <img src="https://github.com/victoria-hurd.png" width="200" />
       </a>
       <br />
-      <b>Viki</b>
+      <b>Vicki</b>
     </td>
     <td align="center">
       <a href="https://github.com/caterer-z-t">
