@@ -154,7 +154,7 @@ Preliminary results suggest that the simulated data retains significant statisti
         <img src="https://github.com/madrpernat.png" width="200" />
       </a>
       <br />
-      <b>Maddie</b>
+      <b>Maddy</b>
     </td>
     <td align="center">
       <a href="https://github.com/pnnoc">
