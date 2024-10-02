@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import argparse
 import os
-from utils import DataPlotter, generate_synthetic_data, load_config
+from utils import SimSeq, generate_synthetic_data, load_config
 
 
 def main():
@@ -55,7 +55,7 @@ def main():
             synthetic_df.to_csv(output_path, index=False)
 
     # Create an instance of DataPlotter
-    plotter = DataPlotter(metadata=df, synthetic_metadata=synthetic_df)
+    plotter = SimSeq(metadata=df, synthetic_metadata=synthetic_df)
 
     # Plot numerical distributions
     plotter.plot_numerical_distributors()
@@ -63,7 +63,7 @@ def main():
     # Get a random row from the dataframe
     random_row = df.iloc[np.random.randint(0, df.shape[0])]
 
-    plotter_with_rows = DataPlotter(metadata=df, target_row=random_row)
+    plotter_with_rows = SimSeq(metadata=df, target_row=random_row)
 
     # Plot numerical distributions with a target row
     plotter_with_rows.plot_numerical_distributors()
