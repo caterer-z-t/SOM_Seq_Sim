@@ -154,16 +154,6 @@ generate_dummy_metadata <- function(n_cells = 3000, # cells of major cell types 
         }
     }
 
-    # check
-    ## celltype_df %>%
-    ##   dplyr::group_by(subject_id) %>%
-    ##   dplyr::summarise(count = dplyr::n()) %>%
-    ##   as.data.frame()
-    ## celltype_df %>%
-    ##   dplyr::group_by(cell_type,subject_id) %>%
-    ##   dplyr::summarise(count = dplyr::n()) %>%
-    ##   as.data.frame()
-
     diff_clusters <- c(1:n_major_diff_celltypes, (n_cell_types - n_minor_diff_celltypes + 1):n_cell_types)
     diff_cell_types <- LETTERS[diff_clusters]
 
@@ -200,6 +190,7 @@ generate_dummy_metadata <- function(n_cells = 3000, # cells of major cell types 
     dummy_data <- dummy_data[sample(nrow(dummy_data)), ]
     return(list(dummy_data, diff_cell_types))
 }
+
 generate_dummy_data_woInteraction <- function(n_cells = 3000, # cells of major cell types per individual
                                               sd_celltypes = 0.1, # standard deviation of number of cells
                                               n_major_cell_types = 7,
@@ -279,16 +270,6 @@ generate_dummy_data_woInteraction <- function(n_cells = 3000, # cells of major c
         }
     }
 
-    # check
-    ## celltype_df %>%
-    ##   dplyr::group_by(subject_id) %>%
-    ##   dplyr::summarise(count = dplyr::n()) %>%
-    ##   as.data.frame()
-    ## celltype_df %>%
-    ##   dplyr::group_by(cell_type,subject_id) %>%
-    ##   dplyr::summarise(count = dplyr::n()) %>%
-    ##   as.data.frame()
-
     diff_clusters <- c(1:n_major_diff_celltypes, (n_cell_types - n_minor_diff_celltypes + 1):n_cell_types)
     diff_cell_types <- LETTERS[diff_clusters]
     prop_control_types <- 0.1
@@ -305,15 +286,6 @@ generate_dummy_data_woInteraction <- function(n_cells = 3000, # cells of major c
                 count = dplyr::n()
             )
         if (i %in% diff_cell_types) {
-            # abundance = dplyr::left_join(celltype_df,
-            #                              dummy_data,
-            #                              by="subject_id") %>%
-            #   dplyr::filter(cell_type == i) %>%
-            #   dplyr::group_by(subject_id) %>%
-            #   dplyr::summarise(pro = dplyr::n()/n_cells,
-            #                    count = dplyr::n())
-
-            # prop(ortion) = cells for each subject that are this cell type
             print(head(abundance))
             # diff is the number of cells that the differential cell types should have (use fc_interact to scale/increase)
             diff <- ceiling(n_cells * (median(abundance$pro) * (1 + fc_interact)) - n_cells * median(abundance$pro))
@@ -358,10 +330,9 @@ generate_dummy_data_woInteraction <- function(n_cells = 3000, # cells of major c
     dummy_data <- dummy_data[sample(nrow(dummy_data)), ]
     return(list(dummy_data, diff_cell_types))
 }
+
 generate_pseudo_pcs_woInteraction <- function(data,
-                                              # 主成分の数
                                               n_pcs = 20,
-                                              # 各属性を示す主成分のうち、占める分散が大きい成分から並べる
                                               cluster_pcs = 1:20,
                                               disease_pcs = 0,
                                               sex_pcs = 0,
@@ -369,7 +340,6 @@ generate_pseudo_pcs_woInteraction <- function(data,
                                               bmi_pcs = 0,
                                               batch_pcs = 0,
                                               scale_factor = 2,
-                                              # 各属性の割合の最大値を定義
                                               cluster_ratio = 0.25,
                                               disease_ratio = 0,
                                               sex_ratio = 0,
@@ -418,18 +388,11 @@ generate_pseudo_pcs_woInteraction <- function(data,
         cell_batch <- as.integer(factor(data[, batch_col]))
         cell_diseases <- as.integer(factor(data[, disease_col]))
 
-        variance <- 1 / (x * scale_factor) # 主成分が1から20にいくに従って分散が小さくなるように設定
+        variance <- 1 / (x * scale_factor) 
         set.seed(seed * x)
         pc <- rnorm(n_cells, mean = 0, sd = sqrt(variance))
         set.seed(seed * x)
         pc_cluster <- rnorm(n_cells, mean = scale(cell_clusters1), sd = sqrt(variance))
-        # for (j in 1:3){
-        #   if (j==1){
-        #     pc_cluster = rnorm(n_cells, mean = scale(eval(parse(text=paste0("cell_clusters",j)))), sd = sqrt(variance))
-        #   } else {
-        #     pc_cluster = pc_cluster + rnorm(n_cells, mean = scale(eval(parse(text=paste0("cell_clusters",j)))), sd = sqrt(variance))
-        #   }
-        # }
         set.seed(seed * x)
         pc_disease <- rnorm(n_cells, mean = scale(cell_diseases), sd = sqrt(variance))
         set.seed(seed * x * 2)
@@ -476,9 +439,7 @@ generate_pseudo_pcs_woInteraction <- function(data,
 }
 
 generate_pseudo_features <- function(data,
-                                     # 主成分の数
                                      n_features = 20,
-                                     # 各属性を示す主成分のうち、占める分散が大きい成分から並べる
                                      cluster_features = 1:20,
                                      disease_features = 0,
                                      sex_features = 0,
@@ -486,7 +447,6 @@ generate_pseudo_features <- function(data,
                                      bmi_features = 0,
                                      batch_features = 0,
                                      individual_features = 0,
-                                     # 各属性の割合の最大値を定義
                                      cluster_ratio = 0.25,
                                      disease_ratio = 0,
                                      sex_ratio = 0,
@@ -555,14 +515,6 @@ generate_pseudo_features <- function(data,
             assign(paste0("cell_clusters_means", j), cell_clusters_tmp)
             print(paste("length of cell_clusters_tmp: ", length(cell_clusters_tmp)))
         }
-        # paste0("cell_clusters_means",j) include cluster-specific mean values
-        ## length(cell_clusters_means1)==length(cell_clusters)
-        ## length(cell_clusters_means2)==length(cell_clusters)
-        # check if cluster means are same value by cluster
-        ## cell_clusters_means1[cell_clusters==1]
-        ## cell_clusters_means2[cell_clusters==1]
-        ## cell_clusters_means1[cell_clusters==2]
-        ## cell_clusters_means2[cell_clusters==2]
         variance <- 1 / cell_clusters_means2 # cell type specific variance
         set.seed(seed * x)
         ### =====
@@ -593,11 +545,6 @@ generate_pseudo_features <- function(data,
         variance <- 1 / cell_covariates_means2 # cell type specific variance
         set.seed(seed * x * 2)
         pc_disease <- rnorm(n_cells, mean = scale(cell_covariates_means1), sd = sqrt(variance))
-        # check if PC values are different by disease group
-        ## data.frame(cell_covariate,pc_disease) %>%
-        ##   dplyr::group_by(cell_covariate) %>%
-        ##   dplyr::summarize(mean_pc = mean(pc_disease),
-        ##                    sd_pc = sd(pc_disease))
         var_all <- c(var_all, variance)
 
         ## SEX
@@ -637,12 +584,6 @@ generate_pseudo_features <- function(data,
         variance <- 1 / cell_covariates_means2 # cell type specific variance
         set.seed(seed * x * 4)
         pc_age <- rnorm(n_cells, mean = scale(data[, age_col]), sd = sqrt(variance))
-        ## data.frame(data[,age_col],pc_age) %>%
-        ##   magrittr::set_colnames(c("cell_covariate","pc_age")) %>%
-        ##   dplyr::group_by(cell_covariate) %>%
-        ##     dplyr::summarize(mean_pc = mean(pc_age),
-        ##                      sd_pc = sd(pc_age)) %>%
-        ##   as.data.frame()
         var_all <- c(var_all, variance)
         ## BMI
         cell_covariate <- cell_bmi
@@ -800,10 +741,6 @@ GLM_interact <- function(dataset, cluster, contrast1, contrast2, random_effects 
     library(stevedata) # the data
     library(lme4) # for mixed models
     library(broom.mixed) # for mixed model tidiers
-    # Check inputs
-    ## if (is.factor(dataset[[contrast1]]) == FALSE) {
-    ##   stop("Specified contrast term is not coded as a factor in dataset")
-    ## }
 
     # Generate design matrix from cluster assignments
     cluster <- as.character(cluster)
@@ -1024,46 +961,29 @@ create_NAM <- function(metadata,
     s <- model.matrix(f, data$obs)
     colnames(s) <- gsub(as.character(glue("^{data$samplem_key}(.*)")), "\\1", colnames(s))
     rownames(s) <- data$obs[[data$obs_key]]
-    s <- s[, data$samplem[[data$samplem_key]]] ## Necessary?
-    # s = Matrix indicating which sample the cells that represent a row are from
-    ## row: cell
-    ## column: individual
-    ## 1=the cell from that sample
-    ### prior knowledge of connectivity among cells
+    s <- s[, data$samplem[[data$samplem_key]]] 
+
 
     prevmedkurt <- Inf
     maxnsteps <- 15L
 
-    ## japanese: https://qiita.com/khigashi02/items/b4b95714cae9e3f2a7be
-    ### Diffusion map: データ点間の距離から遷移確率行列を構成して、diffusion process（データのグラフ構造上のランダムウォーク）を作用させる。
-    ## tステップ後の分布は遷移確率行列のt乗で得られる。その分布の違いをユークリッド距離として反映するような低次元座標を得たいのだけど、それが遷移確率行列のt乗の固有ベクトルとして得られる、という手法。
-    ## ノイズに強い、ステップ数tによって局所的な特徴から大域的構造まで対応できる、「軌道」のような構造を見つけやすい、など色んな利点があるけど、異なる軌道を異なる次元に圧縮しがち。つまり二次元、三次元などの低次元での可視化には向かない。
-    ## ランダムウォークによって隣接行列からノードの集合を得る（https://qiita.com/kk31108424/items/e05b32c1161f1e309328）
-    ## NOTE: this function ignores distances and only uses unweighted connectivities
-    ## このコードは、グラフ上の情報を拡散（または拡散）させるための関数を定義しています。この種の拡散ステップは、しばしばネットワークデータのクラスタリングや次元削減などのタスクで使用されます。
-    ## 具体的には以下のような処理を行っています：
     diffuse_step <- function(data, s) {
-        a <- data$connectivities ## 1. `data$connectivities`から接続行列`a`を取得します。この行列はグラフの接続性を表し、行と列はグラフの頂点（ここでは細胞）を表し、値はその頂点間の接続強度（または重み）を表します。
-        degrees <- Matrix::colSums(a) + 1 # degrees = number of edges joined to each graph vertex (=each cell)  ## 2. それぞれの頂点の次数（つまり、その頂点に接続されたエッジの数）を計算します。次数はグラフ上での頂点の「重要度」を示す一つの指標です。ここでは`Matrix::colSums(a)`を使用して各頂点の次数を計算し、1を加えています。
-        s_norm <- s / degrees ## 3. 入力ベクトル`s`を各頂点の次数で正規化します。これにより、ベクトル`s`の各要素はその頂点の「重要度」に基づいてスケーリングされます。
-        res <- (a %*% s_norm) + s_norm ## 4. その後、接続行列`a`と正規化されたベクトル`s_norm`を掛け算し、元のベクトル`s_norm`を加えます。この計算では、各頂点の新たな値が、その頂点に接続された他の頂点の正規化された値の合計になります。これは情報の「拡散」を模しています。
-        return(as.matrix(res)) ## remove sparsity: do we need this?  ## 5. 最後に、結果を密行列として返します。この関数では結果をスパース行列ではなく、密行列として返すように指定されています。
+        a <- data$connectivities 
+        degrees <- Matrix::colSums(a) + 1
+        s_norm <- s / degrees 
+        res <- (a %*% s_norm) + s_norm 
+        return(as.matrix(res))
     }
-    # 以上が、この関数`diffuse_step`の主な機能です。ネットワークデータやグラフ理論に基づいたアルゴリズムによく見られる手法で、情報をネットワーク全体に拡散させることでデータのパターンを明らかにします。
-    ## 2.で1を加える理由は、0での除算を防ぐためと考えられます。s / degreesの行で次数で割り算を行っているため、もし頂点の次数が0（つまり頂点が孤立している）だった場合、無限大や未定義の値が生じる可能性があります。この1を加える操作により、そのようなエラーを避けることができます。また、全体的なスケーリングを微調整し、拡散の影響を少しでも小さくする可能性もあります。
-
-    # このコードは一連の拡散ステップを繰り返し、各ステップの後に結果を評価し、特定の条件が満たされたらループを終了するというものです。
-    # 情報の拡散が適切な段階に達したら停止するためのメカニズムを提供しています。拡散が十分に進んだことを確認するために、各ステップ後に尖度の中央値が計算され、それが一定の閾値以下に減少したかどうかをチェックしています。
-    for (i in seq_len(maxnsteps)) { # 1. `seq_len(maxnsteps)`で生成されたシーケンスに対してループを開始します。このシーケンスは1から`maxnsteps`までの整数を含んでおり、`maxnsteps`は拡散ステップの最大回数を指定します。
+    for (i in seq_len(maxnsteps)) {
         print(i)
-        s <- diffuse_step(data, s) # 2. 各ステップではまず、`diffuse_step(data, s)`を実行して新しい`s`（情報の拡散状況を表すベクトル）を生成します。
+        s <- diffuse_step(data, s)
         print(s)
-        medkurt <- median(apply(prop.table(s, 2), 1, moments::kurtosis)) # 3. 次に、`prop.table(s, 2)`を使用して各列の合計が1となるように`s`を正規化し、それぞれの列に対して`moments::kurtosis`を適用して尖度（値の分布の鋭さを表す統計量）を計算します。それらの尖度の中央値`medkurt`を計算します。
-        if (is.null(nsteps)) { # 4. `is.null(nsteps)`が真の場合、つまり`nsteps`が指定されていない場合、`medkurt`が前のステップの尖度`prevmedkurt`から3以下で減少しているか、またはループが3回以上繰り返された場合、ループを終了します。これは、情報の拡散が十分に進んだと判断される条件です。
+        medkurt <- median(apply(prop.table(s, 2), 1, moments::kurtosis))
+        if (is.null(nsteps)) {
             prevmedkurt <- medkurt
             print(prevmedkurt)
             print(medkurt)
-            if (prevmedkurt - medkurt < 3 & i > 3) { # 5. それ以外の場合（`nsteps`が指定されている場合）、指定されたステップ数`nsteps`に達したらループを終了します。
+            if (prevmedkurt - medkurt < 3 & i > 3) {
                 message(glue::glue("stopping after {i} steps"))
                 break
             }
@@ -1071,14 +991,7 @@ create_NAM <- function(metadata,
             break
         }
     }
-    # クルトーシス（尖度）は、確率変数の確率密度関数や頻度分布の鋭さを表す統計的な指標です。それは分布が正規分布からどれだけ偏っているか、つまりデータが平均値の周囲にどれだけ集中しているか、または尾部がどれだけ重いか（つまり値が平均から大きく離れている頻度がどれだけ多いか）を示します。
-    # クルトーシスの値によって分布の特性が次のように示されます：
-    # 1. **正のクルトーシス（クルトーシス > 0）**: 分布は「鋭峰型」で、正規分布よりも中央が尖り、尾部が重くなります。これは、値が平均から大きく離れて発生する可能性が高いことを意味します。
-    # 2. **ゼロのクルトーシス（クルトーシス = 0）**: 分布は正規分布と同様に「中心型」です。これはデータが平均の周囲に均等に分布していることを示します。
-    # 3. **負のクルトーシス（クルトーシス < 0）**: 分布は「平坦型」で、正規分布よりもピークが平坦で、尾部が軽くなります。これは、値が平均からあまり離れて発生する可能性が低いことを意味します。
-    # 視覚的には、クルトーシスが高い分布は、正規分布に比べて中心がより尖っていて尾がより厚く、広がりが大きいことを示します。一方、クルトーシスが低い分布は、正規分布に比べてより平らな形状を示します。
-    # なお、クルトーシスの定義にはいくつかのバリエーションがあり、上記の説明は「エクセスクルトーシス」（正規分布のクルトーシスを0とする定義）に基づいています。他の定義では、正規分布のクルトーシスを3とすることもあります。
-
+    
     snorm <- t(prop.table(s, 2)) # normalization
     rownames(snorm) <- data$samplem[[data$samplem_key]]
     colnames(snorm) <- data$obs[[data$obs_key]]
@@ -1095,32 +1008,23 @@ create_NAM <- function(metadata,
         message("filtering based on batches kurtosis")
     }
 
-    # この関数`.batch_kurtosis`は、バッチごとに値のクルトーシス（値の分布の鋭さを表す統計量）を計算しています。以下は各ステップの詳細な説明です：
-    # 要するに、この関数は与えられた`NAM`行列の各バッチについて、バッチ内の行の平均値のクルトーシスを計算しています。これはバッチ効果の分析に使用される可能性があります。
     .batch_kurtosis <- function(NAM, batches_vec) {
-        purrr::imap(split(seq_len(length(batches_vec)), batches_vec), function(i, b) { # 1. `purrr::imap(split(seq_len(length(batches_vec)), batches_vec), function(i, b) {...})`: まず、`batches_vec`の要素数分のシーケンスを生成し、それを`batches_vec`に基づいて分割します。つまり、同じバッチに属するインデックスが一緒にグループ化されます。それから、`imap`関数で各バッチに対する操作を適用します。
-            if (length(i) > 1) { # 2. `if (length(i)>1) {...} else if (length(i)==1) {...}`: この部分では、各バッチの大きさに応じて異なる操作を適用します。バッチの大きさ（つまりバッチ内のインデックスの数）が1より大きい場合、`NAM[i, ]`（つまり、対応するバッチの行を持つ`NAM`行列）の列ごとの平均を計算します。バッチの大きさが1の場合は、行列を転置してから列の平均を計算します。
+        purrr::imap(split(seq_len(length(batches_vec)), batches_vec), function(i, b) { 
+            if (length(i) > 1) { 
                 Matrix::colMeans(NAM[i, ])
             } else if (length(i) == 1) {
                 Matrix::colMeans(t(NAM[i, ]))
             }
         }) %>%
-            dplyr::bind_cols() %>% # 3. `%>% dplyr::bind_cols()`: ここで`purrr::imap`から得られた結果を列方向に結合します。これにより、各バッチの平均値を表す新しいデータフレームが生成されます。
-            apply(1, moments::kurtosis) # 4. `apply(1, moments::kurtosis)`: 最後に、新しく生成されたデータフレームの各行に対して`moments::kurtosis`を適用します。これにより、各バッチの平均値のクルトーシスが計算されます。
+            dplyr::bind_cols() %>% 
+            apply(1, moments::kurtosis) 
     }
 
-    # 先ほどの`.batch_kurtosis`関数を使用して、`NAM`行列の各バッチのクルトーシスを計算し、それに基づいて一部のデータをフィルタリング（除外）する処理を行っています。以下は各ステップの詳細な説明です：
-    # これらのコードを通じて、バッチ間のクルトーシスの違いに基づいてデータをフィルタリングする一連の処理が行われています。これは、バッチ効果を考慮に入れてデータの分析を行うための一つの手法と考えられます。
-    kurtoses <- .batch_kurtosis(NAM, batches_vec) # 1. `NAM`行列と`batches_vec`を引数として`.batch_kurtosis`関数を呼び出し、各バッチのクルトーシスを計算しています。その結果は`kurtoses`に保存されます。
+    kurtoses <- .batch_kurtosis(NAM, batches_vec) 
     # length(kurtoses) == nrow(NAM)
-    threshold <- max(6, 2 * median(kurtoses)) # 2. データをフィルタリングするための閾値を設定しています。この閾値は、6と`kurtoses`の中央値の2倍のうち、大きい方として設定されます。
-    message(glue::glue("throwing out neighborhoods with batch kurtosis >= {threshold}")) # 3. 計算された閾値を用いてどのようなデータフィルタリングが行われるかをメッセージとして表示しています。
-    keep <- which(kurtoses < threshold) # 4. `kurtoses`の値が設定した閾値未満のバッチのインデックスを抽出し、それを`keep`という変数に保存しています。これにより、クルトーシスが閾値未満（つまり、特定の基準に基づいて「適切」であると判断された）バッチのみを保持（フィルタリング）するためのインデックスリストを得ます。
-    ## この閾値設定の背後にある具体的な理由は、コードの作者の解釈や意図によるものであり、その詳細な背景はコードから直接読み取ることはできません。しかし、一般的な考察からすると、次のような解釈が考えられます：
-    ### 1. **6の選択**: この数字は、おそらく統計的な経験則や前の研究結果に基づいて選ばれたと考えられます。たとえば、正規分布のクルトーシスは3となるため、6はその2倍であり、一部の非正規分布（鋭峰型または重尾の分布）でよく見られるクルトーシスの値かもしれません。
-    ### 2. **`kurtoses`の中央値の2倍**: クルトーシスの中央値の2倍という閾値は、データの特性に応じて動的に閾値を設定する方法を示しています。つまり、バッチ間のクルトーシスの分布がどのようであれ、中央値の2倍という閾値は、データの一部が極端に高いまたは低いクルトーシスを持つことを考慮に入れるためのものかもしれません。
-    # 上記の2つの閾値の大きい方を最終的な閾値として選択する理由は、データの異常値やノイズに対する頑健性を確保するためと考えられます。すなわち、一部のバッチが極端なクルトーシスを持つ場合でも、それが結果に過度な影響を与えることを防ぐための措置と言えます。
-
+    threshold <- max(6, 2 * median(kurtoses)) 
+    message(glue::glue("throwing out neighborhoods with batch kurtosis >= {threshold}")) 
+    keep <- which(kurtoses < threshold) 
     # keep <- rep(TRUE, ncol(NAM))
     .res_qc_nam <- list(NAM = NAM, keep = keep)
 
@@ -1129,38 +1033,20 @@ create_NAM <- function(metadata,
     res[[paste0("keptcells", suffix)]] <- .res_qc_nam[[2]]
     res[[paste0("_batches", suffix)]] <- batches_vec
 
-    # このコードの断片は、データ行列 `NAM` をリジュアライズ（residualize）している部分です。リジュアライズするということは、共変量（covariates）の影響をデータから取り除くという意味です。具体的には、以下の手順で行われています。
-    # 共変量の影響を取り除くために一般的に使用される線形回帰の手法の一部であり、結果として得られる `NAM_` は共変量が除去されたデータです。これにより、共変量が目的変数に及ぼす影響を排除し、データの他の特性に焦点を当てることができます。
     if (verbose) message("Residualize NAM")
     N <- nrow(NAM)
-    NAM_ <- scale(NAM, center = TRUE, scale = FALSE) # `NAM` データ行列を中央に配置しますが、スケーリングは行わない（つまり、平均を0にするが、標準偏差で割るなどの変換は行わない）。
+    NAM_ <- scale(NAM, center = TRUE, scale = FALSE)
     ncols_C <- 0
-    if (!is.null(covs_mat)) { # 共変量行列 `covs_mat` が与えられている場合、それをスケーリングします。そして、`ncols_C` に `covs_mat` の列数を加えます。
+    if (!is.null(covs_mat)) { 
         covs_mat <- scale(covs_mat)
         ncols_C <- ncols_C + ncol(covs_mat)
     }
     if (is.null(covs_mat)) {
-        M <- Matrix::Diagonal(n = N) # `covs_mat` が `NULL` である場合、`M` を単位行列に設定します。
+        M <- Matrix::Diagonal(n = N) 
     } else {
-        M <- Matrix::Diagonal(n = N) - covs_mat %*% solve(t(covs_mat) %*% covs_mat, t(covs_mat)) # それ以外の場合、`M` は `covs_mat` の情報を使用して計算される補正行列となります。
+        M <- Matrix::Diagonal(n = N) - covs_mat %*% solve(t(covs_mat) %*% covs_mat, t(covs_mat)) 
     }
-    # このコードの主要な部分は、多重共線性のある共変量（`covs_mat`）の影響を取り除くための「プロジェクションマトリクス」（Projection Matrix）または「帽子マトリクス」（Hat Matrix）を作成する操作です。
-    # `Matrix::Diagonal(n = N)`は単位行列を作成します。これは対角成分が1で他の要素が0の正方形の行列です。行列のサイズ`N`は、観察されたデータポイントの数に相当します。
-    # `covs_mat %*% solve(t(covs_mat) %*% covs_mat, t(covs_mat))`は共変量に基づく帽子マトリクスを作成するコードで、`solve(t(covs_mat) %*% covs_mat)`は `covs_mat` のグラム行列（転置した`covs_mat`と`covs_mat`の積）の逆行列を求め、それを`covs_mat`に右から掛けることで帽子マトリクスを作成しています。
-    # ここで、`M`は単位行列から帽子マトリクスを引いたもので、これは「残差マトリクス」または「プロジェクション補マトリクス」を作成する操作に相当します。このマトリクス`M`をデータに掛けると、それはデータの各要素から共変量による予測成分を引くことを意味します。これにより、共変量の影響を取り除いたデータが得られます。
-    # したがって、この操作全体は共変量の影響を取り除くための線形代数の手法を実装したもので、結果として得られるのは共変量から "浄化" されたデータセットです。
-    NAM_ <- M %*% NAM_ # 最後に、`M` を `NAM_` に掛け合わせて、共変量の影響を取り除いた `NAM_` を得ます。
-    # `M` を `NAM_` に掛け合わせるというステップで行われる操作は、事実上、線形回帰を行っています。ただし、ここでは共変量 `covs_mat` に対する `NAM_` の線形回帰を行い、その結果得られる予測値ではなく残差（予測からの偏差）を取り出しています。
-    # 具体的には、`M` 行列は線形回帰の計算から派生しており、具体的には `covs_mat` に対する `NAM_` の線形回帰を行っています。この行列 `M` を `NAM_` に掛けると、それは `NAM_` の各要素から `covs_mat` による予測成分を引くことを意味します。結果として得られるのは、共変量 `covs_mat` の影響を取り除いた `NAM_` の新しいバージョン、つまり、共変量から "浄化" された `NAM_` です。
-    # この操作が可能な理由は、線形代数の基本的な性質によるもので、行列の乗算を通じて線形変換を行うことができるからです。ここでは、その線形変換が線形回帰の計算を表しているのです。
-    # したがって、このプロセスは共変量が目的変数に及ぼす影響を取り除くための一般的な手法であり、結果として得られるのは共変量の影響を取り除いたデータセットです。
-
-    # solve(t(covs_mat) %*% covs_mat, t(covs_mat))
-    ## このコードは線形代数における一般的な計算、すなわち行列の逆行列の計算を行っています。
-    ## 具体的には、まず `t(covs_mat) %*% covs_mat` という計算で、`covs_mat`の転置行列と`covs_mat`自身との行列積を計算しています。この結果は、`covs_mat`の各列間の共分散を表す正方行列になります。
-    ## そして、`solve`関数を用いて、この共分散行列の逆行列を計算します。ただし、逆行列が存在しない場合（行列が正則でない場合）、エラーが発生します。
-    ## 最後に `t(covs_mat)` が右から乗じられていますが、これは元の`covs_mat`行列を転置したものです。
-    ## この計算全体は、最小二乗法における正規方程式を解く過程と似ています。したがって、このコードは、多変量回帰問題（`covs_mat`の各列が説明変数を表す場合）を解くためのものである可能性があります。ただし、具体的な解釈は、このコードがどのような目的で、どのようなデータに対して用いられるのか、という文脈によります。
+    NAM_ <- M %*% NAM_ 
 
     .res_resid_nam <- list(
         ## NOTE: scale function in R gives slightly different results
@@ -1202,10 +1088,6 @@ create_NAM <- function(metadata,
 
     nam_res <- res
 
-    # d.uns['NAM.T'] contains the transpose of the NAM (neighborhoods by samples)
-    # d.uns['NAM_sampleXpc'] contains the sample loadings of the principal components of the NAM
-    # d.uns['NAM_nbhdXpc'] contains the neighborhood loadings of the principal components of the NAM
-    # d.uns['NAM_svs'] contains the squared singular values of the NAM
 
     NAMsvd <- list(
         nam_res$NAM_sampleXpc,
@@ -1358,11 +1240,7 @@ association_nam <- function(seurat_object = NULL,
     colnames(s) <- gsub(as.character(glue("^{data$samplem_key}(.*)")), "\\1", colnames(s))
     rownames(s) <- data$obs[[data$obs_key]]
     s <- s[, data$samplem[[data$samplem_key]]] ## Necessary?
-    # s = Matrix indicating which sample the cells that represent a row are from
-    ## row: cell
-    ## column: individual
-    ## 1=the cell from that sample
-    ### prior knowledge of connectivity among cells
+
 
     prevmedkurt <- Inf
 
@@ -1825,22 +1703,22 @@ NAM_NMF_GP <- function(seurat_object = NULL,
     s <- s[, data$samplem[[data$samplem_key]]] ## Necessary?
 
     diffuse_step <- function(data, s) {
-        a <- data$connectivities ## 1. `data$connectivities`から接続行列`a`を取得します。この行列はグラフの接続性を表し、行と列はグラフの頂点（ここでは細胞）を表し、値はその頂点間の接続強度（または重み）を表します。
-        degrees <- Matrix::colSums(a) + 1 # degrees = number of edges joined to each graph vertex (=each cell)  ## 2. それぞれの頂点の次数（つまり、その頂点に接続されたエッジの数）を計算します。次数はグラフ上での頂点の「重要度」を示す一つの指標です。ここでは`Matrix::colSums(a)`を使用して各頂点の次数を計算し、1を加えています。
+        a <- data$connectivities 
+        degrees <- Matrix::colSums(a) + 1 
         s_norm <- s / degrees
-        ## 3. 入力ベクトル`s`を各頂点の次数で正規化します。これにより、ベクトル`s`の各要素はその頂点の「重要度」に基づいてスケーリングされます。
-        res <- (a %*% s_norm) + s_norm ## 4. その後、接続行列`a`と正規化されたベクトル`s_norm`を掛け算し、元のベクトル`s_norm`を加えます。この計算では、各頂点の新たな値が、その頂点に接続された他の頂点の正規化された値の合計になります。これは情報の「拡散」を模しています。s_norm を最後に加えることで、各ノード自身の値も更新後の値に影響を与えることになります
-        return(as.matrix(res)) ## remove sparsity: do we need this?  ## 5. 最後に、結果を密行列として返します。この関数では結果をスパース行列ではなく、密行列として返すように指定されています。
+        
+        res <- (a %*% s_norm) + s_norm 
+        return(as.matrix(res)) 
     }
 
     prevmedkurt <- Inf
 
-    for (i in seq_len(maxnsteps)) { # 1. `seq_len(maxnsteps)`で生成されたシーケンスに対してループを開始します。このシーケンスは1から`maxnsteps`までの整数を含んでおり、`maxnsteps`は拡散ステップの最大回数を指定します。
-        s <- diffuse_step(data, s) # 2. 各ステップではまず、`diffuse_step(data, s)`を実行して新しい`s`（情報の拡散状況を表すベクトル）を生成します。
-        medkurt <- median(apply(prop.table(s, 2), 1, moments::kurtosis)) # 3. 次に、`prop.table(s, 2)`を使用して各列の合計が1となるように`s`を正規化し、それぞれの列に対して`moments::kurtosis`を適用して尖度（値の分布の鋭さを表す統計量）を計算します。それらの尖度の中央値`medkurt`を計算します。
-        if (is.null(nsteps)) { # 4. `is.null(nsteps)`が真の場合、つまり`nsteps`が指定されていない場合、`medkurt`が前のステップの尖度`prevmedkurt`から3以下で減少しているか、またはループが3回以上繰り返された場合、ループを終了します。これは、情報の拡散が十分に進んだと判断される条件です。
+    for (i in seq_len(maxnsteps)) { 
+        s <- diffuse_step(data, s) 
+        medkurt <- median(apply(prop.table(s, 2), 1, moments::kurtosis)) 
+        if (is.null(nsteps)) { 
             prevmedkurt <- medkurt
-            if (prevmedkurt - medkurt < 3 & i > 3) { # 5. それ以外の場合（`nsteps`が指定されている場合）、指定されたステップ数`nsteps`に達したらループを終了します。
+            if (prevmedkurt - medkurt < 3 & i > 3) { 
                 message(glue::glue("Diffusion process stoped after {i} steps"))
                 break
             }
@@ -2007,13 +1885,7 @@ NAM_NMF_GP <- function(seurat_object = NULL,
     # y_rand = sample(y, replace = TRUE)
     ssefull <- crossprod(as.numeric(p@y_mean) - y) # Sum of Squares for Error (SSE) is the difference between the predicted and actual values (prediction error). This is the prediction error for the full model (model with all explanatory variables).
     ssefull <- as.numeric(ssefull)
-    # ssered <- crossprod(as.numeric(p@y_mean) - y_rand)
-    # deltasse <-  ssered - ssefull
-    # f <- (deltasse / k) / (ssefull/n) # F統計量を計算しています。F統計量は、モデルがデータにどれだけ適合しているかを評価するための統計量です。
-    # minp <- -pf(f, k, n-(1+length(covs)+k), log.p = TRUE)    # F統計量に対応するp値を計算しています。p値はモデルの有意性を評価するための統計量で、p値が小さいほどモデルが有意にデータを説明していると判断します。
-    # minp <- as.numeric(minp)
-    # r2 <- 1 - ssefull/ssered
-
+    
     # get model parameters
     sf <- fit@stan_fit
     sampler_params <- rstan::get_sampler_params(sf, inc_warmup = FALSE)
@@ -2059,10 +1931,10 @@ NAM_NMF_GP <- function(seurat_object = NULL,
 
         # Huber loss function
         huber_loss <- function(y_true, y_pred, delta = 1.0) {
-            # 誤差の計算
+            
             error <- y_true - y_pred
 
-            # Huber loss の計算
+            
             abs_error <- abs(error)
             quadratic <- pmin(abs_error, delta)
             linear <- abs_error - quadratic
@@ -2198,22 +2070,17 @@ NAM_NMF_GP <- function(seurat_object = NULL,
     seurat_object@meta.data$NMFGP_ncorrs <- ncorrs
 
     # get neighborhood fdrs if requested
-    conditional_permutation <- function(B, Y, num) { # このR関数は条件付き置換（conditional permutation）を行うもので、同じグループ内でのみデータの順序をランダムに並べ替えます。
-        purrr::map(seq_len(num), function(i) { # num回の置換を行います。ここでは、num回の繰り返しを行い、各繰り返しで新しいデータセットが生成されます。
-            split(seq_len(length(Y)), B) %>% # ベクトルYのインデックスをベクトルBの各値に基づいてグループに分けます。これにより、Bの各ユニークな値に対応するYのインデックスのリストが作成されます。
-                purrr::map(function(idx) { # Bの各ユニークな値に対して関数を適用します。ここでは、各グループ内でYの値をランダムに並べ替えます。
-                    data.frame(idx, val = sample(Y[idx], replace = TRUE)) # Yの各グループの値をランダムに並べ替え、その結果をデータフレームに保存します。
-                }) %>% dplyr::bind_rows() %>% # 各グループからのデータフレームを1つのデータフレームにまとめます。
-                dplyr::arrange(idx) %>% # オリジナルのYの順序に基づいて行を並べ替えます。
-                with(val) # 新しく並べ替えられたYの値のベクトルを取り出します。
+    conditional_permutation <- function(B, Y, num) { 
+        purrr::map(seq_len(num), function(i) { 
+            split(seq_len(length(Y)), B) %>% 
+                purrr::map(function(idx) { 
+                    data.frame(idx, val = sample(Y[idx], replace = TRUE)) 
+                }) %>% dplyr::bind_rows() %>% 
+                dplyr::arrange(idx) %>% 
+                with(val) 
         }) %>%
-            purrr::reduce(Matrix::cbind2) # 各繰り返しで生成されたベクトルを列として結合し、最終的にnum列を持つ行列を作成します。
-    } # 全体として、この関数は、Bの各ユニークな値に基づいてグループ化されたベクトルYのnum回のランダム置換を生成します。その結果は、行数がYの長さで、列数がnumの行列として返されます。
-
-    # このコードはFalse Discovery Rate (FDR)を経験的に計算するためのものです。主な考え方は、特定の閾値での帰無仮説 (znull) の棄却数に対する、実際の観測値 (z) の棄却数の割合を計算することです。これにより、誤って偽陽性を検出する可能性を評価します。
-    # tail_counts関数は、特定の閾値での帰無仮説と実際の観測値の棄却数を計算します。具体的には、znullとzの各要素を二乗し、それらの二乗値をカテゴリ化（cut関数）してから、それぞれのカテゴリ（つまり、それぞれの閾値）でのznullの数を計算します。cumsumとlength(znulli) -を使用して、各閾値以上の値の数（つまり、帰無仮説が棄却される数）を計算します。
-    # empirical_fdrs関数は、計算された帰無仮説と実際の観測値の棄却数を用いて、経験的なFDRを計算します。これは、sweep関数を使用して帰無仮説の棄却数と実際の観測値の棄却数の割合（False Discovery Proportion, FDP）を計算し、次にcolMeansを使用してFDPの平均（つまり、FDR）を計算することにより行われます。
-    # 全体として、このコードは、特定の閾値での帰無仮説の棄却数に対する実際の観測値の棄却数の割合（FDR）を計算し、その結果を返します。この結果は、誤って偽陽性を検出する可能性を評価するために使用できます。
+            purrr::reduce(Matrix::cbind2) 
+    } 
     empirical_fdrs <- function(z, znull, thresholds) {
         N <- length(thresholds) - 1
         tails <- t(tail_counts(thresholds, znull)[1:N, ])
@@ -2246,7 +2113,7 @@ NAM_NMF_GP <- function(seurat_object = NULL,
         y_ <- conditional_permutation(batches_vec, y, Nnull)
         Nnull <- min(1000, Nnull)
         y_ <- y_[, 1:Nnull]
-        gamma_ <- crossprod(U[, 1:k], y_) # U行列の最初のk列（つまり、k個の主成分）とy_ベクトル（サンプルの疾患情報）のクロス積（または外積）を計算しています。Rにおけるcrossprod(x, y)関数はtranspose(x) %*% yと等価で、行列xの転置と行列yの行列積を計算します。各成分値と疾患情報との間の相関を計算していると解釈できます。これにより、各成分値が疾患情報をどの程度説明できるかを評価することが可能となります。結果として得られるgamma_は長さkのベクトルとなり、各主成分に対する疾患情報の重みを表します。具体的には、gamma_[i]はi番目の主成分と疾患情報との間の相関（または共分散）を表しています。
+        gamma_ <- crossprod(U[, 1:k], y_) 
         m_ <- (n - k - length(c(interaction_feature, covs, samplem_key, batch_col)))
         if (m_ > 0) {
             nullncorrs <- abs(V[, 1:k] %*% (gamma_ / m_))
@@ -2254,19 +2121,6 @@ NAM_NMF_GP <- function(seurat_object = NULL,
             nullncorrs <- abs(V[, 1:k] %*% (gamma_ / n))
         }
         nullncorrs <- abs(scale(nullncorrs))
-        # nullncorrs <- abs(V[, 1:k] %*% (gamma_/(k+1)))
-        # nullncorrs <- abs(V[, 1:k] %*% (gamma_/n))
-        # nullncorrs <- abs(nullncorrs / sd(nullncorrs))  * sd(ncorrs)
-        # nullncorrs <- abs((nullncorrs - mean(nullncorrs)) / sd(nullncorrs))  * sd(ncorrs)
-        # nullncorrs <- abs(scale(nullncorrs, center = TRUE, scale = FALSE))
-        # for (i in 1:ncol(nullncorrs)){
-        #   nullncorrs[,i] <-  abs(scale_by_group(value = nullncorrs[,i],
-        #                                         group = rcna_data$obs[,interaction_feature]))
-        # }
-        # for (i in 1:ncol(nullncorrs)){
-        #   nullncorrs[,i] <-  abs(scale_by_group(value = nullncorrs[,i],
-        #                                         group = sample(rcna_data$obs[,interaction_feature],length(ncorrs),replace = TRUE)))
-        # }
 
         maxcorr <- max(abs(ncorrs))
         fdr_thresholds <- seq(maxcorr / 4, maxcorr, maxcorr / 400)
@@ -2404,26 +2258,24 @@ unregister_dopar <- function() {
 
 
 apply_model_to_column <- function(column_data) {
-    # モデル式を定義。column_dataを応答変数として使用
+    
     form_test <- as.formula(paste0("column_data ~ (1|cell_type) + (1|sex) + (1|disease) + (1|batch) + (1|subject_id) + age + bmi"))
 
-    # lmer関数でモデルを適用
     fit <- lme4::lmer(form_test, data = dummy_data, REML = FALSE, control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 100000)))
 
-    # 分散統計を計算
     var_stats <- variancePartition::calcVarPart(fit)
 
     return(var_stats)
 }
 
 apply_countmodel_to_column <- function(column_data) {
-    # モデル式を定義。column_dataを応答変数として使用
+
     form_test <- as.formula(paste0("column_data ~ (1|cell_type) + (1|sex) + (1|disease) + (1|batch) + (1|subject_id) + age + bmi"))
 
-    # lmer関数でモデルを適用
+    
     fit <- lme4::glmer(form_test, family = "poisson", nAGQ = 0, data = dummy_data, control = glmerControl(optimizer = "nloptwrap"))
 
-    # 分散統計を計算
+    
     var_stats <- variancePartition::calcVarPart(fit)
 
     return(var_stats)
