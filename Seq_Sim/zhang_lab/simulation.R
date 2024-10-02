@@ -3,20 +3,19 @@ args <- commandArgs(trailingOnly = TRUE)
 
 # Check if any arguments are provided
 if (length(args) == 0) {
-    stop("No arguments provided. Usage: Rscript my_script.R <arg1> <arg2>")
+    stop("No arguments provided. Usage: Rscript my_script.R <arg1> <arg2> <arg3> <arg4>")
 }
 
 # Extract command-line parameters
 num_samples <- as.numeric(args[1])
 fold_change <- as.numeric(args[2])
+data_path <- results_path <- args[3]
+file_prefix <- args[4]
 
-source("/Users/zc/Library/CloudStorage/OneDrive-UCB-O365/Zhang_lab/jade/xcell_results/simulation/functions-3.R")
+source("functions.R")
 
 n_thread <- 4
 registerDoParallel(cores = n_thread)
-
-results_path <- "/Users/zc/Library/CloudStorage/OneDrive-UCB-O365/Zhang_lab/zac/Zac_SHAP/miloR/simulation_benchmarking_results/"
-data_path <- "/Users/zc/Library/CloudStorage/OneDrive-UCB-O365/Zhang_lab/zac/Zac_SHAP/miloR/simulation_benchmarking_data/"
 
 # parameters for generating dummy dataset
 n_cells <- 100 # cells per individual #PER CELLTYPE
@@ -30,10 +29,6 @@ n_individuals <- num_samples # total individuals
 n_batchs <- 4
 prop_sex <- 0.5 # proportion of feature 1 if feature 1 is categorical variable
 prop_disease <- 0.5 # proportion of feature 2 if feature 2 is categorical variable
-# interaction_feature_1="sex"
-# interaction_feature_2="disease"
-# interaction_feature_1="age"
-# interaction_feature_2="bmi"
 fc_increase <- fold_change # proportion of interacted cells which are from people with interacted group
 # interaction_type="specific" # c("specific","differential","opposite")
 seed <- 1234
@@ -122,8 +117,6 @@ pseudo_feature_matrix <- generate_pseudo_features(dummy_data,
     bmi_features = bmi_features,
     batch_features = batch_features,
     individual_features = individual_features,
-
-    # 各属性の割合の最大値を定義
     cluster_ratio = cluster_ratio,
     disease_ratio = disease_ratio,
     sex_ratio = sex_ratio,
@@ -198,9 +191,6 @@ ggsave(
     plot = last_plot(), device = "pdf", path = results_path, width = 50, height = 20, units = "cm", dpi = 500
 )
 
-
-
-
 # UMAP
 umap_res <- uwot::umap(pseudo_pcs_matrix,
     n_neighbors = n_neighbors,
@@ -213,8 +203,6 @@ umap_res <- umap_res %>%
     as.data.frame()
 
 dummy_data_with_umap <- cbind(dummy_data, umap_res)
-
-
 
 dummy_data$condition_val <- as.numeric(dummy_data[, disease_col])
 
@@ -649,54 +637,15 @@ ggsave(
 )
 
 # save data lol
-nam_file_name <- paste0(
-    data_path,
-    "simulated_pc_NAM_HARMONIZED_jade_woi_advanced",
-    "_numCell", n_cells,
-    "_numSamp", n_individuals,
-    "_sd", sd_celltypes,
-    "_fci", fc_increase,
-    "_clusterRatio", cluster_ratio,
-    "_diseaseRatio", disease_ratio,
-    ".csv"
-)
+# Save data with filenames using the provided prefix
+nam_file_name <- paste0(data_path, file_prefix, "_nam_HARMONIZED.csv")
 write.csv(harmonized_NAM, file = nam_file_name, row.names = FALSE, col.names = TRUE)
 
-pseudo_feature_file_name <- paste0(
-    data_path,
-    "simulated_pseudo_feature_jade_woi_advanced",
-    "_numCell", n_cells,
-    "_numSamp", n_individuals,
-    "_sd", sd_celltypes,
-    "_fci", fc_increase,
-    "_clusterRatio", cluster_ratio,
-    "_diseaseRatio", disease_ratio,
-    ".csv"
-)
+pseudo_feature_file_name <- paste0(data_path, file_prefix, "_pseudo_feature.csv")
 write.csv(pseudo_feature_matrix, file = pseudo_feature_file_name, row.names = FALSE, col.names = TRUE)
 
-meta_file_name <- paste0(
-    data_path,
-    "simulated_umap_data_jade_woi_advanced",
-    "_numCell", n_cells,
-    "_numSamp", n_individuals,
-    "_sd", sd_celltypes,
-    "_fci", fc_increase,
-    "_clusterRatio", cluster_ratio,
-    "_diseaseRatio", disease_ratio,
-    ".csv"
-)
+meta_file_name <- paste0(data_path, file_prefix, "_umap_data.csv")
 write.csv(dummy_data_with_umap, file = meta_file_name, row.names = FALSE, col.names = TRUE)
 
-file_name <- paste0(
-    data_path,
-    "simulated_cna_data_jade_woi_advanced",
-    "_numCell", n_cells,
-    "_numSamp", n_individuals,
-    "_sd", sd_celltypes,
-    "_fci", fc_increase,
-    "_clusterRatio", cluster_ratio,
-    "_diseaseRatio", disease_ratio,
-    ".csv"
-)
+file_name <- paste0(data_path, file_prefix, "_cna_data.csv")
 write.csv(nam_res@meta.data$cna_ncorrs_fdr05, file = file_name, row.names = FALSE, col.names = TRUE)

@@ -1,0 +1,14 @@
+# config.yml
+environment: "/opt/anaconda3/envs/zhang_lab"
+log_file: "/Users/zc/Library/CloudStorage/OneDrive-UCB-O365/academics/2024_fall/CSCI_6118/SOM_Seq_Sim/Seq_Sim/zhang_lab/error.log"
+data_file_path: "/Users/zc/Library/CloudStorage/OneDrive-UCB-O365/academics/2024_fall/CSCI_6118/SOM_Seq_Sim/Seq_Sim/zhang_lab/data"
+file_path_to_simulation: "/Users/zc/Library/CloudStorage/OneDrive-UCB-O365/academics/2024_fall/CSCI_6118/SOM_Seq_Sim/Seq_Sim/zhang_lab/simulation.R"
+num_samples:
+  - 10
+  - 20
+  - 30
+fold_changes:
+  - 0.1
+  - 0.75
+  - 1.5
+  - 3
