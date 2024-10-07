@@ -21,3 +21,4 @@ Seq_Sim/notes.md
 __pycache__
 .pytest_cache
 .DS_Store
+.vscode/launch.json
