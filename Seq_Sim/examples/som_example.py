@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 from Seq_Sim.utils.SOM import SOM
 
 train_dat = pd.read_csv("./data/simulation/simulated_pc_NAM_HARMONIZED_jade_woi_advanced_numCell100_numSamp10_sd0.1_fci0.1_clusterRatio0.7_diseaseRatio0.05.csv")
@@ -12,9 +13,12 @@ som = SOM(
     y_dim=6,
     topology="hexagonal",
     neighborhood_fnc="gaussian",
-    epochs=12
+    epochs=2
 )
 
 som.train_map()
 
+som.plot_map_grid(print_neuron_idx=True)
+plt.show()
 
+print("trained")
