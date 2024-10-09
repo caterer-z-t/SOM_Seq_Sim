@@ -1,0 +1,4 @@
+- get juns code and shell script working (simulations.sh)
+- wrapper package for soms in python
+- cahonen package (R), find similar in python
+- visualization functions, usually done in python
