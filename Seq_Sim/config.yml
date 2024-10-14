@@ -88,4 +88,4 @@ files_to_save:
   feature_matrxi: True
   latent_factors: True
   pca: False
-  nam: False
+  cna: False
