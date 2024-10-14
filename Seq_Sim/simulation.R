@@ -34,74 +34,74 @@ n_thread <- config$n_threads
 registerDoParallel(cores = n_thread)
 
 # Extract dummy dataset parameters from YAML config
-n_cells <- config$dummy_dataset_params[[1]]$n_cells
-sd_celltypes <- config$dummy_dataset_params[[2]]$sd_celltypes
-n_major_cell_types <- config$dummy_dataset_params[[3]]$n_major_cell_types
-n_minor_cell_types <- config$dummy_dataset_params[[4]]$n_minor_cell_types
-relative_abundance <- config$dummy_dataset_params[[5]]$relative_abundance
-n_major_diff_celltypes <- config$dummy_dataset_params[[6]]$n_major_diff_celltypes
-n_minor_diff_celltypes <- config$dummy_dataset_params[[7]]$n_minor_diff_celltypes
+n_cells <- config$dummy_dataset_params$n_cells
+sd_celltypes <- config$dummy_dataset_params$sd_celltypes
+n_major_cell_types <- config$dummy_dataset_params$n_major_cell_types
+n_minor_cell_types <- config$dummy_dataset_params$n_minor_cell_types
+relative_abundance <- config$dummy_dataset_params$relative_abundance
+n_major_diff_celltypes <- config$dummy_dataset_params$n_major_diff_celltypes
+n_minor_diff_celltypes <- config$dummy_dataset_params$n_minor_diff_celltypes
 n_individuals <- num_samples # Override with command line
-n_batchs <- config$dummy_dataset_params[[8]]$n_batchs
-prop_sex <- config$dummy_dataset_params[[9]]$prop_sex
-prop_disease <- config$dummy_dataset_params[[10]]$prop_disease
+n_batchs <- config$dummy_dataset_params$n_batchs
+prop_sex <- config$dummy_dataset_params$prop_sex
+prop_disease <- config$dummy_dataset_params$prop_disease
 fc_increase <- fold_change # Override with command line
-seed <- config$dummy_dataset_params[[11]]$seed
-n_features <- config$dummy_dataset_params[[12]]$n_features
+seed <- config$dummy_dataset_params$seed
+n_features <- config$dummy_dataset_params$n_features
 
-cluster_features <- eval(parse(text = config$dummy_dataset_params[[13]]$cluster_features))
-disease_features <- eval(parse(text = config$dummy_dataset_params[[14]]$disease_features))
-sex_features <- eval(parse(text = config$dummy_dataset_params[[15]]$sex_features))
-age_features <- eval(parse(text = config$dummy_dataset_params[[16]]$age_features))
-bmi_features <- eval(parse(text = config$dummy_dataset_params[[17]]$bmi_features))
-batch_features <- eval(parse(text = config$dummy_dataset_params[[18]]$batch_features))
-individual_features <- eval(parse(text = config$dummy_dataset_params[[19]]$individual_features))
+cluster_features <- eval(parse(text = config$dummy_dataset_params$cluster_features))
+disease_features <- eval(parse(text = config$dummy_dataset_params$disease_features))
+sex_features <- eval(parse(text = config$dummy_dataset_params$sex_features))
+age_features <- eval(parse(text = config$dummy_dataset_params$age_features))
+bmi_features <- eval(parse(text = config$dummy_dataset_params$bmi_features))
+batch_features <- eval(parse(text = config$dummy_dataset_params$batch_features))
+individual_features <- eval(parse(text = config$dummy_dataset_params$individual_features))
 
 # Extract variance attributes from YAML config
-cluster_ratio <- config$variance_attributes[[1]]$cluster_ratio
-disease_ratio <- config$variance_attributes[[2]]$disease_ratio
-sex_ratio <- config$variance_attributes[[3]]$sex_ratio
-age_ratio <- config$variance_attributes[[4]]$age_ratio
-bmi_ratio <- config$variance_attributes[[5]]$bmi_ratio
-batch_ratio <- config$variance_attributes[[6]]$batch_ratio
-individual_ratio <- config$variance_attributes[[7]]$individual_ratio
+cluster_ratio <- config$variance_attributes$cluster_ratio
+disease_ratio <- config$variance_attributes$disease_ratio
+sex_ratio <- config$variance_attributes$sex_ratio
+age_ratio <- config$variance_attributes$age_ratio
+bmi_ratio <- config$variance_attributes$bmi_ratio
+batch_ratio <- config$variance_attributes$batch_ratio
+individual_ratio <- config$variance_attributes$individual_ratio
 
 n_pcs <- config$princliple_components
 ratio_variance <- config$ratio_variance
 
 # Extract column information
-cluster_col <- config$column_information[[1]]$cluster_col
-sex_col <- config$column_information[[2]]$sex_col
-age_col <- config$column_information[[3]]$age_col
-bmi_col <- config$column_information[[4]]$bmi_col
-batch_col <- config$column_information[[5]]$batch_col
-disease_col <- config$column_information[[6]]$disease_col
-individual_col <- config$column_information[[7]]$individual_col
+cluster_col <- config$column_information$cluster_col
+sex_col <- config$column_information$sex_col
+age_col <- config$column_information$age_col
+bmi_col <- config$column_information$bmi_col
+batch_col <- config$column_information$batch_col
+disease_col <- config$column_information$disease_col
+individual_col <- config$column_information$individual_col
 
 # Extract UMAP parameters from YAML config
-n_neighbors <- config$umap_params[[1]]$n_neighbors
-metric <- config$umap_params[[2]]$metric
-min_dist <- config$umap_params[[3]]$min_dist
+n_neighbors <- config$umap_params$n_neighbors
+metric <- config$umap_params$metric
+min_dist <- config$umap_params$min_dist
 
 # Downsampling parameter for MASC
-ds_pro <- config$downsampling_param_for_masc[[1]]$ds_pro
+ds_pro <- config$downsampling_param_for_masc$ds_pro
 
 # Extract CNA parameters from YAML config
-test_var <- config$params_for_cna[[1]]$test_var
-samplem_key <- config$params_for_cna[[2]]$samplem_key
-graph_use <- config$params_for_cna[[3]]$graph_use
-batches <- config$params_for_cna[[4]]$batches
-nsteps <- config$params_for_cna[[5]]$nsteps
-verbose <- config$params_for_cna[[6]]$verbose
-assay <- config$params_for_cna[[7]]$assay
-key <- config$params_for_cna[[8]]$key
-maxnsteps <- config$params_for_cna[[9]]$maxnsteps
-max_frac_pcs <- config$params_for_cna[[10]]$max_frac_pcs
-ks <- config$params_for_cna[[11]]$ks
-Nnull <- config$params_for_cna[[12]]$Nnull
-force_permute_all <- config$params_for_cna[[13]]$force_permute_all
-local_test <- config$params_for_cna[[14]]$local_test
-return_nam <- config$params_for_cna[[15]]$return_nam
+test_var <- config$params_for_cna$test_var
+samplem_key <- config$params_for_cna$samplem_key
+graph_use <- config$params_for_cna$graph_use
+batches <- config$params_for_cna$batches
+nsteps <- config$params_for_cna$nsteps
+verbose <- config$params_for_cna$verbose
+assay <- config$params_for_cna$assay
+key <- config$params_for_cna$key
+maxnsteps <- config$params_for_cna$maxnsteps
+max_frac_pcs <- config$params_for_cna$max_frac_pcs
+ks <- config$params_for_cna$ks
+Nnull <- config$params_for_cna$Nnull
+force_permute_all <- config$params_for_cna$force_permute_all
+local_test <- config$params_for_cna$local_test
+return_nam <- config$params_for_cna$return_nam
 
 
 # Source the function script (assumed to be present at the path specified in YAML)
@@ -655,15 +655,22 @@ ggsave(
 )
 
 # save data lol
-# Save data with filenames using the provided prefix
-nam_file_name <- paste0(data_path, file_prefix, "_nam_HARMONIZED.csv")
-write.csv(harmonized_NAM, file = nam_file_name, row.names = FALSE, col.names = TRUE)
+if (config$files_to_save$pca) {
+    nam_file_name <- paste0(data_path, file_prefix, "_nam_HARMONIZED.csv")
+    write.csv(harmonized_NAM, file = nam_file_name, row.names = FALSE)
+}
 
-pseudo_feature_file_name <- paste0(data_path, file_prefix, "_pseudo_feature.csv")
-write.csv(pseudo_feature_matrix, file = pseudo_feature_file_name, row.names = FALSE, col.names = TRUE)
+if (config$files_to_save$feature_matrix) {
+    pseudo_feature_file_name <- paste0(data_path, file_prefix, "_pseudo_feature.csv")
+    write.csv(pseudo_feature_matrix, file = pseudo_feature_file_name, row.names = FALSE)
+}
 
-meta_file_name <- paste0(data_path, file_prefix, "_umap_data.csv")
-write.csv(dummy_data_with_umap, file = meta_file_name, row.names = FALSE, col.names = TRUE)
+if (config$files_to_save$latent_factors) {
+    meta_file_name <- paste0(data_path, file_prefix, "_umap_data.csv")
+    write.csv(dummy_data_with_umap, file = meta_file_name, row.names = FALSE)
+}
 
-file_name <- paste0(data_path, file_prefix, "_cna_data.csv")
-write.csv(nam_res@meta.data$cna_ncorrs_fdr05, file = file_name, row.names = FALSE, col.names = TRUE)
+if (config$files_to_save$cna) {
+    file_name <- paste0(data_path, file_prefix, "_cna_data.csv")
+    write.csv(nam_res@meta.data$cna_ncorrs_fdr05, file = file_name, row.names = FALSE)
+}

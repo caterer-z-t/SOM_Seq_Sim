@@ -3,19 +3,10 @@
 .RData
 .Rhistory
 *.Rproj
-
-# Example data, people should download this themselves from github
-# please follow the information in the README.md file
-/microbiome-metabolome-curated-data
-
-# Generated figures 
-/figures
-
-# Generated Sequencing Data
-Seq_Sim/gen_seq_data
-Seq_Sim/config.yaml
+*.Rproj.user
 
 *.csv
+*.log
 
 # Generated cache files from running the code
 __pycache__
