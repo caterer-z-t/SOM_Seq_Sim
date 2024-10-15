@@ -1,5 +1,5 @@
 import pandas as pd
-from Seq_Sim.utils.SOM import SOM
+from SOM.utils.SOM import SOM
 
 # Training data: Only considering two features here. This data has already undergone PCA and so 
 # there aren't really any patterns between the features. This is more just a proof of concept
