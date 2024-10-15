@@ -6,7 +6,6 @@
 *.Rproj.user
 
 
-<<<<<<< HEAD
 # Generated figures 
 /figures
 
@@ -15,10 +14,8 @@ Seq_Sim/gen_seq_data
 Seq_Sim/config.yaml
 Seq_Sim/exp.ipynb
 Seq_Sim/notes.md
-=======
 *.csv
 *.log
->>>>>>> origin/zac
 
 # Generated cache files from running the code
 __pycache__

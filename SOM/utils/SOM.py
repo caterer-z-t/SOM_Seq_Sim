@@ -1,5 +1,5 @@
 import os
-from typing import Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -8,6 +8,7 @@ import matplotlib.figure
 from minisom import MiniSom
 import numpy as np
 import pandas as pd
+import seaborn as sns
 
 
 class SOM():
@@ -43,6 +44,7 @@ class SOM():
         self.weights = None
         self.weights_scaled = None
 
+
     def train_map(self):
         """_
         Train the SOM and extract neuron coordinates, weights, and observation mappings
@@ -76,23 +78,28 @@ class SOM():
         self.weights_scaled = self._get_weights()
         self.weights = self._unscale(self.weights_scaled)
 
+
     def _zscore_scale(self):
         means = np.mean(self.train_dat, axis=0)
         stds = np.std(self.train_dat, axis=0)
         return (self.train_dat - means) / stds, [means, stds]
+
 
     def _minmax_scale(self):
         min_vals = np.min(self.train_dat, axis=0)
         max_vals = np.max(self.train_dat, axis=0)
         return (self.train_dat - min_vals) / (max_vals - min_vals), [min_vals, max_vals]
 
+
     def _zscore_unscale(self, scaled_data):
         means, stds = self._scaling_factors
         return scaled_data * stds + means
 
+
     def _minmax_unscale(self, scaled_data):
         min_vals, max_vals = self._scaling_factors
         return scaled_data * (max_vals - min_vals) + min_vals
+
 
     def _get_observation_neuron_mappings(self):
         """
@@ -109,6 +116,7 @@ class SOM():
             dims=(self.xdim, self.ydim)
         )
         return winner_neuron
+
 
     def _get_neuron_coordinates(self):
         """
@@ -131,22 +139,16 @@ class SOM():
             'y': y_coords
         })
 
+
     def _get_weights(self):
         """
         Get the weights of each neuron after training on scaled data.
         """
-        # weights_scaled = []  # "scaled" since trained on scaled data
-        # for i in range(self.x_dim * self.ydim):
-        #     neuron_idx = np.unravel_index(i, (self.x_dim, self.ydim))
-        #     row, col = neuron_idx[0], neuron_idx[1]
-        #     weight_scaled = som.get_weights()[row, col, :]
-        #     weights_scaled.append(weight_scaled)
-        # weights_scaled = pd.DataFrame(weights_scaled)
-
         weights_scaled = [
             self.map.get_weights()[i, j, :] for i in range(self.xdim) for j in range(self.ydim)
         ]
         return pd.DataFrame(weights_scaled)
+
 
     def plot_component_planes(
         self,
@@ -182,7 +184,7 @@ class SOM():
                     fill_color=neuron_fill_color,
                     edge_color='none'
                 )
-       
+
             SOM._add_colorbar(
                 fig=fig,
                 value_range=feature_weights_range,
@@ -190,9 +192,62 @@ class SOM():
             )
             fig.suptitle(f"Feature {feature_idx}", y=0.95)
             plt.savefig(os.path.join(output_dir, f"feature{feature_idx}_component_plane.png"))
+            plt.close(fig)
+
+
+    def plot_categorical_data(
+        self,
+        output_dir: str
+    ):
+        """
+        Plot of the SOM where each neuron is represented by a pie chart showing the proportion of
+        different categories contained within that neuron. Note: The SOM was not trained on these
+        data.
+        """
+        for feature_idx in range(self.other_dat.shape[1]):
+
+            # Initialize the figure and axis for the SOM map grid.
+            fig, ax = self.plot_map_grid()
+
+            # Get unique categories and their associated colors.
+            categories = np.unique(self.other_dat[:, feature_idx])
+            category_colors = SOM._get_distinct_colors(categories)
+
+            # Calculate category proportions for each neuron.
+            category_neuron = pd.DataFrame({
+                "Neuron": self.observation_mapping,
+                "Category": self.other_dat[:, feature_idx]
+            })
+            counts = category_neuron.groupby(['Neuron', 'Category']).size().unstack(fill_value=0)
+            counts = counts.reindex(self.neuron_coordinates.index, fill_value=0)
+            category_proportions = counts.div(counts.sum(axis=1), axis=0)
+
+            # Plot pie charts at each neuron's coordinates.
+            for idx, (x, y) in self.neuron_coordinates[['x', 'y']].iterrows():
+
+                proportions = category_proportions.loc[idx]
+                colors = [category_colors[cat] for cat in proportions.index]
+
+                ax.pie(
+                    proportions,
+                    colors=colors,
+                    center=(x, y),
+                    radius=0.5,
+                    wedgeprops=dict(edgecolor='black')
+                )
+            ax.set_aspect('equal')
+            ax.set_xlim([-1.5, self.xdim])
+            ax.set_ylim([-1, self.ydim - 0.5])
+
+            # Save the plot with a title for the current feature.
+            fig.suptitle(f"Feature {feature_idx}", y=0.95)
+            output_path = os.path.join(output_dir, f"Feature{feature_idx}_category_proportions.png")
+            plt.savefig(output_path)
+            plt.close(fig)
+
 
     def plot_map_grid(
-        self, 
+        self,
         print_neuron_idx: bool = False
     ) -> Tuple[plt.Figure, plt.Axes]:
         """
@@ -300,3 +355,22 @@ class SOM():
             labelpad=10
         )
         cbar.ax.tick_params(labelsize=14)
+
+
+    @staticmethod
+    def _get_distinct_colors(
+        categories: List[str]
+    ) -> Dict[str, str]:
+        """
+        Get a list of n distinct colors using a seaborn color palette.
+
+        Arguements:
+            Categories (List[str]): The number of colors required.
+
+        Returns:
+            Dict[str, str]: A dictionary mapping each category to a color.
+        """
+        palette = sns.color_palette('tab20', len(categories))
+        palette = palette.as_hex()
+
+        return {categories[i]: palette[i] for i in range(len(categories))}
