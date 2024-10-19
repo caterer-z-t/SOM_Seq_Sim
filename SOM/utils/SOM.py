@@ -1,3 +1,8 @@
+"""
+This module define Self-Organize Map (SOM) with asociated attributions, 
+mainly training, gettting obseravation, and plotting SOM graph.
+"""
+
 import os
 from typing import Dict, List, Tuple, Union
 
@@ -12,6 +17,9 @@ import seaborn as sns
 
 
 class SOM():
+    """
+    Building SOM Architecture and its methods.
+    """
     def __init__(
         self,
         train_dat: Union[pd.DataFrame, np.ndarray],
@@ -23,6 +31,7 @@ class SOM():
         neighborhood_fnc: str,
         epochs: int
     ):
+        # converting Panda dataframe into Numpy array 
         self.train_dat = train_dat.to_numpy() if isinstance(train_dat, pd.DataFrame) else train_dat
         self.other_dat = other_dat.to_numpy() if isinstance(other_dat, pd.DataFrame) else other_dat
 
@@ -56,14 +65,17 @@ class SOM():
             x=self.xdim,
             y=self.ydim,
             input_len=n_features,
-            sigma=1,
-            learning_rate=0.5,
-            neighborhood_function=self.neighborhood_fnc,
+            sigma=1, #related to the how many neighbors are considered
+            learning_rate=0.5, # define how much weight is adjusted
+            neighborhood_function=self.neighborhood_fnc, # defined neighborhood function
             topology=self.topology,
-            activation_distance='euclidean',
+            activation_distance='euclidean', # method for distance calculation
             random_seed=0
         )
+
+        # principle_component_analysis for weight initialization
         som.pca_weights_init(self.train_dat_scaled)
+        # SOM training
         som.train(
             data=self.train_dat_scaled,
             num_iteration=self.epochs * n_samples,
@@ -80,23 +92,45 @@ class SOM():
 
 
     def _zscore_scale(self):
+        """
+        Z_score calculation: (orignal data - mean) / (standard deviation)
+        The mean and standard deviation from original data are used for scaling.
+        Args:
+            self: original training data in numpy array
+        Returns:
+            scaled data, [mean, stds]
+        """
         means = np.mean(self.train_dat, axis=0)
         stds = np.std(self.train_dat, axis=0)
         return (self.train_dat - means) / stds, [means, stds]
 
 
     def _minmax_scale(self):
+        """
+        minmax_score calculation: (orignal data - min) / (max - min)
+        It determine minimum and maximum values from the data and cooperate that into scaling.
+        Args:
+            self: original training data in numpy array
+        Returns:
+            scaled data, [min, max]
+        """
         min_vals = np.min(self.train_dat, axis=0)
         max_vals = np.max(self.train_dat, axis=0)
         return (self.train_dat - min_vals) / (max_vals - min_vals), [min_vals, max_vals]
 
 
     def _zscore_unscale(self, scaled_data):
+        """
+        Reverse scaled to unscaled data z_score
+        """
         means, stds = self._scaling_factors
         return scaled_data * stds + means
 
 
     def _minmax_unscale(self, scaled_data):
+        """
+        Reverse scaled to unscaled data minmax_score
+        """
         min_vals, max_vals = self._scaling_factors
         return scaled_data * (max_vals - min_vals) + min_vals
 
