@@ -1,5 +1,7 @@
 # SOM_Seq_Sim
 
+<img src="assets/som_package_logo.png" alt="SOM SIM SEQ Logo" width="25%">
+
 Implementation for Self-Organizing Maps on Simulated Genetic Sequencing Datasets
 
 ## Title

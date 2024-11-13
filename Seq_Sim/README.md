@@ -105,3 +105,4 @@ B. through the `simulation.sh` shell script.
 
 
 
+Rscript /Users/zc/Library/CloudStorage/OneDrive-UCB-O365/academics/2024_fall/CSCI_6118/SOM_Seq_Sim/Seq_Sim/simulation.R 10 3 /Users/zc/Library/CloudStorage/OneDrive-UCB-O365/academics/2024_fall/CSCI_6118/SOM_Seq_Sim/Seq_Sim/config.yml
