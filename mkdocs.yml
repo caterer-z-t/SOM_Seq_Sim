@@ -8,7 +8,8 @@ theme: readthedocs
 nav:
   - Home: index.md
   - Pipelines:
-    - Motility: pipelines/motility.md
+    - Sequence Simulation: pipelines/seq_sim.md
+  - Github: https://github.com/caterer-z-t/SOM_Seq_Sim
 
 plugins:
   - search
