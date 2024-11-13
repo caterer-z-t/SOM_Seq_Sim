@@ -85,7 +85,7 @@ params_for_cna:
   return_nam: TRUE
 
 files_to_save:
-  feature_matrxi: True
+  feature_matrix: True
   latent_factors: True
   pca: False
   cna: False
