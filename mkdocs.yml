@@ -7,9 +7,14 @@ theme: readthedocs
 
 nav:
   - Home: index.md
+  - Data Overview: data_overview.md
   - Pipelines:
     - Sequence Simulation: pipelines/seq_sim.md
-  - Github: https://github.com/caterer-z-t/SOM_Seq_Sim
+  - How-To Guides:
+    - Guide 1: tutorial1.md
+    - Guide 2: tutorial2.md
+  - Link to Github: https://github.com/caterer-z-t/SOM_Seq_Sim
+  - References & Acknowledgements: references.md
 
 plugins:
   - search
