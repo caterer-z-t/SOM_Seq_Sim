@@ -1,8 +1,7 @@
 log_file: "error.log"
 data_file_path: "./data/"
-figures_path: "./figures/"
-file_path_to_simulation: "simulation.R"
-functions_script_path: "function.R"
+file_path_to_simulation: "Seq_Sim/seq_sim.py"
+functions_script_path: "Seq_Sim/utils/seq_sim_utils.py"
 file_prefix: "sim_data"
 
 num_samples:
@@ -30,62 +29,17 @@ dummy_dataset_params:
   prop_disease: 0.5 # proportion of feature 2 if feature 2 is categorical variable
   seed: 1234
   n_features: 1000
-  cluster_features: 1:200
-  disease_features: 1:200
-  sex_features: 1:200 # seq(2, 20, by = 2)
-  age_features: 1:200 # seq(2, 10, by = 2)
-  bmi_features: 1:200 # seq(11, 20, by = 2)
-  batch_features: 1:200 # seq(1, 20,by = 2)
-  individual_features: 1:200 # seq(1, 20,by = 2)
 
 variance_attributes: 
   cluster_ratio: 0.7
-  disease_ratio: 0.05
-  sex_ratio: 0.05 # 0.05
-  age_ratio: 0.05 # 0.05
-  bmi_ratio: 0.05 # 0.05
-  batch_ratio: 0.05 # 0.1
-  individual_ratio: 0.05 # 0.1
 
-princliple_components: 20
 ratio_variance: 0.1
 
 column_information:
   cluster_col: "cell_type"
-  sex_col: "sex"
-  age_col: "age"
-  bmi_col: "bmi"
-  batch_col: "batch"
   disease_col: "disease"
   individual_col: "subject_id"
-
-umap_params:
-  n_neighbors: 30
-  metric: "cosine"
-  min_dist: 0.01
-
-downsampling_param_for_masc:
-  ds_pro: 1
-
-params_for_cna:
-  test_var: "condition_val"
-  samplem_key: "subject_id"
-  graph_use: "RNA_nn"
-  batches: "batch"
-  nsteps: NULL
-  verbose: TRUE
-  assay: NULL
-  key: "NAMPC_"
-  maxnsteps: 15
-  max_frac_pcs: 0.15
-  ks: NULL
-  Nnull: 1000
-  force_permute_all: FALSE
-  local_test: TRUE
-  return_nam: TRUE
 
 files_to_save:
   feature_matrix: True
   latent_factors: True
-  pca: False
-  cna: False
