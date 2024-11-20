@@ -80,9 +80,9 @@ This project depends on several libraries and software packages. You can find th
 Alternatively, you can run:
   ``` bash
   python /Seq_Sim/seq_sim.py \ 
-        30                   \ # num samples 
-        0.5                  \ # fold change between disease and healthy samples 
-        /Seq_Sim/config.yml    # configuration file
+        --num_samples 30                   \ # num samples 
+        --fold_change 0.5                  \ # fold change between disease and healthy samples 
+        --config_file /Seq_Sim/config.yml    # configuration file
   ```
 
 By default, the output CSV files will be saved in the `SOM_Seq_Sim/data/` directory.
