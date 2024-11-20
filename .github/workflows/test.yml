@@ -28,7 +28,7 @@ jobs:
       - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v2
         with:
-          python-version: 3.9
+          python-version: 3.12
           auto-update-conda: true
           environment-file: env.yml
           activate-environment: som-sim-env
