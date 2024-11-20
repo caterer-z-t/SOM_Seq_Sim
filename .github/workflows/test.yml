@@ -17,18 +17,18 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
 
     steps:
       # Checkout the repository
       - name: Check out repository
         uses: actions/checkout@v3
 
-      # Set up Python version using Conda
+      # Set up Conda
       - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v2
         with:
-          python-version: 3.9
+          python-version: 3.12
           auto-update-conda: true
           environment-file: env.yml
           activate-environment: som-sim-env
@@ -37,8 +37,15 @@ jobs:
       - name: Print Conda Environment Info
         run: conda info --envs
 
+      # Install pytest if it's not in the environment.yml
+      - name: Install pytest
+        run: |
+          conda activate som-sim-env
+          conda install pytest
+
       # Run tests with pytest
       - name: Run tests with pytest
         run: |
+          conda activate som-sim-env
           export PYTHONPATH=$(pwd)
           pytest test/ -v

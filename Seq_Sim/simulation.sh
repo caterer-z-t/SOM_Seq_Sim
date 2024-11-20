@@ -29,7 +29,7 @@ set -e
 log_file=$(yq e '.log_file' $config_file)
 num_samples=($(yq e '.num_samples[]' $config_file))
 fold_changes=($(yq e '.fold_changes[]' $config_file))
-r_script_file=$(yq e '.file_path_to_simulation' $config_file)
+seq_sim=$(yq e '.file_path_to_simulation' $config_file)
 
 
 # Ensure log file exists
@@ -53,6 +53,6 @@ for num_samp in "${num_samples[@]}"; do
         file_prefix="sim${num_samp}_fc${fold_change}"
         
         # Run the R script with additional arguments for filenames
-        Rscript "$r_script_file" "$num_samp" "$fold_change" "$config_file"
+        python "$seq_sim" --num_samples "$num_samp" --fold_change "$fold_change" --config_file "$config_file"
     done
 done
