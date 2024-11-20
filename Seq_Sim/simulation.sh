@@ -53,6 +53,6 @@ for num_samp in "${num_samples[@]}"; do
         file_prefix="sim${num_samp}_fc${fold_change}"
         
         # Run the R script with additional arguments for filenames
-        python "$seq_sim" "$num_samp" "$fold_change" "$config_file"
+        python "$seq_sim" --num_samples "$num_samp" --fold_change "$fold_change" --config_file "$config_file"
     done
 done
