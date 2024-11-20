@@ -24,7 +24,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
-      # Set up Python version using Conda
+      # Set up Conda
       - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v2
         with:
@@ -37,8 +37,15 @@ jobs:
       - name: Print Conda Environment Info
         run: conda info --envs
 
+      # Install pytest if it's not in the environment.yml
+      - name: Install pytest
+        run: |
+          conda activate som-sim-env
+          conda install pytest
+
       # Run tests with pytest
       - name: Run tests with pytest
         run: |
+          conda activate som-sim-env
           export PYTHONPATH=$(pwd)
           pytest test/ -v
