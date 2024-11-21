@@ -22,24 +22,24 @@ Seq_Sim/
 │   └── seq_sim_utils.py        # Utility functions for handling configuration, validation, and feature generation
 ├── simulation.sh               # Shell script to run simulations with various parameters
 ├── config.yml                  # Configuration file containing simulation parameters
-├── seq_sim.py                  # Python file which calls all the utility functions
+└── seq_sim.py                  # Python file which calls all the utility functions
 ```
 
 ### File Descriptions
 
 1. **`seq_sim.py`**:
    - This Python script is the main entry point for the simulation. It handles loading configuration files, validating arguments, and calling functions to generate the synthetic dataset based on user-specified parameters (e.g., number of samples, fold change).
-   - **Main functions**:
+     - **Main functions used from `utils/seq_sim_utils.py`**:
      - `arg_parser()`: Parses command-line arguments.
      - `validate_arguments()`: Validates the provided arguments.
      - `load_config()`: Loads the YAML configuration file.
      - `generate_and_save_features()`: Simulates data based on the parameters and saves the output.
 
-2. **`seq_sim_utils.py`**:
+2. **`utils/seq_sim_utils.py`**:
    - This utility script contains helper functions for reading the configuration file, validating inputs, and generating data. The functions make it easier to modularize the code and keep the main script clean and readable.
 
 3. **`simulation.sh`**:
-   - This is a shell script that automates the running of the simulation. It reads parameters from the YAML configuration file and executes the Python simulation script with different combinations of `num_samples` and `fold_changes`.
+   - This is a shell script that automates the running of the simulation. It reads parameters from the YAML configuration file and executes the Python simulation script with different combinations of `num_samples`, `fold_changes`, and `config.yml`.
    - The script also handles logging by writing the simulation results to a log file and ensures that the necessary file permissions are set.
 
 4. **`config.yml`**:
@@ -49,6 +49,55 @@ Seq_Sim/
      - `fold_changes`: A list of fold change values that will be used in the simulation.
      - `log_file`: Path to the log file where errors and output are saved.
      - `file_path_to_simulation`: Path to the `seq_sim.py` script, relative to the `Seq_Sim/` directory.
+   
+   - Example of the structure and layout of this configuration file is shown below. 
+   ``` yaml
+   log_file: "error.log"
+   data_file_path: "./data/"
+   file_path_to_simulation: "Seq_Sim/seq_sim.py"
+   functions_script_path: "Seq_Sim/utils/seq_sim_utils.py"
+   file_prefix: "sim_data"
+
+   num_samples:
+   - 10
+   - 20
+   - 30
+   fold_changes:
+   - 0.1
+   - 0.75
+   - 1.5
+   - 3
+
+   n_threads: 4
+
+   dummy_dataset_params:
+   n_cells: 100 # cells per individual #PER CELLTYPE
+   sd_celltypes: 0.1 # standard deviation of number of cells
+   n_major_cell_types: 7
+   n_minor_cell_types: 3
+   relative_abundance: 0.4 # ratio between major and rare
+   n_major_diff_celltypes: 1
+   n_minor_diff_celltypes: 1
+   n_batchs: 4
+   prop_sex: 0.5 # proportion of feature 1 if feature 1 is categorical variable
+   prop_disease: 0.5 # proportion of feature 2 if feature 2 is categorical variable
+   seed: 1234
+   n_features: 1000
+
+   variance_attributes: 
+   cluster_ratio: 0.7
+
+   ratio_variance: 0.1
+
+   column_information:
+   cluster_col: "cell_type"
+   disease_col: "disease"
+   individual_col: "subject_id"
+
+   files_to_save:
+   feature_matrix: True
+   latent_factors: True
+   ```
 
 ## How It Works
 
@@ -77,7 +126,7 @@ Seq_Sim/
    ```
 
 2. **Configuration**:
-   The `config.yml` file contains all the necessary parameters for the simulation, including the path to the simulation Python script, the number of samples, fold changes, and more. You can modify this file to adjust the simulation settings.
+   The `config.yml` file contains all the necessary parameters for the simulation, including the path to the simulation Python script, the number of samples, fold changes, and more. You can modify this file to adjust the simulation settings. See [File Descriptions](#file-descriptions) or [config.yml](config.yml) for more information. 
 
 3. **Run the Simulation**:
    After ensuring that the Conda environment is activated and the configuration is set, you can run the simulation by executing the `simulation.sh` script:
@@ -89,11 +138,11 @@ Seq_Sim/
    This will run the simulation using the parameters specified in the `config.yml` file.
 
    Alternatively, you can run
-   ```bash 
+   ``` bash 
    python seq_sim.py \ 
         --num_samples 30                   \ # num samples 
         --fold_change 0.5                  \ # fold change between disease and healthy samples 
-        --config_file /Seq_Sim/config.yml    # configuration file
+        --config_file <path_to_config_file>    # configuration file
     ```
 
 ### Customizing the Simulation
