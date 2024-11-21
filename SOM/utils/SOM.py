@@ -1,6 +1,42 @@
 """
-This module define Self-Organize Map (SOM) with asociated attributions, 
-mainly training, gettting obseravation, and plotting SOM graph.
+Self-Organizing Maps (SOMs) Module
+===================================
+
+What is a Self-Organizing Map?
+------------------------------
+A Self-Organizing Map (SOM) is a type of unsupervised artificial neural network used to group and 
+visualize data points that are similar to each other. What makes SOMs unique is that they visualize
+these groups (or clusters) in simple 2D grid configuration, even though the original data that they
+represent is high-dimensional. This makes SOMs very useful for exploring and discovering hidden
+patterns with complex datasets.
+
+How Does a SOM Work?
+--------------------
+- The 2D Grid: A SOM is visualized as a grid of "neurons," arranged in rows and columns. Each
+  neuron represents a part of the dataset being modeled.
+  
+- Weight Vectors: Behind the scenes, each neuron is associated with a "weight vector." This weight
+  vector has the same number of dimensions as the original data. Think of the weight vector as the
+  neuron's "position" in the high-dimensional space, summarizing the features of the data it
+  represents.
+
+- Training the SOM: During training, the SOM adjusts the weight vectors of the neurons to better
+  represent the dataset. When a neuron's weight vector is updated, its neighboring neurons on the
+  grid are also updated. This ensures that similar data points are mapped to nearby neurons on the
+  grid, preserving the topology of the dataset.
+
+- Mapping Data Points to the Grid: For each data point, the SOM calculates how "close" it is to
+  each neuron's weight vector using a distance metric (e.g., Euclidean distance). The data point is
+  then assigned to the neuron with the closest weight vector. This process transforms the high-
+  dimensional data points into positions on the 2D grid.
+
+How Does a SOM Compare to Other Clustering Methods?
+---------------------------------------------------
+SOMs are similar to k-means clustering in that they group data points by assigning them to a central
+representative (a "neuron" in SOMs, or a "centroid" in k-means). However, SOMs are more structured
+because neurons are part of a grid, and their updates are influenced by neighboring neurons. This
+constraint creates a smooth, organized map where similar clusters are close to each other, making
+SOMs ideal for data visualization.
 """
 
 import os
@@ -18,8 +54,32 @@ import seaborn as sns
 
 class SOM():
     """
-    Building SOM Architecture and its methods.
-    """
+    A class for building, training, and visualizing Self-Organizing Maps (SOMs). This class
+    simplifies the creation and usage of SOMs, providing configurable parameters for training and
+    tools for data scaling and visualization of the trained SOM.
+
+    Attributes (set before training):
+    ---------------------------------
+     - train_dat (np.ndarray): The raw (unscaled) training data used to fit the SOM.
+     - other_dat (np.ndarray): Additional, non-numeric data associated with each data point in 
+      `train_dat`, but not used to train the SOM.
+     - xdim (int): The number of neurons in the x-dimension of the SOM grid.
+     - ydim (int): The number of neurons in the y-dimension of the SOM grid.
+     - topology (str): The topology of the SOM grid ('rectangular' or 'hexagonal', associated
+       with 4 and 6 neighbors, respectively).
+     - neighborhood_fnc (str): The neighborhood function used during training.
+     - epochs (int): The number of training epochs (i.e., how many times the dataset is presented 
+       during the training process).
+
+    Attributes (set after training):
+    --------------------------------
+     - map (MiniSom): The trained MiniSom instance, created after calling `train_map`.
+     - observation_mapping (np.ndarray): The mapping of data points to their closest neurons.
+     - neuron_coordinates (pd.DataFrame): The coordinates of neurons in the SOM grid.
+     - weights (pd.DataFrame): The unscaled weights of each neuron after training.
+     - weights_scaled (pd.DataFrame): The scaled weights of each neuron after training.
+"""
+
     def __init__(
         self,
         train_dat: Union[pd.DataFrame, np.ndarray],
@@ -31,11 +91,11 @@ class SOM():
         neighborhood_fnc: str,
         epochs: int
     ):
-        # converting Panda dataframe into Numpy array 
+        # Convert input data to numpy array
         self.train_dat = train_dat.to_numpy() if isinstance(train_dat, pd.DataFrame) else train_dat
         self.other_dat = other_dat.to_numpy() if isinstance(other_dat, pd.DataFrame) else other_dat
 
-        # Scaling and unscaling methods
+        # Set scaling and unscaling methods
         self._scale = getattr(self, f"_{scale_method}_scale", None)
         self._unscale = getattr(self, f"_{scale_method}_unscale", None)
 
@@ -55,26 +115,39 @@ class SOM():
 
 
     def train_map(self):
-        """_
-        Train the SOM and extract neuron coordinates, weights, and observation mappings
         """
+        Train the Self-Organizing Map on the scaled training data.
+
+        This method initializes the SOM using PCA-based weight initialization and trains it using
+        the specified parameters. It also calculates neuron weights and maps observations to their
+        corresponding neurons.
+
+        Sets the following attributes:
+            - `map`: The trained MiniSom instance.
+            - `observation_mapping`: Mapping of observations to neurons.
+            - `neuron_coordinates`: Coordinates of neurons in the SOM grid.
+            - `weights_scaled`: Scaled weights of each neuron.
+            - `weights`: Unscaled weights of each neuron.
+        """
+
         n_samples = self.train_dat_scaled.shape[0]
         n_features = self.train_dat_scaled.shape[1]
 
         som = MiniSom(
-            x=self.xdim,
-            y=self.ydim,
-            input_len=n_features,
-            sigma=1, #related to the how many neighbors are considered
-            learning_rate=0.5, # define how much weight is adjusted
-            neighborhood_function=self.neighborhood_fnc, # defined neighborhood function
-            topology=self.topology,
-            activation_distance='euclidean', # method for distance calculation
+            x=self.xdim,  # number of neurons in x-dimension
+            y=self.ydim,  # number of neurons in y-dimension
+            input_len=n_features,  # number of features/variables describing each observation
+            sigma=1, #related to the how many neighbors are considered during fitting process
+            learning_rate=0.5,  # define how much weight is adjusted
+            neighborhood_function=self.neighborhood_fnc,  # form of the neighbordhood function
+            topology=self.topology,  # rectangular or hexagonal (4 or 6 neighbors, respectively)
+            activation_distance='euclidean',  # method for distance calculation
             random_seed=0
         )
 
-        # principle_component_analysis for weight initialization
+        # Principle_component_analysis for weight initialization
         som.pca_weights_init(self.train_dat_scaled)
+
         # SOM training
         som.train(
             data=self.train_dat_scaled,
@@ -93,13 +166,15 @@ class SOM():
 
     def _zscore_scale(self):
         """
-        Z_score calculation: (orignal data - mean) / (standard deviation)
-        The mean and standard deviation from original data are used for scaling.
-        Args:
-            self: original training data in numpy array
+        Scale data using z-score normalization.
+
         Returns:
-            scaled data, [mean, stds]
+            Tuple[np.ndarray, List[np.ndarray]]:
+                - (np.ndarray): The scaled data
+                - (List[np.ndarray]): A list containing the means and standard deviations used for
+                  scaling.
         """
+
         means = np.mean(self.train_dat, axis=0)
         stds = np.std(self.train_dat, axis=0)
         return (self.train_dat - means) / stds, [means, stds]
@@ -107,13 +182,15 @@ class SOM():
 
     def _minmax_scale(self):
         """
-        minmax_score calculation: (orignal data - min) / (max - min)
-        It determine minimum and maximum values from the data and cooperate that into scaling.
-        Args:
-            self: original training data in numpy array
+        Scale data using min/max normalization.
+
         Returns:
-            scaled data, [min, max]
+            Tuple[np.ndarray, List[np.ndarray]]:
+                - np.ndarray: The scaled data
+                - List[np.ndarray]: A list containing the minimum and maximum values used for
+                  scaling.
         """
+
         min_vals = np.min(self.train_dat, axis=0)
         max_vals = np.max(self.train_dat, axis=0)
         return (self.train_dat - min_vals) / (max_vals - min_vals), [min_vals, max_vals]
@@ -121,24 +198,45 @@ class SOM():
 
     def _zscore_unscale(self, scaled_data):
         """
-        Reverse scaled to unscaled data z_score
+        Unscale z-score normalized data back to its original scale.
+
+        Args:
+            scaled_data (np.ndarray): Scaled data, often neuron weights returned from the training
+            process.
+
+        Returns:
+            np.ndarray: The unscaled data.
         """
+
         means, stds = self._scaling_factors
         return scaled_data * stds + means
 
 
     def _minmax_unscale(self, scaled_data):
         """
-        Reverse scaled to unscaled data minmax_score
+        Unscale z-score normalized data back to its original scale.
+
+        Args:
+            scaled_data (np.ndarray): Scaled data, often neuron weights returned from the training
+            process.
+
+        Returns:
+            np.ndarray: The unscaled data.
         """
+
         min_vals, max_vals = self._scaling_factors
         return scaled_data * (max_vals - min_vals) + min_vals
 
 
     def _get_observation_neuron_mappings(self):
         """
-        Get the neuron id that each observation in the training data is assigned to
+        Get the neuron id that each observation in `training_dat` is assigned to.
+
+        Returns:
+            np.ndarray: An array where each element corresponds to the ID of the winning neuron for
+            the respective data point.
         """
+
         # Get the x-y coordiantes of the winning neurons
         winner_coordinates = np.array([
             self.map.winner(x) for x in self.train_dat_scaled
@@ -154,8 +252,13 @@ class SOM():
 
     def _get_neuron_coordinates(self):
         """
-        Get the x-y coordinates of the SOM grid's neurons
+        Retrieve the coordinates of all neurons in the SOM grid.
+
+        Returns:
+            pd.DataFrame: A DataFrame containing the x and y coordinates of each neuron, where the
+            first column corresponds to x and the second column corresponds to y.
         """
+
         HEX_CORRECTION = np.sqrt(3)/2
 
         xx, yy = self.map.get_euclidean_coordinates()
@@ -176,8 +279,13 @@ class SOM():
 
     def _get_weights(self):
         """
-        Get the weights of each neuron after training on scaled data.
+        Retrieve the weights of each neuron after training.
+
+        Returns:
+            pd.DataFrame: A DataFrame where each row corresponds to a neuron's weight vector and 
+            the number of columns equal the dimensionality of the original dataset.
         """
+
         weights_scaled = [
             self.map.get_weights()[i, j, :] for i in range(self.xdim) for j in range(self.ydim)
         ]
@@ -186,11 +294,13 @@ class SOM():
 
     def plot_component_planes(
         self,
-        output_dir: str
+        output_dir: str,
+        components: Union[List[int], List[str]]
     ):
         """
         Plot component planes for each feature in the training data and save the figures.
         """
+
         # Color scheme
         cmap = mcolors.LinearSegmentedColormap.from_list(
             name='cmap',
