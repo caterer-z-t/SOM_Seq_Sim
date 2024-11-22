@@ -294,12 +294,29 @@ class SOM():
 
     def plot_component_planes(
         self,
-        output_dir: str,
-        components: Union[List[int], List[str]]
+        output_dir: str
     ):
         """
-        Plot component planes for each feature in the training data and save the figures.
-        """
+        Generate and save component plane plots for each feature in the training data.
+
+        A component plane is a visualization that shows how the values of a specific feature 
+        in `training_dat` are distributed across the SOM grid. Each neuron on the grid is assigned
+        a color based on the value of the feature it represents, allowing you to see patterns and
+        relationships in the data.
+
+        Component planes help in understanding how individual features contribute to the
+        organization of the SOM. By examining these plots, you can:
+            - Identify clusters and trends in specific features.
+            - Compare how different features vary across the grid, potentially highlighting
+              relationships/correlations between features.
+
+        Args:
+            - output_dir (str): The directory where the component plane plots will be saved. 
+
+        Saves:
+            - One plot per feature as a .png file in the specified directory. Each plot displays
+              the SOM grid with neurons colored based on the value of the feature being plotted.
+    """
 
         # Color scheme
         cmap = mcolors.LinearSegmentedColormap.from_list(
@@ -344,10 +361,31 @@ class SOM():
         output_dir: str
     ):
         """
-        Plot of the SOM where each neuron is represented by a pie chart showing the proportion of
-        different categories contained within that neuron. Note: The SOM was not trained on these
-        data.
-        """
+        Generate and save categorical data distribution plots across the SOM grid.
+
+        This method visualizes how the SOM, trained using `train_dat`, organizes the data points
+        relative to the separate, categorical dataset (`other_dat`). While the SOM is trained only
+        on numerical features in `train_dat`, the resulting clustering/organization of the data
+        points may aligns with categories in `other_dat`. By examining these plot, we can explore
+        whether and how the organization of the SOM reflects patterns in these categorical
+        variables.
+
+        Categorical data plots help in assessing whether the SOM's training on numerical data leads
+        to meaningful grouping or separation of associated categorical variables. These plots can:
+            - Reveal clusters of similar categories across the SOM grid.
+            - Provide insights into the relationship between numerical and categorical data.
+            - Suggest whether the SOM's organization inherently captures distinctions present in
+              the categorical dataset.
+
+        Args:
+            - output_dir (str): The directory where the categorical data distribution plots will be
+              saved.
+
+        Saves:
+            - One plot per categorical feature as a .png file in the specified directory. Each plot displays
+              the SOM grid with neurons colored based on the value of the feature being plotted.
+    """
+
         for feature_idx in range(self.other_dat.shape[1]):
 
             # Initialize the figure and axis for the SOM map grid.
@@ -397,6 +435,7 @@ class SOM():
         """
         Plot a blank SOM grid with optional neuron ids
         """
+
         fig, ax = plt.subplots(figsize=(self.xdim, self.ydim))
 
         # Plot each neuron as a circle
