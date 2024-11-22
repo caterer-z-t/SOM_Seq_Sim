@@ -1,3 +1,4 @@
 data/datasimulated_data_numSamp10_foldChange0.1_pseudo_feature.csv filter=lfs diff=lfs merge=lfs -text
 data/sim_data_pseudo_feature.csv filter=lfs diff=lfs merge=lfs -text
 data/sim_data_umap_data.csv filter=lfs diff=lfs merge=lfs -text
+*.psd filter=lfs diff=lfs merge=lfs -text
