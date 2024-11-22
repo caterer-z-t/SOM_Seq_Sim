@@ -80,6 +80,8 @@ class SOM():
      - weights_scaled (pd.DataFrame): The scaled weights of each neuron after training.
 """
 
+    """ Building SOM Architecture and its methods.
+    """
     def __init__(
         self,
         train_dat: Union[pd.DataFrame, np.ndarray],
@@ -294,7 +296,8 @@ class SOM():
 
     def plot_component_planes(
         self,
-        output_dir: str
+        output_dir: str,
+        save: bool = True
     ):
         """
         Generate and save component plane plots for each feature in the training data.
@@ -352,7 +355,8 @@ class SOM():
                 cmap=cmap
             )
             fig.suptitle(f"Feature {feature_idx}", y=0.95)
-            plt.savefig(os.path.join(output_dir, f"feature{feature_idx}_component_plane.png"))
+            if save:
+                plt.savefig(os.path.join(output_dir, f"feature{feature_idx}_component_plane.png"))
             plt.close(fig)
 
 
@@ -424,7 +428,8 @@ class SOM():
             # Save the plot with a title for the current feature.
             fig.suptitle(f"Feature {feature_idx}", y=0.95)
             output_path = os.path.join(output_dir, f"Feature{feature_idx}_category_proportions.png")
-            plt.savefig(output_path)
+            if save:
+                plt.savefig(output_path)
             plt.close(fig)
 
 
@@ -432,8 +437,13 @@ class SOM():
         self,
         print_neuron_idx: bool = False
     ) -> Tuple[plt.Figure, plt.Axes]:
-        """
-        Plot a blank SOM grid with optional neuron ids
+        """ Plot the SOM grid with each neuron as a circle
+
+        Args:
+            print_neuron_idx (bool, optional): Whether to print the neuron index in each neuron. Defaults to False.
+
+        Returns:
+            Tuple[plt.Figure, plt.Axes]: Figure and axis objects for the plot
         """
 
         fig, ax = plt.subplots(figsize=(self.xdim, self.ydim))
@@ -482,8 +492,15 @@ class SOM():
         edge_color: Union[Tuple[float, float, float, float], str],
         radius: float = 0.5
     ):
-        """
-        Draw a circle on the provided ax object at specified coordinates
+        """ Draw a circle on the plot
+
+        Args:
+            ax: Axis object to draw the circle on
+            x (float): X coordinate of the circle
+            y (float): Y coordinate of the circle
+            fill_color (Union[Tuple[float, float, float, float], str]): Fill color of the circle
+            edge_color (Union[Tuple[float, float, float, float], str]): Edge color of the circle
+            radius (float, optional): Radius of the circle. Defaults to 0.5.
         """
         circle = patches.Circle(
                     xy=(x, y),
@@ -499,6 +516,16 @@ class SOM():
         value_range: Tuple[float, float],
         cmap: mcolors.LinearSegmentedColormap
     ) -> Tuple[float, float, float, float]:
+        """ Map a value to a color in a given colormap
+
+        Args:
+            value (float): value to map to a color
+            value_range (Tuple[float, float]): Range of values to normalize the value to
+            cmap (mcolors.LinearSegmentedColormap): Colormap to map the value to
+
+        Returns:
+            Tuple[float, float, float, float]: RGBA color tuple
+        """
 
         # Normalize the value to the range [0, 1]
         normalized_value = (value - value_range[0]) / (value_range[1] - value_range[0])
@@ -512,8 +539,12 @@ class SOM():
         value_range: Tuple[float, float],
         cmap: mcolors.LinearSegmentedColormap
     ):
-        """
-        Add colorbar to component plane figures
+        """ Add a colorbar to the figure
+
+        Args:
+            fig (matplotlib.figure.Figure): Figure to add the colorbar to
+            value_range (Tuple[float, float]): Range of values to normalize the colorbar to
+            cmap (mcolors.LinearSegmentedColormap): Colormap to use for the colorbar
         """
         norm = plt.Normalize(
             vmax=value_range[1],
