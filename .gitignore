@@ -6,6 +6,14 @@
 *.Rproj.user
 
 
+# Generated figures 
+/figures
+
+# Generated Sequencing Data
+Seq_Sim/gen_seq_data
+Seq_Sim/config.yaml
+Seq_Sim/exp.ipynb
+Seq_Sim/notes.md
 *.csv
 *.log
 
@@ -13,4 +21,7 @@
 __pycache__
 .pytest_cache
 .DS_Store
+
+.vscode/launch.json
+.vscode/settings.json
 .coverage

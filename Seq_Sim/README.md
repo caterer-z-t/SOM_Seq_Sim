@@ -17,11 +17,16 @@ Here’s an overview of the key files and their roles:
 
 ``` bash
 Seq_Sim/
-├── seq_sim.py                  # Main Python script for data simulation
 ├── utils/
 │   └── seq_sim_utils.py        # Utility functions for handling configuration, validation, and feature generation
+├── zhang_lab/                  # Code written by the Zhang Lab, the python files in this parent directory were modified from these scripts
+│   ├── function.R              # Utitlity functions for generating the single cell sequencing
+│   ├── simulation.R            # Main R script to call the utility function and create the sequencing datasets and figures
+│   ├── simulation.sh           # Shell script to run simulations with various parameters
+│   └── config.yml              # Configuration file containing simulation parameters
 ├── simulation.sh               # Shell script to run simulations with various parameters
 ├── config.yml                  # Configuration file containing simulation parameters
+├── seq_sim.py                  # Main Python script for data simulation
 └── seq_sim.py                  # Python file which calls all the utility functions
 ```
 
