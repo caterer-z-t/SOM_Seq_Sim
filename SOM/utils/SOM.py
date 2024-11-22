@@ -78,10 +78,8 @@ class SOM():
      - neuron_coordinates (pd.DataFrame): The coordinates of neurons in the SOM grid.
      - weights (pd.DataFrame): The unscaled weights of each neuron after training.
      - weights_scaled (pd.DataFrame): The scaled weights of each neuron after training.
-"""
-
-    """ Building SOM Architecture and its methods.
     """
+
     def __init__(
         self,
         train_dat: Union[pd.DataFrame, np.ndarray],
@@ -232,7 +230,7 @@ class SOM():
 
     def _get_observation_neuron_mappings(self):
         """
-        Get the neuron id that each observation in `training_dat` is assigned to.
+        Get the neuron id that each observation in `train_dat` is assigned to.
 
         Returns:
             np.ndarray: An array where each element corresponds to the ID of the winning neuron for
@@ -303,7 +301,7 @@ class SOM():
         Generate and save component plane plots for each feature in the training data.
 
         A component plane is a visualization that shows how the values of a specific feature 
-        in `training_dat` are distributed across the SOM grid. Each neuron on the grid is assigned
+        in `train_dat` are distributed across the SOM grid. Each neuron on the grid is assigned
         a color based on the value of the feature it represents, allowing you to see patterns and
         relationships in the data.
 
@@ -314,11 +312,11 @@ class SOM():
               relationships/correlations between features.
 
         Args:
-            - output_dir (str): The directory where the component plane plots will be saved. 
+            output_dir (str): The directory where the component plane plots will be saved. 
 
         Saves:
-            - One plot per feature as a .png file in the specified directory. Each plot displays
-              the SOM grid with neurons colored based on the value of the feature being plotted.
+            One plot per feature as a .png file in the specified directory. Each plot displays
+            the SOM grid with neurons colored based on the value of the feature being plotted.
     """
 
         # Color scheme
@@ -382,12 +380,13 @@ class SOM():
               the categorical dataset.
 
         Args:
-            - output_dir (str): The directory where the categorical data distribution plots will be
-              saved.
+            output_dir (str): The directory where the categorical data distribution plots will be
+            saved.
 
         Saves:
-            - One plot per categorical feature as a .png file in the specified directory. Each plot displays
-              the SOM grid with neurons colored based on the value of the feature being plotted.
+            One plot per categorical feature as a .png file in the specified directory. Each plot
+            displays the SOM grid with neurons colored based on the value of the feature being
+            plotted.
     """
 
         for feature_idx in range(self.other_dat.shape[1]):
@@ -437,13 +436,18 @@ class SOM():
         self,
         print_neuron_idx: bool = False
     ) -> Tuple[plt.Figure, plt.Axes]:
-        """ Plot the SOM grid with each neuron as a circle
+        """ 
+        Plot a blank SOM grid where each neuron is represented by a circle.
+
+        This method creates a visual representation of the SOM grid without any feature or category
+        values. Optionally, you can display the index of each neuron within its circle.
 
         Args:
-            print_neuron_idx (bool, optional): Whether to print the neuron index in each neuron. Defaults to False.
+            print_neuron_idx (bool, optional): Whether to display the neuron indices on the plot. 
+            Defaults to False.
 
         Returns:
-            Tuple[plt.Figure, plt.Axes]: Figure and axis objects for the plot
+            Tuple[plt.Figure, plt.Axes]: The matplotlib figure and axis objects for the plot.
         """
 
         fig, ax = plt.subplots(figsize=(self.xdim, self.ydim))
@@ -492,16 +496,20 @@ class SOM():
         edge_color: Union[Tuple[float, float, float, float], str],
         radius: float = 0.5
     ):
-        """ Draw a circle on the plot
+        """ 
+        Draw a circle at the specified coordinates on a matplotlib axis.
 
         Args:
-            ax: Axis object to draw the circle on
-            x (float): X coordinate of the circle
-            y (float): Y coordinate of the circle
-            fill_color (Union[Tuple[float, float, float, float], str]): Fill color of the circle
-            edge_color (Union[Tuple[float, float, float, float], str]): Edge color of the circle
-            radius (float, optional): Radius of the circle. Defaults to 0.5.
+            ax (matplotlib.axes.Axes): The axis object where the circle will be drawn.
+            x (float): The x-coordinate of the circle's center.
+            y (float): The y-coordinate of the circle's center.
+            fill_color (Union[Tuple[float, float, float, float], str]): The color to fill the
+            circle with.
+            edge_color (Union[Tuple[float, float, float, float], str]): The color of the circle's
+            edge.
+            radius (float, optional): The radius of the circle. Defaults to 0.5.
         """
+
         circle = patches.Circle(
                     xy=(x, y),
                     radius=radius,
@@ -516,15 +524,16 @@ class SOM():
         value_range: Tuple[float, float],
         cmap: mcolors.LinearSegmentedColormap
     ) -> Tuple[float, float, float, float]:
-        """ Map a value to a color in a given colormap
+        """ 
+        Map a numeric value to a color using a specified colormap.
 
         Args:
-            value (float): value to map to a color
-            value_range (Tuple[float, float]): Range of values to normalize the value to
-            cmap (mcolors.LinearSegmentedColormap): Colormap to map the value to
+            value (float): The numeric value to map.
+            value_range (Tuple[float, float]): The range of possible values (min, max).
+            cmap (mcolors.LinearSegmentedColormap): The colormap to use for mapping.
 
         Returns:
-            Tuple[float, float, float, float]: RGBA color tuple
+            Tuple[float, float, float, float]: The RGBA color corresponding to the input value.
         """
 
         # Normalize the value to the range [0, 1]
@@ -539,13 +548,16 @@ class SOM():
         value_range: Tuple[float, float],
         cmap: mcolors.LinearSegmentedColormap
     ):
-        """ Add a colorbar to the figure
+        """ 
+        Add a horizontal colorbar to a matplotlib figure.
 
         Args:
-            fig (matplotlib.figure.Figure): Figure to add the colorbar to
-            value_range (Tuple[float, float]): Range of values to normalize the colorbar to
-            cmap (mcolors.LinearSegmentedColormap): Colormap to use for the colorbar
+            fig (matplotlib.figure.Figure): The figure object where the colorbar will be added.
+            value_range (Tuple[float, float]): The range of values (min, max) represented by the
+            colorbar.
+            cmap (mcolors.LinearSegmentedColormap): The colormap to use for the colorbar.
         """
+
         norm = plt.Normalize(
             vmax=value_range[1],
             vmin=value_range[0]
@@ -575,14 +587,17 @@ class SOM():
     def _get_distinct_colors(
         categories: List[str]
     ) -> Dict[str, str]:
+        
         """
-        Get a list of n distinct colors using a seaborn color palette.
+        Generate a dictionary of distinct colors for a list of categories.
 
-        Arguements:
-            Categories (List[str]): The number of colors required.
+        This method uses the seaborn color palette to assign a unique color to each category.
+
+        Args:
+            categories (List[str]): A list of unique category labels.
 
         Returns:
-            Dict[str, str]: A dictionary mapping each category to a color.
+            Dict[str, str]: A dictionary mapping each category to a distinct hex color string.
         """
         palette = sns.color_palette('tab20', len(categories))
         palette = palette.as_hex()
