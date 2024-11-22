@@ -30,7 +30,12 @@ from Seq_Sim.utils.seq_sim_utils import (
 # Test class using unittest
 class TestAddRowsForDiffCells(unittest.TestCase):
 
+    """Test the add_rows_for_diff_cells function.
+    """
+
     def setUp(self):
+        """Prepare mock data for the tests.
+        """
         # Prepare mock data for the tests
         self.celltype_df = pd.DataFrame({
             "subject_id": [1, 2, 3],
@@ -43,6 +48,8 @@ class TestAddRowsForDiffCells(unittest.TestCase):
         })
 
     def test_add_rows_for_diff_cells_no_disease(self):
+        """Test the function with no subjects having the disease.
+        """
         # Test with diff = 2, and no subjects with disease
         dummy_data_no_disease = pd.DataFrame({
             "subject_id": [1, 2, 3],
@@ -58,9 +65,15 @@ class TestAddRowsForDiffCells(unittest.TestCase):
 
 # Test class for generate_cluster_features
 class TestGenerateClusterFeatures(unittest.TestCase):
+    """Test suite for the generate_cluster_features function.
+
+    Args:
+        unittest (TestCase): The base class for test cases.
+    """
 
     def test_generate_cluster_features_normal(self):
-        """Test generate_cluster_features with normal data"""
+        """Test generate_cluster_features with normal data
+    """
         cell_clusters = np.array([0, 1, 2, 1, 0, 2])  # Sample encoded clusters
         unique_clusters = 3  # Number of unique clusters
 
