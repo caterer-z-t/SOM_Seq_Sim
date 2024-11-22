@@ -17,8 +17,7 @@ import seaborn as sns
 
 
 class SOM():
-    """
-    Building SOM Architecture and its methods.
+    """ Building SOM Architecture and its methods.
     """
     def __init__(
         self,
@@ -31,6 +30,18 @@ class SOM():
         neighborhood_fnc: str,
         epochs: int
     ):
+        """Initialize the SOM object with the provided parameters.
+
+        Args:
+            train_dat (Union[pd.DataFrame, np.ndarray]): Data to train the SOM on
+            other_dat (Union[pd.DataFrame, np.ndarray]): Additional data used to plot on the SOM
+            scale_method (str): Method to scale the data. Either 'zscore' or 'minmax'
+            x_dim (int): X dimension of the SOM grid
+            y_dim (int): Y dimension of the SOM grid
+            topology (str): Topology of the SOM grid. Either 'rectangular' or 'hexagonal'
+            neighborhood_fnc (str): Neighborhood function to use during training
+            epochs (int): Number of epochs to train the SOM for
+        """
         # converting Panda dataframe into Numpy array 
         self.train_dat = train_dat.to_numpy() if isinstance(train_dat, pd.DataFrame) else train_dat
         self.other_dat = other_dat.to_numpy() if isinstance(other_dat, pd.DataFrame) else other_dat
@@ -55,8 +66,10 @@ class SOM():
 
 
     def train_map(self):
-        """_
-        Train the SOM and extract neuron coordinates, weights, and observation mappings
+        """ Train the SOM and extract neuron coordinates, weights, and observation mappings
+
+        Args:
+            self: SOM object with training data and parameters
         """
         n_samples = self.train_dat_scaled.shape[0]
         n_features = self.train_dat_scaled.shape[1]
@@ -92,13 +105,14 @@ class SOM():
 
 
     def _zscore_scale(self):
-        """
-        Z_score calculation: (orignal data - mean) / (standard deviation)
+        """ Z_score calculation: (orignal data - mean) / (standard deviation)
         The mean and standard deviation from original data are used for scaling.
+        
         Args:
             self: original training data in numpy array
+        
         Returns:
-            scaled data, [mean, stds]
+            scaled data (z_score), [mean, standard deviation]: mean and standard deviation of the original data
         """
         means = np.mean(self.train_dat, axis=0)
         stds = np.std(self.train_dat, axis=0)
@@ -106,13 +120,14 @@ class SOM():
 
 
     def _minmax_scale(self):
-        """
-        minmax_score calculation: (orignal data - min) / (max - min)
+        """ minmax_score calculation: (orignal data - min) / (max - min)
         It determine minimum and maximum values from the data and cooperate that into scaling.
+        
         Args:
             self: original training data in numpy array
+        
         Returns:
-            scaled data, [min, max]
+            scaled data (minmax_score), [min, max]: minimum and maximum values of the original data
         """
         min_vals = np.min(self.train_dat, axis=0)
         max_vals = np.max(self.train_dat, axis=0)
@@ -120,24 +135,36 @@ class SOM():
 
 
     def _zscore_unscale(self, scaled_data):
-        """
-        Reverse scaled to unscaled data z_score
+        """ Reverse scaled to unscaled data z_score
+
+        Args:
+            scaled_data (numpy array): scaled data
+
+        Returns:
+            unscaled data (z_score): original data
         """
         means, stds = self._scaling_factors
         return scaled_data * stds + means
 
 
     def _minmax_unscale(self, scaled_data):
-        """
-        Reverse scaled to unscaled data minmax_score
+        """ Reverse scaled to unscaled data minmax_score
+
+        Args:
+            scaled_data (numpy array): scaled data
+
+        Returns:
+            unscaled data (minmax_score): original data
         """
         min_vals, max_vals = self._scaling_factors
         return scaled_data * (max_vals - min_vals) + min_vals
 
 
     def _get_observation_neuron_mappings(self):
-        """
-        Get the neuron id that each observation in the training data is assigned to
+        """ Get the neuron id of the winning neuron for each observation in the training data
+
+        Returns:
+            List[int]: List of neuron ids for each observation
         """
         # Get the x-y coordiantes of the winning neurons
         winner_coordinates = np.array([
@@ -153,8 +180,10 @@ class SOM():
 
 
     def _get_neuron_coordinates(self):
-        """
-        Get the x-y coordinates of the SOM grid's neurons
+        """ Get the x-y coordinates of each neuron in the SOM grid
+
+        Returns:
+            pd.DataFrame: DataFrame with columns 'x' and 'y' containing the coordinates
         """
         HEX_CORRECTION = np.sqrt(3)/2
 
@@ -175,8 +204,10 @@ class SOM():
 
 
     def _get_weights(self):
-        """
-        Get the weights of each neuron after training on scaled data.
+        """ Get the weights of each neuron in the SOM grid
+
+        Returns:
+            pd.DataFrame: DataFrame with columns for each feature and rows for each neuron
         """
         weights_scaled = [
             self.map.get_weights()[i, j, :] for i in range(self.xdim) for j in range(self.ydim)
@@ -186,10 +217,14 @@ class SOM():
 
     def plot_component_planes(
         self,
-        output_dir: str
+        output_dir: str,
+        save: bool = True
     ):
-        """
-        Plot component planes for each feature in the training data and save the figures.
+        """ Plot the component planes of the SOM
+
+        Args:
+            output_dir (str): Directory to save the component plane plots
+            save (bool): Whether to save the plots to disk, default is True
         """
         # Color scheme
         cmap = mcolors.LinearSegmentedColormap.from_list(
@@ -225,18 +260,21 @@ class SOM():
                 cmap=cmap
             )
             fig.suptitle(f"Feature {feature_idx}", y=0.95)
-            plt.savefig(os.path.join(output_dir, f"feature{feature_idx}_component_plane.png"))
+            if save:
+                plt.savefig(os.path.join(output_dir, f"feature{feature_idx}_component_plane.png"))
             plt.close(fig)
 
 
     def plot_categorical_data(
         self,
-        output_dir: str
+        output_dir: str,
+        save: bool = True
     ):
-        """
-        Plot of the SOM where each neuron is represented by a pie chart showing the proportion of
-        different categories contained within that neuron. Note: The SOM was not trained on these
-        data.
+        """ Plot the categorical data on the SOM grid
+
+        Args:
+            output_dir (str): Directory to save the plots
+            save (bool): Whether to save the plots to disk, default is True
         """
         for feature_idx in range(self.other_dat.shape[1]):
 
@@ -276,7 +314,8 @@ class SOM():
             # Save the plot with a title for the current feature.
             fig.suptitle(f"Feature {feature_idx}", y=0.95)
             output_path = os.path.join(output_dir, f"Feature{feature_idx}_category_proportions.png")
-            plt.savefig(output_path)
+            if save:
+                plt.savefig(output_path)
             plt.close(fig)
 
 
@@ -284,8 +323,13 @@ class SOM():
         self,
         print_neuron_idx: bool = False
     ) -> Tuple[plt.Figure, plt.Axes]:
-        """
-        Plot a blank SOM grid with optional neuron ids
+        """ Plot the SOM grid with each neuron as a circle
+
+        Args:
+            print_neuron_idx (bool, optional): Whether to print the neuron index in each neuron. Defaults to False.
+
+        Returns:
+            Tuple[plt.Figure, plt.Axes]: Figure and axis objects for the plot
         """
         fig, ax = plt.subplots(figsize=(self.xdim, self.ydim))
 
@@ -333,8 +377,15 @@ class SOM():
         edge_color: Union[Tuple[float, float, float, float], str],
         radius: float = 0.5
     ):
-        """
-        Draw a circle on the provided ax object at specified coordinates
+        """ Draw a circle on the plot
+
+        Args:
+            ax: Axis object to draw the circle on
+            x (float): X coordinate of the circle
+            y (float): Y coordinate of the circle
+            fill_color (Union[Tuple[float, float, float, float], str]): Fill color of the circle
+            edge_color (Union[Tuple[float, float, float, float], str]): Edge color of the circle
+            radius (float, optional): Radius of the circle. Defaults to 0.5.
         """
         circle = patches.Circle(
                     xy=(x, y),
@@ -350,6 +401,16 @@ class SOM():
         value_range: Tuple[float, float],
         cmap: mcolors.LinearSegmentedColormap
     ) -> Tuple[float, float, float, float]:
+        """ Map a value to a color in a given colormap
+
+        Args:
+            value (float): value to map to a color
+            value_range (Tuple[float, float]): Range of values to normalize the value to
+            cmap (mcolors.LinearSegmentedColormap): Colormap to map the value to
+
+        Returns:
+            Tuple[float, float, float, float]: RGBA color tuple
+        """
 
         # Normalize the value to the range [0, 1]
         normalized_value = (value - value_range[0]) / (value_range[1] - value_range[0])
@@ -363,8 +424,12 @@ class SOM():
         value_range: Tuple[float, float],
         cmap: mcolors.LinearSegmentedColormap
     ):
-        """
-        Add colorbar to component plane figures
+        """ Add a colorbar to the figure
+
+        Args:
+            fig (matplotlib.figure.Figure): Figure to add the colorbar to
+            value_range (Tuple[float, float]): Range of values to normalize the colorbar to
+            cmap (mcolors.LinearSegmentedColormap): Colormap to use for the colorbar
         """
         norm = plt.Normalize(
             vmax=value_range[1],
