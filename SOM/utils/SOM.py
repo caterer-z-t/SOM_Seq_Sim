@@ -64,14 +64,16 @@ class SOM():
     ---------------------------------
      - train_dat (np.ndarray): The raw (unscaled) training data used to fit the SOM.
      - other_dat (np.ndarray): Additional, non-numeric data associated with each data point in 
-      `train_dat`, but not used to train the SOM.
+            `train_dat`, but not used to train the SOM.
+     - train_dat_features (List[str]): A list of feature names from the training data.
+     - other_dat_features (List[str]): A list of feature names from the additional data.
      - xdim (int): The number of neurons in the x-dimension of the SOM grid.
      - ydim (int): The number of neurons in the y-dimension of the SOM grid.
      - topology (str): The topology of the SOM grid ('rectangular' or 'hexagonal', associated
-       with 4 and 6 neighbors, respectively).
+            with 4 and 6 neighbors, respectively).
      - neighborhood_fnc (str): The neighborhood function used during training.
      - epochs (int): The number of training epochs (i.e., how many times the dataset is presented 
-       during the training process).
+            during the training process).
      - _scale (Callable): Method for scaling `train_dat` (z-score or min/max)
      - _unscale (Callable): Method for unscaling scaled data (z-score or mimn/max)
 
@@ -95,6 +97,30 @@ class SOM():
         neighborhood_fnc: str,
         epochs: int
     ):
+        
+        """
+        Initialize the Self-Organizing Map (SOM) class with user-defined parameters.
+
+        This constructor sets up the SOM by validating inputs, scaling the training data, and
+        preparing the attributes needed for training and analysis.
+
+        Args:
+            train_dat (pd.DataFrame): A DataFrame containing the numerical training data for the 
+                SOM.
+            other_dat (pd.DataFrame): A DataFrame with non-numeric data associated with each row in
+                `train_dat`, not used for training the SOM but for analysis.
+            scale_method (str): Method for scaling the data; must be either 'zscore' or 'minmax'.
+            x_dim (int): The number of neurons in the x-dimension of the SOM grid. Must be a 
+                positive integer.
+            y_dim (int): The number of neurons in the y-dimension of the SOM grid. Must be a
+                positive integer.
+            topology (str): Topology of the SOM grid; must be 'rectangular' or 'hexagonal'.
+            neighborhood_fnc (str): Neighborhood function to use during training; must be
+                'gaussian' or 'bubble'.
+            epochs (int): Number of epochs (iterations over the dataset) for training the SOM. Must
+                be a positive integer.
+        """
+
         # Input validation
         self._validate_inputs(
             train_dat=train_dat,
@@ -143,34 +169,58 @@ class SOM():
         epochs: int):
 
         """
-        Validates input parameters for the SOM class.
+        Validate the input parameters for initializing the SOM class.
+
+        Ensures that all required inputs meet the expected types, ranges, and formats.
+
+        Args:
+            train_dat (pd.DataFrame): A DataFrame containing the numerical training data for the 
+                SOM.
+            other_dat (pd.DataFrame): A DataFrame with non-numeric data associated with each row in
+                `train_dat`, not used for training the SOM but for analysis.
+            scale_method (str): Method for scaling the data; must be either 'zscore' or 'minmax'.
+            x_dim (int): The number of neurons in the x-dimension of the SOM grid. Must be a 
+                positive integer.
+            y_dim (int): The number of neurons in the y-dimension of the SOM grid. Must be a
+                positive integer.
+            topology (str): Topology of the SOM grid; must be 'rectangular' or 'hexagonal'.
+            neighborhood_fnc (str): Neighborhood function to use during training; must be
+                'gaussian' or 'bubble'.
+            epochs (int): Number of epochs (iterations over the dataset) for training the SOM. Must
+                be a positive integer.
+            
+        Raises:
+            TypeError: If `train_dat` or `other_dat` is not a pandas DataFrame, or if `train_dat`
+                contains non-numeric data.
+            ValueError: If `scale_method`, `topology`, or `neighborhood_fnc` contains invalid
+                values, or if `x_dim`, `y_dim`, or `epochs` are not positive integers.
         """
 
         if not isinstance(train_dat, pd.DataFrame):
             raise TypeError("train_dat must be a pandas DataFrame.")
-        
+
         is_all_numeric = train_dat.dtypes.apply(lambda dtype: np.issubdtype(dtype, np.number)).all()
         if not is_all_numeric:
             raise TypeError("train_dat must contain only numeric values.")
-        
+
         if not isinstance(other_dat, pd.DataFrame):
             raise TypeError("other_dat must be a pandas DataFrame.")
-        
+
         if scale_method not in ["zscore", "minmax"]:
             raise ValueError("scale_method must be 'zscore' or 'minmax'.")
-        
+
         if topology not in ["rectangular", "hexagonal"]:
             raise ValueError("topology must be 'rectangular' or 'hexagonal'.")
-        
+
         if neighborhood_fnc not in ["gaussian", "bubble"]:
             raise ValueError("neighborhood_fnc must be 'gaussian' or 'bubble'.")
-        
+
         if not isinstance(x_dim, int) or x_dim <= 0:
             raise ValueError("x_dim must be a positive integer.")
-        
+
         if not isinstance(y_dim, int) or y_dim <= 0:
             raise ValueError("y_dim must be a positive integer.")
-        
+
         if not isinstance(epochs, int) or epochs <= 0:
             raise ValueError("epochs must be a positive integer.")
 
@@ -185,11 +235,11 @@ class SOM():
         corresponding neurons.
 
         Sets the following attributes:
-            - `map`: The trained MiniSom instance.
-            - `observation_mapping`: Mapping of observations to neurons.
-            - `neuron_coordinates`: Coordinates of neurons in the SOM grid.
-            - `weights_scaled`: Scaled weights of each neuron.
-            - `weights`: Unscaled weights of each neuron.
+            - map: The trained MiniSom instance.
+            - observation_mapping: Mapping of observations to neurons.
+            - neuron_coordinates: Coordinates of neurons in the SOM grid.
+            - weights_scaled: Scaled weights of each neuron.
+            - weights: Unscaled weights of each neuron.
         """
 
         n_samples = self.train_dat_scaled.shape[0]
@@ -238,7 +288,7 @@ class SOM():
             Tuple[np.ndarray, List[np.ndarray]]:
                 - (np.ndarray): The scaled data
                 - (List[np.ndarray]): A list containing the means and standard deviations used for
-                  scaling.
+                    scaling.
         """
 
         means = np.mean(self.train_dat, axis=0)
@@ -255,7 +305,7 @@ class SOM():
             Tuple[np.ndarray, List[np.ndarray]]:
                 - np.ndarray: The scaled data
                 - List[np.ndarray]: A list containing the minimum and maximum values used for
-                  scaling.
+                    scaling.
         """
 
         min_vals = np.min(self.train_dat, axis=0)
@@ -270,7 +320,7 @@ class SOM():
 
         Args:
             scaled_data (np.ndarray): Scaled data, often neuron weights returned from the training
-            process.
+                process.
 
         Returns:
             np.ndarray: The unscaled data.
@@ -287,7 +337,7 @@ class SOM():
 
         Args:
             scaled_data (np.ndarray): Scaled data, often neuron weights returned from the training
-            process.
+                process.
 
         Returns:
             np.ndarray: The unscaled data.
@@ -304,7 +354,7 @@ class SOM():
 
         Returns:
             np.ndarray: An array where each element corresponds to the ID of the winning neuron for
-            the respective data point.
+                the respective data point.
         """
 
         # Get the x-y coordiantes of the winning neurons
@@ -327,7 +377,7 @@ class SOM():
 
         Returns:
             pd.DataFrame: A DataFrame containing the x and y coordinates of each neuron, where the
-            first column corresponds to x and the second column corresponds to y.
+                first column corresponds to x and the second column corresponds to y.
         """
 
         HEX_CORRECTION = np.sqrt(3)/2
@@ -351,11 +401,11 @@ class SOM():
     def _get_weights(self):
 
         """
-        Retrieve the weights of each neuron after training.
+        Retrieve the weight vector of each neuron after training.
 
         Returns:
             pd.DataFrame: A DataFrame where each row corresponds to a neuron's weight vector and 
-            the number of columns equal the dimensionality of the original dataset.
+                the number of columns equal the dimensionality of the original dataset.
         """
 
         weights_scaled = [
@@ -381,7 +431,7 @@ class SOM():
         organization of the SOM. By examining these plots, you can:
             - Identify clusters and trends in specific features.
             - Compare how different features vary across the grid, potentially highlighting
-              relationships/correlations between features.
+                relationships/correlations between features.
 
         Args:
             output_dir (str): The directory where the component plane plots will be saved. 
@@ -478,7 +528,7 @@ class SOM():
 
         Args:
             output_dir (str): The directory where the categorical data distribution plots will be
-            saved.
+                saved.
 
         Saves:
             One plot per categorical feature as a .png file in the specified directory. Each plot
@@ -579,7 +629,7 @@ class SOM():
 
         Args:
             print_neuron_idx (bool, optional): Whether to display the neuron indices on the plot. 
-            Defaults to False.
+                Defaults to False.
 
         Returns:
             Tuple[plt.Figure, plt.Axes]: The matplotlib figure and axis objects for the plot.
@@ -642,9 +692,9 @@ class SOM():
             x (float): The x-coordinate of the circle's center.
             y (float): The y-coordinate of the circle's center.
             fill_color (Union[Tuple[float, float, float, float], str]): The color to fill the
-            circle with.
+                circle with.
             edge_color (Union[Tuple[float, float, float, float], str]): The color of the circle's
-            edge.
+                edge.
             text (str, optional): Text to annotate neuron.
             radius (float, optional): The radius of the circle. Defaults to 0.5.
         """
@@ -709,7 +759,7 @@ class SOM():
         Args:
             fig (matplotlib.figure.Figure): The figure object where the colorbar will be added.
             value_range (Tuple[float, float]): The range of values (min, max) represented by the
-            colorbar.
+                colorbar.
             cmap (mcolors.LinearSegmentedColormap): The colormap to use for the colorbar.
             label (str): Name of feature
         """
@@ -766,6 +816,17 @@ class SOM():
     def _check_output_path(
         path: str
     ):
+        
+        """
+        Ensure the specified output path exists. If the directory does not exist, it is created.
+
+        Args:
+            path (str): The directory path to check or create.
+
+        Raises:
+            OSError: If the directory cannot be created due to permissions or other errors.
+        """
+
         if not os.path.exists(path):
             os.makedirs(path)
 
@@ -781,7 +842,7 @@ class SOM():
 
         Returns:
             float: The topographic error, ranging from 0 (perfect preservation) to 1 (poor 
-            preservation).
+                preservation).
         """
 
         if self.map is None:
@@ -812,30 +873,42 @@ class SOM():
         return topographic_error_count / len(self.train_dat_scaled)
 
 
-    def calculate_quantization_error(self) -> float:
+    def calculate_percent_variance_explained(self) -> float:
 
         """
-        Calculate the quantization error of the trained SOM.
+        Calculate the Percent Variance Explained (PVE) for the trained SOM.
 
-        Quantization error is the average distance between each data point and its Best Matching 
-        Unit (BMU) in the SOM grid. Lower values indicate better representation of the data.
+        PVE is the proportion of the total variance in the data explained by the SOM.
+        It is computed as: PVE = ((TSS - WCSS) / TSS) * 100, where:
+            - TSS = total sum of squares
+            - WCSS = within cluster (i.e., within neuron) sum of squares
 
         Returns:
-            float: The quantization error.
+            float: Percent Variance Explained (PVE)
         """
 
         if self.map is None:
             raise RuntimeError(
-                "SOM has not been trained. Call `train_map` before calculating quant error."
+                "SOM has not been trained. Call `train_map` before calculating PVE."
             )
 
-        quantization_error = 0
+        # Compute the mean of the dataset
+        global_mean = self.train_dat_scaled.mean(axis=0)
+
+        # Compute Total Sum of Squares (TSS)
+        tss = np.sum(np.linalg.norm(self.train_dat_scaled - global_mean, axis=1) ** 2)
+
+        # Compute Within-Cluster Sum of Squares (WCSS)
+        wcss = 0
         for idx in np.arange(len(self.train_dat_scaled)):
             bmu = self.observation_mapping[idx]
             bmu_weight = self.weights_scaled.iloc[bmu, :].to_numpy()
-            quantization_error += np.linalg.norm(self.train_dat_scaled[idx, :] - bmu_weight)
+            wcss += np.linalg.norm(self.train_dat_scaled[idx, :] - bmu_weight) ** 2
 
-        return quantization_error / len(self.train_dat_scaled)
+        # Calculate PVE
+        pve = ((tss - wcss) / tss) * 100
+
+        return pve
 
 
     def _are_nodes_adjacent(
@@ -848,8 +921,8 @@ class SOM():
         Check if two neurons in the SOM grid are adjacent.
 
         Args:
-            bmu1 (Tuple[int, int]): Coordinates of the first neuron.
-            bmu2 (Tuple[int, int]): Coordinates of the second neuron.
+            bmu1 (int): ID of the first neuron.
+            bmu2 (int): ID of the second neuron.
 
         Returns:
             bool: True if the neurons are neighbors, False otherwise.
