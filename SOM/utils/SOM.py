@@ -187,7 +187,7 @@ class SOM():
         neighborhood_fnc: str,
         epochs: int
     ):
-        
+
         """
         Initialize the Self-Organizing Map (SOM) class with user-defined parameters.
 
@@ -574,9 +574,9 @@ class SOM():
             fig.suptitle(f"{feature_name}", y=1)
 
             fig.subplots_adjust(
-                top=0.9,   # Space for the title
-                bottom=0.15,  # Space for the colorbar
-                left=0.1,  # Space for grid clarity
+                top=0.9,
+                bottom=0.15,
+                left=0.1,
                 right=0.9
             )
 
