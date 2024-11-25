@@ -82,8 +82,8 @@ class SOM():
 
     def __init__(
         self,
-        train_dat: Union[pd.DataFrame, np.ndarray],
-        other_dat: Union[pd.DataFrame, np.ndarray],
+        train_dat: pd.DataFrame,
+        other_dat: pd.DataFrame,
         scale_method: str,
         x_dim: int,
         y_dim: int,
@@ -91,9 +91,12 @@ class SOM():
         neighborhood_fnc: str,
         epochs: int
     ):
-        # Convert input data to numpy array
-        self.train_dat = train_dat.to_numpy() if isinstance(train_dat, pd.DataFrame) else train_dat
-        self.other_dat = other_dat.to_numpy() if isinstance(other_dat, pd.DataFrame) else other_dat
+        # Save feature names and convert input data to numpy array
+        self.train_dat_features = train_dat.columns.tolist()
+        self.other_dat_features = other_dat.columns.tolist()
+
+        self.train_dat = train_dat.to_numpy()
+        self.other_dat = other_dat.to_numpy()
 
         # Set scaling and unscaling methods
         self._scale = getattr(self, f"_{scale_method}_scale", None)
@@ -294,8 +297,7 @@ class SOM():
 
     def plot_component_planes(
         self,
-        output_dir: str,
-        save: bool = True
+        output_dir: str
     ):
         """
         Generate and save component plane plots for each feature in the training data.
@@ -330,6 +332,7 @@ class SOM():
             fig, ax = self.plot_map_grid()
             feature_weights = self.weights.iloc[:, feature_idx]
             feature_weights_range = (np.min(feature_weights), np.max(feature_weights))
+            feature_name = self.train_dat_features[feature_idx]
 
             # Fill grid with neuron values
             for neuron_idx, row in self.neuron_coordinates.iterrows():
@@ -350,11 +353,24 @@ class SOM():
             SOM._add_colorbar(
                 fig=fig,
                 value_range=feature_weights_range,
-                cmap=cmap
+                cmap=cmap,
+                label=feature_name
             )
-            fig.suptitle(f"Feature {feature_idx}", y=0.95)
-            if save:
-                plt.savefig(os.path.join(output_dir, f"feature{feature_idx}_component_plane.png"))
+            fig.suptitle(f"{feature_name}", y=1)
+
+            # Adjust layout to center SOM grid between title and legend
+            fig.subplots_adjust(
+                top=0.9,   # Space for the title
+                bottom=0.15,  # Space for the colorbar
+                left=0.1,  # Space for grid clarity
+                right=0.9
+            )
+
+            plt.savefig(
+                os.path.join(output_dir, f"{feature_name}_component_plane.png"),
+                format='png',
+                dpi=300,
+                bbox_inches='tight')
             plt.close(fig)
 
 
@@ -391,6 +407,8 @@ class SOM():
 
         for feature_idx in range(self.other_dat.shape[1]):
 
+            feature_name = self.other_dat_features[feature_idx]
+
             # Initialize the figure and axis for the SOM map grid.
             fig, ax = self.plot_map_grid()
 
@@ -424,11 +442,39 @@ class SOM():
             ax.set_xlim([-1.5, self.xdim])
             ax.set_ylim([-1, self.ydim - 0.5])
 
-            # Save the plot with a title for the current feature.
-            fig.suptitle(f"Feature {feature_idx}", y=0.95)
-            output_path = os.path.join(output_dir, f"Feature{feature_idx}_category_proportions.png")
-            if save:
-                plt.savefig(output_path)
+            # Add legend
+            legend_patches = [
+                patches.Patch(color=color, label=cat) for cat, color in category_colors.items()
+            ]
+            ax.legend(
+                handles=legend_patches,
+                loc='upper center',
+                bbox_to_anchor=(0.5, 0.1),
+                ncol=3,
+                fontsize=9,
+                frameon=False
+            )
+
+            # Add title for current feature
+            fig.suptitle(f"{feature_name}", y=1)
+
+            # Adjust layout to center SOM grid between title and legend
+            fig.subplots_adjust(
+                top=0.9,   # Space for the title
+                bottom=0.2,  # Space for the legend
+                left=0.1,
+                right=0.9
+            )
+
+            # Save and close the figure
+            output_path = os.path.join(output_dir, f"{feature_name}_category_proportions.png")
+
+            plt.savefig(
+                fname=output_path,
+                format='png',
+                dpi=300,
+                bbox_inches='tight'
+            )
             plt.close(fig)
 
 
@@ -489,7 +535,7 @@ class SOM():
 
     @staticmethod
     def _draw_circle(
-        ax,
+        ax: plt.axes,
         x: float,
         y: float,
         fill_color: Union[Tuple[float, float, float, float], str],
@@ -546,7 +592,8 @@ class SOM():
     def _add_colorbar(
         fig: matplotlib.figure.Figure,
         value_range: Tuple[float, float],
-        cmap: mcolors.LinearSegmentedColormap
+        cmap: mcolors.LinearSegmentedColormap,
+        label: str
     ):
         """ 
         Add a horizontal colorbar to a matplotlib figure.
@@ -556,6 +603,7 @@ class SOM():
             value_range (Tuple[float, float]): The range of values (min, max) represented by the
             colorbar.
             cmap (mcolors.LinearSegmentedColormap): The colormap to use for the colorbar.
+            label (str): Name of feature
         """
 
         norm = plt.Normalize(
@@ -569,25 +617,24 @@ class SOM():
         sm.set_array([])
 
         fig.subplots_adjust(bottom=0.1)
-        cbar_ax = fig.add_axes([0.125, 0.1, 0.775, 0.03])
+        cbar_ax = fig.add_axes([0.2, 0.2, 0.6, 0.02])
         cbar = fig.colorbar(
             mappable=sm,
             cax=cbar_ax,
             orientation='horizontal'
         )
         cbar.set_label(
-            label='Color: Neuron Feature Value',
-            fontsize=15,
+            label=f'Color: Neuron {label} Value',
+            fontsize=9,
             labelpad=10
         )
-        cbar.ax.tick_params(labelsize=14)
+        cbar.ax.tick_params(labelsize=9)
 
 
     @staticmethod
     def _get_distinct_colors(
         categories: List[str]
     ) -> Dict[str, str]:
-        
         """
         Generate a dictionary of distinct colors for a list of categories.
 
