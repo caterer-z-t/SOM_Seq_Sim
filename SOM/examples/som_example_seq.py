@@ -1,4 +1,3 @@
-
 # Standard imports
 import os
 import sys
@@ -35,5 +34,5 @@ som.train_map()
 
 # Plot SOM Map Using Categorical Data
 som.plot_categorical_data(
-    output_dir="output_figs"
+    output_dir="output_figs/seq"
 )
