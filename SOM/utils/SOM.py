@@ -39,6 +39,7 @@ constraint creates a smooth, organized map where similar clusters are close to e
 SOMs ideal for data visualization.
 """
 
+import math
 import os
 from typing import Dict, List, Tuple, Union
 
@@ -53,6 +54,7 @@ import seaborn as sns
 
 
 class SOM():
+
     """
     A class for building, training, and visualizing Self-Organizing Maps (SOMs). This class
     simplifies the creation and usage of SOMs, providing configurable parameters for training and
@@ -146,25 +148,35 @@ class SOM():
 
         if not isinstance(train_dat, pd.DataFrame):
             raise TypeError("train_dat must be a pandas DataFrame.")
-        if not np.issubdtype(train_dat, np.number):
+        
+        is_all_numeric = train_dat.dtypes.apply(lambda dtype: np.issubdtype(dtype, np.number)).all()
+        if not is_all_numeric:
             raise TypeError("train_dat must contain only numeric values.")
+        
         if not isinstance(other_dat, pd.DataFrame):
             raise TypeError("other_dat must be a pandas DataFrame.")
+        
         if scale_method not in ["zscore", "minmax"]:
             raise ValueError("scale_method must be 'zscore' or 'minmax'.")
+        
         if topology not in ["rectangular", "hexagonal"]:
             raise ValueError("topology must be 'rectangular' or 'hexagonal'.")
+        
         if neighborhood_fnc not in ["gaussian", "bubble"]:
             raise ValueError("neighborhood_fnc must be 'gaussian' or 'bubble'.")
+        
         if not isinstance(x_dim, int) or x_dim <= 0:
             raise ValueError("x_dim must be a positive integer.")
+        
         if not isinstance(y_dim, int) or y_dim <= 0:
             raise ValueError("y_dim must be a positive integer.")
+        
         if not isinstance(epochs, int) or epochs <= 0:
             raise ValueError("epochs must be a positive integer.")
 
 
     def train_map(self):
+
         """
         Train the Self-Organizing Map on the scaled training data.
 
@@ -218,6 +230,7 @@ class SOM():
 
 
     def _zscore_scale(self):
+
         """
         Scale data using z-score normalization.
 
@@ -234,6 +247,7 @@ class SOM():
 
 
     def _minmax_scale(self):
+
         """
         Scale data using min/max normalization.
 
@@ -250,6 +264,7 @@ class SOM():
 
 
     def _zscore_unscale(self, scaled_data):
+
         """
         Unscale z-score normalized data back to its original scale.
 
@@ -266,6 +281,7 @@ class SOM():
 
 
     def _minmax_unscale(self, scaled_data):
+
         """
         Unscale z-score normalized data back to its original scale.
 
@@ -282,6 +298,7 @@ class SOM():
 
 
     def _get_observation_neuron_mappings(self):
+
         """
         Get the neuron id that each observation in `train_dat` is assigned to.
 
@@ -304,6 +321,7 @@ class SOM():
 
 
     def _get_neuron_coordinates(self):
+
         """
         Retrieve the coordinates of all neurons in the SOM grid.
 
@@ -331,6 +349,7 @@ class SOM():
 
 
     def _get_weights(self):
+
         """
         Retrieve the weights of each neuron after training.
 
@@ -349,6 +368,7 @@ class SOM():
         self,
         output_dir: str
     ):
+
         """
         Generate and save component plane plots for each feature in the training data.
 
@@ -370,6 +390,7 @@ class SOM():
             One plot per feature as a .png file in the specified directory. Each plot displays
             the SOM grid with neurons colored based on the value of the feature being plotted.
         """
+
         # Check that SOM has been trained
         if self.map is None:
             raise RuntimeError("SOM has not been trained. Call `train_map` before plotting.")
@@ -437,6 +458,7 @@ class SOM():
         self,
         output_dir: str
     ):
+
         """
         Generate and save categorical data distribution plots across the SOM grid.
 
@@ -548,6 +570,7 @@ class SOM():
         self,
         print_neuron_idx: bool = False
     ) -> Tuple[plt.Figure, plt.Axes]:
+
         """ 
         Plot a blank SOM grid where each neuron is represented by a circle.
 
@@ -610,6 +633,7 @@ class SOM():
         text: str = None,
         radius: float = 0.5
     ):
+
         """ 
         Draw a circle at the specified coordinates on a matplotlib axis.
 
@@ -651,6 +675,7 @@ class SOM():
         value_range: Tuple[float, float],
         cmap: mcolors.LinearSegmentedColormap
     ) -> Tuple[float, float, float, float]:
+
         """ 
         Map a numeric value to a color using a specified colormap.
 
@@ -677,6 +702,7 @@ class SOM():
         cmap: mcolors.LinearSegmentedColormap,
         label: str
     ):
+
         """ 
         Add a horizontal colorbar to a matplotlib figure.
 
@@ -717,6 +743,7 @@ class SOM():
     def _get_distinct_colors(
         categories: List[str]
     ) -> Dict[str, str]:
+
         """
         Generate a dictionary of distinct colors for a list of categories.
 
@@ -728,6 +755,7 @@ class SOM():
         Returns:
             Dict[str, str]: A dictionary mapping each category to a distinct hex color string.
         """
+
         palette = sns.color_palette('tab20', len(categories))
         palette = palette.as_hex()
 
@@ -739,4 +767,100 @@ class SOM():
         path: str
     ):
         if not os.path.exists(path):
-                os.makedirs(path)
+            os.makedirs(path)
+
+
+    def calculate_topographic_error(self) -> float:
+
+        """
+        Calculate the topographic error of the trained SOM.
+
+        Topographic error measures the proportion of data points for which the two closest neurons
+        (BMUs) are not adjacent in the SOM grid. A lower topographic error indicates better 
+        topology preservation.
+
+        Returns:
+            float: The topographic error, ranging from 0 (perfect preservation) to 1 (poor 
+            preservation).
+        """
+
+        if self.map is None:
+            raise RuntimeError(
+                "SOM has not been trained. Call `train_map` before calculating topographic error."
+            )
+
+        topographic_error_count = 0
+
+        for idx in np.arange(len(self.train_dat_scaled)):
+            # Find the BMU (Best Matching Unit) for the current data point
+            bmu1 = self.observation_mapping[idx]
+
+            # Get the weights for all nodes
+            all_weights = self.weights_scaled.to_numpy()
+
+            # Compute distances from current data point to all nodes
+            distances = np.linalg.norm(all_weights - self.train_dat_scaled[idx, :], axis=1)
+
+            # Identify the second-best matching unit
+            bmu2 = np.argsort(distances)[1]
+
+            # Check if the two BMUs are adjacent in the SOM grid
+            if not self._are_nodes_adjacent(bmu1, bmu2):
+                topographic_error_count += 1
+
+        # Calculate the topographic error as the proportion of non-adjacent BMUs
+        return topographic_error_count / len(self.train_dat_scaled)
+
+
+    def calculate_quantization_error(self) -> float:
+
+        """
+        Calculate the quantization error of the trained SOM.
+
+        Quantization error is the average distance between each data point and its Best Matching 
+        Unit (BMU) in the SOM grid. Lower values indicate better representation of the data.
+
+        Returns:
+            float: The quantization error.
+        """
+
+        if self.map is None:
+            raise RuntimeError(
+                "SOM has not been trained. Call `train_map` before calculating quant error."
+            )
+
+        quantization_error = 0
+        for idx in np.arange(len(self.train_dat_scaled)):
+            bmu = self.observation_mapping[idx]
+            bmu_weight = self.weights_scaled.iloc[bmu, :].to_numpy()
+            quantization_error += np.linalg.norm(self.train_dat_scaled[idx, :] - bmu_weight)
+
+        return quantization_error / len(self.train_dat_scaled)
+
+
+    def _are_nodes_adjacent(
+        self,
+        bmu1: int,
+        bmu2: int
+    ) -> bool:
+
+        """
+        Check if two neurons in the SOM grid are adjacent.
+
+        Args:
+            bmu1 (Tuple[int, int]): Coordinates of the first neuron.
+            bmu2 (Tuple[int, int]): Coordinates of the second neuron.
+
+        Returns:
+            bool: True if the neurons are neighbors, False otherwise.
+        """
+
+        coord1 = self.neuron_coordinates.iloc[bmu1, :].to_list()
+        coord2 = self.neuron_coordinates.iloc[bmu2, :].to_list()
+
+        euclidean_distance = np.sqrt((coord1[0] - coord2[0]) ** 2 + (coord1[1] - coord2[1]) ** 2)
+
+        return math.isclose(
+            a=euclidean_distance,
+            b=1
+        )
