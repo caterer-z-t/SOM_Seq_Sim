@@ -10,8 +10,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 from SOM.utils.som import SOM
 
 # Load data
-#data = pd.read_csv("../../data/iris.csv")
-data = pd.read_csv("data/iris.csv")
+data = pd.read_csv("../../data/iris.csv")
+#data = pd.read_csv("data/iris.csv")
 train_dat = data.iloc[:, 0:4]
 other_dat = data.iloc[:, 4].to_frame()
 
@@ -20,21 +20,21 @@ som = SOM(
     train_dat=train_dat,
     other_dat=other_dat,
     scale_method="minmax",
-    x_dim=4,
+    x_dim=5,
     y_dim=2,
     topology="hexagonal",
     neighborhood_fnc="gaussian",
-    epochs=100
+    epochs=17
 )
 
 # Train SOM Map
 som.train_map()
 
 # Get fit metrics
-quantization_error = som.calculate_quantization_error()
+pve = som.calculate_percent_variance_explained()
 topographic_error = som.calculate_topographic_error()
 
-print(f"Quantization error = {quantization_error}")
+print(f"Percent variance explained = {pve}%")
 print(f"Topographic error = {topographic_error}")
 
 # Plot component planes
