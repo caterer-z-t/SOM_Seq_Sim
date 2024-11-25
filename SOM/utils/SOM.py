@@ -56,34 +56,124 @@ import seaborn as sns
 class SOM():
 
     """
-    A class for building, training, and visualizing Self-Organizing Maps (SOMs). This class
-    simplifies the creation and usage of SOMs, providing configurable parameters for training and
-    tools for data scaling and visualization of the trained SOM.
+    A class for building, training, and visualizing Self-Organizing Maps (SOMs).
+
+    This class provides tools to train a Self-Organizing Map on high-dimensional data, including
+    scaling and unscaling data, calculating various fit metrics (e.g., topographic error, percent
+    variance explained), and visualizing the SOM grid after fitting.
 
     Attributes (set before training):
     ---------------------------------
-     - train_dat (np.ndarray): The raw (unscaled) training data used to fit the SOM.
-     - other_dat (np.ndarray): Additional, non-numeric data associated with each data point in 
-            `train_dat`, but not used to train the SOM.
-     - train_dat_features (List[str]): A list of feature names from the training data.
-     - other_dat_features (List[str]): A list of feature names from the additional data.
-     - xdim (int): The number of neurons in the x-dimension of the SOM grid.
-     - ydim (int): The number of neurons in the y-dimension of the SOM grid.
-     - topology (str): The topology of the SOM grid ('rectangular' or 'hexagonal', associated
-            with 4 and 6 neighbors, respectively).
-     - neighborhood_fnc (str): The neighborhood function used during training.
-     - epochs (int): The number of training epochs (i.e., how many times the dataset is presented 
-            during the training process).
-     - _scale (Callable): Method for scaling `train_dat` (z-score or min/max)
-     - _unscale (Callable): Method for unscaling scaled data (z-score or mimn/max)
+    train_dat (np.ndarray): 
+        The raw (unscaled) training data used to fit the SOM.
+    other_dat (np.ndarray): 
+        Additional, non-numeric data associated with each data point in `train_dat`, but 
+        not used to train the SOM.
+    train_dat_features (List[str]): 
+        A list of feature names associated with `train_dat`.
+    other_dat_features (List[str]): 
+        A list of feature names associated with `other_dat`.
+    xdim (int): 
+        The number of neurons in the x-dimension of the SOM grid.
+    ydim (int): 
+        The number of neurons in the y-dimension of the SOM grid.
+    topology (str): 
+        The topology of the SOM grid ('rectangular' or 'hexagonal', associated with 4 and 6
+        neighbors, respectively).
+    neighborhood_fnc (str): 
+        The neighborhood function used during training ('gaussian' or 'bubble').
+    epochs (int): 
+        The number of training epochs (i.e., how many times the dataset is presented during the
+        training process).
+    _scale (Callable): 
+        Method for scaling `train_dat` (z-score or min/max).
+    _unscale (Callable): 
+        Method for unscaling scaled data (z-score or min/max).
 
     Attributes (set after training):
     --------------------------------
-     - map (MiniSom): The trained MiniSom instance, created after calling `train_map`.
-     - observation_mapping (np.ndarray): The mapping of data points to their closest neurons.
-     - neuron_coordinates (pd.DataFrame): The coordinates of neurons in the SOM grid.
-     - weights (pd.DataFrame): The unscaled weights of each neuron after training.
-     - weights_scaled (pd.DataFrame): The scaled weights of each neuron after training.
+    map (MiniSom): 
+        The trained MiniSom instance, created after calling `train_map`.
+    observation_mapping (np.ndarray): 
+        The mapping of data points to their closest neurons (i.e. BMU, best matching unit).
+    neuron_coordinates (pd.DataFrame): 
+        The coordinates of neurons in the SOM grid.
+    weights (pd.DataFrame): 
+        The unscaled weight vectors of each neuron after training.
+    weights_scaled (pd.DataFrame): 
+        The scaled weight vectors of each neuron after training.
+
+    Methods:
+    --------
+    __init__:
+        Initializes the SOM instance with training data, configuration parameters, and scaling 
+        methods.
+
+    _validate_inputs:
+        Validates the input parameters for the SOM class, ensuring data types, ranges, and formats 
+        are correct.
+
+    train_map:
+        Trains the SOM using scaled training data. Includes initializing neuron weights and mapping
+        data points to neurons.
+
+    calculate_percent_variance_explained:
+        Calculates the Percent Variance Explained (PVE) of the fit SOM, indicating how well the
+        SOM represents the variance in the data.
+
+    calculate_topographic_error:
+        Calculates the topographic error of the fit SOM, a measure of how well the SOM preserves
+        the topology of the data.
+
+    plot_component_planes:
+        Generates and saves component plane plots for each feature in the training data.
+
+    plot_categorical_data:
+        Generates and saves the distribution of categorical data (from `other_dat`) across the 
+        SOM grid.
+
+    plot_map_grid:
+        Plots a blank SOM grid, optionally labeling neurons with their indices.
+
+    _zscore_scale:
+        Scales the training data (`train_dat`) using z-score normalization.
+
+    _minmax_scale:
+        Scales the training data (`train_dat`) using min-max normalization.
+
+    _zscore_unscale:
+        Reverses z-score normalization to unscale data back to its original range.
+
+    _minmax_unscale:
+        Reverses min-max scaling to unscale data back to its original range.
+
+    _get_observation_neuron_mappings:
+        Maps each data point in the training set (`train_dat`) to its Best Matching Unit (BMU).
+
+    _get_neuron_coordinates:
+        Retrieves the x and y coordinates of all neurons in the SOM grid.
+
+    _get_weights:
+        Retrieves the weight vectors of all neurons in the SOM grid after training.
+
+    _draw_circle:
+        Draws a circle at specified coordinates in a matplotlib plot, representing a neuron.
+
+    _map_value_to_color:
+        Maps numeric feature values to colors using a specified colormap.
+
+    _add_colorbar:
+        Adds a colorbar to a matplotlib plot to represent feature value ranges.
+
+    _get_distinct_colors:
+        Generates distinct colors for categorical data using a seaborn palette.
+
+    _check_output_path:
+        Ensures the specified directory exists, creating it if necessary.
+
+    _are_nodes_adjacent:
+        Determines if two neurons in the SOM grid are adjacent based on their coordinates, used
+        when calculating topographic error.
     """
 
     def __init__(
