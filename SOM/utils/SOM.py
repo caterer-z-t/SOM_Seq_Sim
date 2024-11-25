@@ -70,6 +70,8 @@ class SOM():
      - neighborhood_fnc (str): The neighborhood function used during training.
      - epochs (int): The number of training epochs (i.e., how many times the dataset is presented 
        during the training process).
+     - _scale (Callable): Method for scaling `train_dat` (z-score or min/max)
+     - _unscale (Callable): Method for unscaling scaled data (z-score or mimn/max)
 
     Attributes (set after training):
     --------------------------------
@@ -91,17 +93,27 @@ class SOM():
         neighborhood_fnc: str,
         epochs: int
     ):
+        # Input validation
+        self._validate_inputs(
+            train_dat=train_dat,
+            other_dat=other_dat,
+            scale_method=scale_method,
+            x_dim=x_dim,
+            y_dim=y_dim,
+            topology=topology,
+            neighborhood_fnc=neighborhood_fnc,
+            epochs=epochs
+        )
+
         # Save feature names and convert input data to numpy array
         self.train_dat_features = train_dat.columns.tolist()
         self.other_dat_features = other_dat.columns.tolist()
-
         self.train_dat = train_dat.to_numpy()
         self.other_dat = other_dat.to_numpy()
 
-        # Set scaling and unscaling methods
+        # Scaling and attributes
         self._scale = getattr(self, f"_{scale_method}_scale", None)
         self._unscale = getattr(self, f"_{scale_method}_unscale", None)
-
         self.train_dat_scaled, self._scaling_factors = self._scale()
         self.xdim = x_dim
         self.ydim = y_dim
@@ -109,12 +121,47 @@ class SOM():
         self.neighborhood_fnc = neighborhood_fnc
         self.epochs = epochs
 
-        # Attributes to be set later
+        # Post-training attributes
         self.map = None
         self.observation_mapping = None
         self.neuron_coordinates = None
         self.weights = None
         self.weights_scaled = None
+
+
+    @staticmethod
+    def _validate_inputs(
+        train_dat: pd.DataFrame,
+        other_dat: pd.DataFrame,
+        scale_method: str,
+        x_dim: int,
+        y_dim: int,
+        topology: str,
+        neighborhood_fnc: str,
+        epochs: int):
+
+        """
+        Validates input parameters for the SOM class.
+        """
+
+        if not isinstance(train_dat, pd.DataFrame):
+            raise TypeError("train_dat must be a pandas DataFrame.")
+        if not np.issubdtype(train_dat, np.number):
+            raise TypeError("train_dat must contain only numeric values.")
+        if not isinstance(other_dat, pd.DataFrame):
+            raise TypeError("other_dat must be a pandas DataFrame.")
+        if scale_method not in ["zscore", "minmax"]:
+            raise ValueError("scale_method must be 'zscore' or 'minmax'.")
+        if topology not in ["rectangular", "hexagonal"]:
+            raise ValueError("topology must be 'rectangular' or 'hexagonal'.")
+        if neighborhood_fnc not in ["gaussian", "bubble"]:
+            raise ValueError("neighborhood_fnc must be 'gaussian' or 'bubble'.")
+        if not isinstance(x_dim, int) or x_dim <= 0:
+            raise ValueError("x_dim must be a positive integer.")
+        if not isinstance(y_dim, int) or y_dim <= 0:
+            raise ValueError("y_dim must be a positive integer.")
+        if not isinstance(epochs, int) or epochs <= 0:
+            raise ValueError("epochs must be a positive integer.")
 
 
     def train_map(self):
@@ -135,6 +182,9 @@ class SOM():
 
         n_samples = self.train_dat_scaled.shape[0]
         n_features = self.train_dat_scaled.shape[1]
+
+        if n_features <= 1:
+            raise ValueError("Training data must have at least two features.")
 
         som = MiniSom(
             x=self.xdim,  # number of neurons in x-dimension
@@ -319,7 +369,10 @@ class SOM():
         Saves:
             One plot per feature as a .png file in the specified directory. Each plot displays
             the SOM grid with neurons colored based on the value of the feature being plotted.
-    """
+        """
+        # Check that SOM has been trained
+        if self.map is None:
+            raise RuntimeError("SOM has not been trained. Call `train_map` before plotting.")
 
         # Color scheme
         cmap = mcolors.LinearSegmentedColormap.from_list(
@@ -327,7 +380,7 @@ class SOM():
             colors=[(0, '#008000'), (0.5, '#FFFF00'), (1, '#FF0000')]
         )
 
-        # Create plot for each feature
+        # Create one plot for each feature
         for feature_idx in range(self.train_dat.shape[1]):
             fig, ax = self.plot_map_grid()
             feature_weights = self.weights.iloc[:, feature_idx]
@@ -347,7 +400,8 @@ class SOM():
                     x=row['x'],
                     y=row['y'],
                     fill_color=neuron_fill_color,
-                    edge_color='none'
+                    edge_color='none',
+                    text=str(round(neuron_value, 2))
                 )
 
             SOM._add_colorbar(
@@ -358,7 +412,6 @@ class SOM():
             )
             fig.suptitle(f"{feature_name}", y=1)
 
-            # Adjust layout to center SOM grid between title and legend
             fig.subplots_adjust(
                 top=0.9,   # Space for the title
                 bottom=0.15,  # Space for the colorbar
@@ -366,8 +419,14 @@ class SOM():
                 right=0.9
             )
 
+            # Set output directory and create if it doesn't exist
+            output_path = os.path.join(output_dir, f"{feature_name}_component_plane.png")
+            self._check_output_path(
+                path=output_path
+            )
+
             plt.savefig(
-                os.path.join(output_dir, f"{feature_name}_component_plane.png"),
+                fname=output_path,
                 format='png',
                 dpi=300,
                 bbox_inches='tight')
@@ -403,8 +462,13 @@ class SOM():
             One plot per categorical feature as a .png file in the specified directory. Each plot
             displays the SOM grid with neurons colored based on the value of the feature being
             plotted.
-    """
+        """
 
+        # Check that SOM has been trained
+        if self.map is None:
+            raise RuntimeError("SOM has not been trained. Call `train_map` before plotting.")
+
+        # Make one plot per categorical feature
         for feature_idx in range(self.other_dat.shape[1]):
 
             feature_name = self.other_dat_features[feature_idx]
@@ -455,19 +519,21 @@ class SOM():
                 frameon=False
             )
 
-            # Add title for current feature
-            fig.suptitle(f"{feature_name}", y=1)
+            # Add title
+            fig.suptitle(f"Proportion of {feature_name} per neuron", y=1)
 
-            # Adjust layout to center SOM grid between title and legend
             fig.subplots_adjust(
-                top=0.9,   # Space for the title
-                bottom=0.2,  # Space for the legend
+                top=0.9,
+                bottom=0.2,
                 left=0.1,
                 right=0.9
             )
 
-            # Save and close the figure
+            # Set output directory and create if it doesn't exist
             output_path = os.path.join(output_dir, f"{feature_name}_category_proportions.png")
+            self._check_output_path(
+                path=output_path
+            )
 
             plt.savefig(
                 fname=output_path,
@@ -533,6 +599,7 @@ class SOM():
 
         return fig, ax
 
+
     @staticmethod
     def _draw_circle(
         ax: plt.axes,
@@ -540,6 +607,7 @@ class SOM():
         y: float,
         fill_color: Union[Tuple[float, float, float, float], str],
         edge_color: Union[Tuple[float, float, float, float], str],
+        text: str = None,
         radius: float = 0.5
     ):
         """ 
@@ -553,6 +621,7 @@ class SOM():
             circle with.
             edge_color (Union[Tuple[float, float, float, float], str]): The color of the circle's
             edge.
+            text (str, optional): Text to annotate neuron.
             radius (float, optional): The radius of the circle. Defaults to 0.5.
         """
 
@@ -563,6 +632,18 @@ class SOM():
                     edgecolor=edge_color
                 )
         ax.add_patch(circle)
+
+        if text:
+            ax.text(
+                x=x,
+                y=y,
+                s=text,
+                ha='center',
+                va='center',
+                fontsize=8,
+                color='black'
+                )
+
 
     @staticmethod
     def _map_value_to_color(
@@ -587,6 +668,7 @@ class SOM():
 
         # Map the normalized value to a color in the gradient
         return cmap(normalized_value)
+
 
     @staticmethod
     def _add_colorbar(
@@ -650,3 +732,11 @@ class SOM():
         palette = palette.as_hex()
 
         return {categories[i]: palette[i] for i in range(len(categories))}
+
+
+    @staticmethod
+    def _check_output_path(
+        path: str
+    ):
+        if not os.path.exists(path):
+                os.makedirs(path)
