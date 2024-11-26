@@ -38,13 +38,12 @@ import pandas as pd
 
 # Local imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from SOM.utils.som import SOM
+from SOM.utils.som_utils import SOM
 
 
 # Load data
-data = pd.read_csv("../../data/iris.csv")
-train_dat = data.iloc[:, 0:4]
-other_dat = data.iloc[:, 4].to_frame()
+train_dat = pd.read_csv("../../data/iris_training_data.csv")
+other_dat = pd.read_csv("../../data/iris_categorical_data.csv")
 
 # Train SOM
 som = SOM(
@@ -70,10 +69,10 @@ print(f"Topographic error = {topographic_error}")
 
 # Plot component planes
 som.plot_component_planes(
-    output_dir="output_figs/iris"
+    output_dir="output/iris"
 )
 
 # Plot SOM Map Using Categorical Data
 som.plot_categorical_data(
-    output_dir="output_figs/iris"
+    output_dir="output/iris"
 )

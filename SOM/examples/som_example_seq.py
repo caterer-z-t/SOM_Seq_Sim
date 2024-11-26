@@ -45,12 +45,12 @@ import pandas as pd
 
 # Local imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from SOM.utils.som import SOM
+from SOM.utils.som_utils import SOM
 
 
 # Load data
 train_dat = pd.read_csv("../../data/sim_data_pseudo_feature.csv")
-other_dat = pd.read_csv("../../data/sim_data_umap_data.csv").iloc[:, [1, 2, 6]]
+other_dat = pd.read_csv("../../data/sim_data_umap_data.csv")
 
 # Train SOM
 som = SOM(
@@ -70,10 +70,10 @@ som.train_map()
 # Since there are 1000  features, this creates 1000 figures. Uncomment if you want to create
 # these figures
 # som.plot_component_planes(
-#     output_dir="output_figs"
+#     output_dir="output/seq"
 # )
 
 # Plot SOM Map Using Categorical Data
 som.plot_categorical_data(
-    output_dir="output_figs/seq"
+    output_dir="output/seq"
 )
