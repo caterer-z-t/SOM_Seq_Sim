@@ -1,3 +1,34 @@
+"""
+Basic Example of Using the Self-Organizing Map (SOM) Class
+==========================================================
+
+This script provides a straightforward example of how to use the SOM class to train and evaluate 
+a Self-Organizing Map (SOM) with predetermined hyperparameters. The process includes calculating 
+fit metrics and visualizing the results.
+
+Key Features:
+-------------
+1. Predetermined Hyperparameters:
+    - The SOM is configured with a fixed set of hyperparameters, including scaling method, grid 
+      dimensions, topology, neighborhood function, and number of epochs.
+
+2. Fit Metric Calculation:
+    - The Percent Variance Explained (PVE) and Topographic Error are calculated to evaluate the 
+      quality of the SOM fit.
+
+3. Visualization:
+    - Component planes for individual features are generated to show their distribution across the 
+      SOM grid.
+    - Categorical data distributions are visualized on the SOM grid to examine relationships 
+      between numerical and categorical variables.
+
+Considerations:
+---------------
+This script serves as a basic example and is not intended for rigorous analysis or hyperparameter 
+tuning. For more complex workflows, such as automated hyperparameter optimization, refer to scripts 
+specifically designed for grid search or other tuning techniques.
+"""
+
 # Standard imports
 import os
 import sys
@@ -11,7 +42,6 @@ from SOM.utils.som import SOM
 
 # Load data
 data = pd.read_csv("../../data/iris.csv")
-#data = pd.read_csv("data/iris.csv")
 train_dat = data.iloc[:, 0:4]
 other_dat = data.iloc[:, 4].to_frame()
 
