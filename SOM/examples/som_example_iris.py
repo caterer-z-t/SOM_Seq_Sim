@@ -40,6 +40,7 @@ import pandas as pd
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from SOM.utils.som import SOM
 
+
 # Load data
 data = pd.read_csv("../../data/iris.csv")
 train_dat = data.iloc[:, 0:4]
