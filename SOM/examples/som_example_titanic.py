@@ -27,10 +27,10 @@ som = SOM(
     other_dat=other_dat,
     scale_method="zscore",
     x_dim=5,
-    y_dim=2,
+    y_dim=4,
     topology="hexagonal",
     neighborhood_fnc="gaussian",
-    epochs=17
+    epochs=100
 )
 
 # Train SOM Map
@@ -45,10 +45,10 @@ print(f"Topographic error = {topographic_error}")
 
 # Plot component planes
 som.plot_component_planes(
-    output_dir="output_figs"
+    output_dir="output_figs/titanic"
 )
 
 # Plot SOM Map Using Categorical Data
 som.plot_categorical_data(
-    output_dir="output_figs"
+    output_dir="output_figs/titanic"
 )
