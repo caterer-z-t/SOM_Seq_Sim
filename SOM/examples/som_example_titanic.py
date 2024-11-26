@@ -56,18 +56,11 @@ import pandas as pd
 
 # Local imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from SOM.utils.som import SOM
+from SOM.utils.som_utils import SOM
 
 # Load data
-data = pd.read_csv("../../data/titanic.csv")
-data.dropna(
-    axis=0,
-    how='any',
-    subset=None,
-    inplace=True
-)
-train_dat = data.iloc[:, 0:5]
-other_dat = data.iloc[:, 5:]
+train_dat = pd.read_csv("../../data/titanic_training_data.csv")
+other_dat = pd.read_csv("../../data/titanic_categorical_data.csv")
 
 # Define hyperparameter grid
 hyperparameter_grid = {
@@ -155,10 +148,10 @@ print(f"Topographic error = {topographic_error}")
 
 # Plot component planes
 best_som.plot_component_planes(
-    output_dir="output_figs/titanic"
+    output_dir="output/titanic"
 )
 
 # Plot SOM Map Using Categorical Data
 best_som.plot_categorical_data(
-    output_dir="output_figs/titanic"
+    output_dir="output/titanic"
 )
