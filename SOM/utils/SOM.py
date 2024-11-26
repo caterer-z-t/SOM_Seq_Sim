@@ -581,10 +581,10 @@ class SOM():
             )
 
             # Set output directory and create if it doesn't exist
-            output_path = os.path.join(output_dir, f"{feature_name}_component_plane.png")
             self._check_output_path(
-                path=output_path
+                path=output_dir
             )
+            output_path = os.path.join(output_dir, f"{feature_name}_component_plane.png")
 
             plt.savefig(
                 fname=output_path,
@@ -692,10 +692,10 @@ class SOM():
             )
 
             # Set output directory and create if it doesn't exist
-            output_path = os.path.join(output_dir, f"{feature_name}_category_proportions.png")
             self._check_output_path(
-                path=output_path
+                path=output_dir
             )
+            output_path = os.path.join(output_dir, f"{feature_name}_category_proportions.png")
 
             plt.savefig(
                 fname=output_path,
