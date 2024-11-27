@@ -5,7 +5,7 @@ Application of Self-Organizing Maps (SOM) for Cell Type Identification
 This script demonstrates the original application for which the SOM class and associated project 
 were developed: identifying different cell types based on simulated single-cell data. By training 
 a Self-Organizing Map (SOM) on high-dimensional data, this script allows for efficient clustering 
-and visualization of cellular features.
+and visualization of different cell types.
 
 Key Features:
 -------------
@@ -49,8 +49,8 @@ from SOM.utils.som_utils import SOM
 
 
 # Load data
-train_dat = pd.read_csv("../../data/sim_data_pseudo_feature.csv")
-other_dat = pd.read_csv("../../data/sim_data_umap_data.csv")
+train_dat = pd.read_csv("../../data/seq_sim_training_data.csv")
+other_dat = pd.read_csv("../../data/seq_sim_categorical_data.csv")
 
 # Train SOM
 som = SOM(
