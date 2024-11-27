@@ -178,14 +178,14 @@ class SOM():
 
     def __init__(
         self,
-        train_dat: pd.DataFrame,
-        other_dat: pd.DataFrame,
         scale_method: str,
         x_dim: int,
         y_dim: int,
         topology: str,
         neighborhood_fnc: str,
-        epochs: int
+        epochs: int,
+        train_dat: pd.DataFrame,
+        other_dat: pd.DataFrame = None
     ):
 
         """
@@ -250,7 +250,7 @@ class SOM():
     @staticmethod
     def _validate_inputs(
         train_dat: pd.DataFrame,
-        other_dat: pd.DataFrame,
+        other_dat: Union[pd.DataFrame, None],
         scale_method: str,
         x_dim: int,
         y_dim: int,
@@ -286,31 +286,47 @@ class SOM():
                 values, or if `x_dim`, `y_dim`, or `epochs` are not positive integers.
         """
 
+        # Validate train_dat
         if not isinstance(train_dat, pd.DataFrame):
             raise TypeError("train_dat must be a pandas DataFrame.")
+
+        if train_dat.shape[1] <= 1:
+            raise ValueError("Training data must have at least two features.")
 
         is_all_numeric = train_dat.dtypes.apply(lambda dtype: np.issubdtype(dtype, np.number)).all()
         if not is_all_numeric:
             raise TypeError("train_dat must contain only numeric values.")
 
-        if not isinstance(other_dat, pd.DataFrame):
-            raise TypeError("other_dat must be a pandas DataFrame.")
+        # Validate other_dat if provided
+        if other_dat is not None:
+            if not isinstance(other_dat, pd.DataFrame):
+                raise TypeError("`other_dat` must be a pandas DataFrame if provided.")
+            if len(train_dat) != len(other_dat):
+                raise ValueError(
+                    "The number of rows in `train_dat` must match the number of rows in `other_dat`."
+                )
 
+        # Validate scaling method
         if scale_method not in ["zscore", "minmax"]:
             raise ValueError("scale_method must be 'zscore' or 'minmax'.")
 
+        # Validate topology
         if topology not in ["rectangular", "hexagonal"]:
             raise ValueError("topology must be 'rectangular' or 'hexagonal'.")
 
+        # Validate neighborhood function
         if neighborhood_fnc not in ["gaussian", "bubble"]:
             raise ValueError("neighborhood_fnc must be 'gaussian' or 'bubble'.")
 
+        # Validate x-dimension
         if not isinstance(x_dim, int) or x_dim <= 0:
             raise ValueError("x_dim must be a positive integer.")
 
+        # Validate y-dimension
         if not isinstance(y_dim, int) or y_dim <= 0:
             raise ValueError("y_dim must be a positive integer.")
 
+        # Validate epochs
         if not isinstance(epochs, int) or epochs <= 0:
             raise ValueError("epochs must be a positive integer.")
 
@@ -333,10 +349,7 @@ class SOM():
         """
 
         n_samples = self.train_dat_scaled.shape[0]
-        n_features = self.train_dat_scaled.shape[1]
-
-        if n_features <= 1:
-            raise ValueError("Training data must have at least two features.")
+        n_features = self.train_dat_scaled.shape[1]      
 
         som = MiniSom(
             x=self.xdim,  # number of neurons in x-dimension
@@ -762,7 +775,7 @@ class SOM():
     def _minmax_unscale(self, scaled_data):
 
         """
-        Unscale z-score normalized data back to its original scale.
+        Unscale min/max normalized data back to its original scale.
 
         Args:
             scaled_data (np.ndarray): Scaled data, often neuron weights returned from the training
