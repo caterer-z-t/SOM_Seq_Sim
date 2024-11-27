@@ -178,14 +178,14 @@ class SOM():
 
     def __init__(
         self,
-        train_dat: pd.DataFrame,
-        other_dat: pd.DataFrame,
         scale_method: str,
         x_dim: int,
         y_dim: int,
         topology: str,
         neighborhood_fnc: str,
-        epochs: int
+        epochs: int,
+        train_dat: pd.DataFrame,
+        other_dat: pd.DataFrame = None
     ):
 
         """
@@ -250,7 +250,7 @@ class SOM():
     @staticmethod
     def _validate_inputs(
         train_dat: pd.DataFrame,
-        other_dat: pd.DataFrame,
+        other_dat: Union[pd.DataFrame, None],
         scale_method: str,
         x_dim: int,
         y_dim: int,
@@ -286,31 +286,47 @@ class SOM():
                 values, or if `x_dim`, `y_dim`, or `epochs` are not positive integers.
         """
 
+        # Validate train_dat
         if not isinstance(train_dat, pd.DataFrame):
             raise TypeError("train_dat must be a pandas DataFrame.")
+
+        if train_dat.shape[1] <= 1:
+            raise ValueError("Training data must have at least two features.")
 
         is_all_numeric = train_dat.dtypes.apply(lambda dtype: np.issubdtype(dtype, np.number)).all()
         if not is_all_numeric:
             raise TypeError("train_dat must contain only numeric values.")
 
-        if not isinstance(other_dat, pd.DataFrame):
-            raise TypeError("other_dat must be a pandas DataFrame.")
+        # Validate other_dat if provided
+        if other_dat is not None:
+            if not isinstance(other_dat, pd.DataFrame):
+                raise TypeError("`other_dat` must be a pandas DataFrame if provided.")
+            if len(train_dat) != len(other_dat):
+                raise ValueError(
+                    "The number of rows in `train_dat` must match the number of rows in `other_dat`."
+                )
 
+        # Validate scaling method
         if scale_method not in ["zscore", "minmax"]:
             raise ValueError("scale_method must be 'zscore' or 'minmax'.")
 
+        # Validate topology
         if topology not in ["rectangular", "hexagonal"]:
             raise ValueError("topology must be 'rectangular' or 'hexagonal'.")
 
+        # Validate neighborhood function
         if neighborhood_fnc not in ["gaussian", "bubble"]:
             raise ValueError("neighborhood_fnc must be 'gaussian' or 'bubble'.")
 
+        # Validate x-dimension
         if not isinstance(x_dim, int) or x_dim <= 0:
             raise ValueError("x_dim must be a positive integer.")
 
+        # Validate y-dimension
         if not isinstance(y_dim, int) or y_dim <= 0:
             raise ValueError("y_dim must be a positive integer.")
 
+        # Validate epochs
         if not isinstance(epochs, int) or epochs <= 0:
             raise ValueError("epochs must be a positive integer.")
 
@@ -333,10 +349,7 @@ class SOM():
         """
 
         n_samples = self.train_dat_scaled.shape[0]
-        n_features = self.train_dat_scaled.shape[1]
-
-        if n_features <= 1:
-            raise ValueError("Training data must have at least two features.")
+        n_features = self.train_dat_scaled.shape[1]      
 
         som = MiniSom(
             x=self.xdim,  # number of neurons in x-dimension
@@ -369,139 +382,84 @@ class SOM():
         self.weights = self._unscale(self.weights_scaled)
 
 
-    def _zscore_scale(self):
+    def calculate_topographic_error(self) -> float:
 
         """
-        Scale data using z-score normalization.
+        Calculate the topographic error of the trained SOM.
+
+        Topographic error measures the proportion of data points for which the two closest neurons
+        (BMUs) are not adjacent in the SOM grid. A lower topographic error indicates better 
+        topology preservation.
 
         Returns:
-            Tuple[np.ndarray, List[np.ndarray]]:
-                - (np.ndarray): The scaled data
-                - (List[np.ndarray]): A list containing the means and standard deviations used for
-                    scaling.
+            float: The topographic error, ranging from 0 (perfect preservation) to 1 (poor 
+                preservation).
         """
 
-        means = np.mean(self.train_dat, axis=0)
-        stds = np.std(self.train_dat, axis=0)
-        return (self.train_dat - means) / stds, [means, stds]
+        if self.map is None:
+            raise RuntimeError(
+                "SOM has not been trained. Call `train_map` before calculating topographic error."
+            )
+
+        topographic_error_count = 0
+
+        for idx in np.arange(len(self.train_dat_scaled)):
+            # Find the BMU (Best Matching Unit) for the current data point
+            bmu1 = self.observation_mapping[idx]
+
+            # Get the weights for all nodes
+            all_weights = self.weights_scaled.to_numpy()
+
+            # Compute distances from current data point to all nodes
+            distances = np.linalg.norm(all_weights - self.train_dat_scaled[idx, :], axis=1)
+
+            # Identify the second-best matching unit
+            bmu2 = np.argsort(distances)[1]
+
+            # Check if the two BMUs are adjacent in the SOM grid
+            if not self._are_nodes_adjacent(bmu1, bmu2):
+                topographic_error_count += 1
+
+        # Calculate the topographic error as the proportion of non-adjacent BMUs
+        return topographic_error_count / len(self.train_dat_scaled)
 
 
-    def _minmax_scale(self):
+    def calculate_percent_variance_explained(self) -> float:
 
         """
-        Scale data using min/max normalization.
+        Calculate the Percent Variance Explained (PVE) for the trained SOM.
+
+        PVE is the proportion of the total variance in the data explained by the SOM.
+        It is computed as: PVE = ((TSS - WCSS) / TSS) * 100, where:
+            - TSS = total sum of squares
+            - WCSS = within cluster (i.e., within neuron) sum of squares
 
         Returns:
-            Tuple[np.ndarray, List[np.ndarray]]:
-                - np.ndarray: The scaled data
-                - List[np.ndarray]: A list containing the minimum and maximum values used for
-                    scaling.
+            float: Percent Variance Explained (PVE)
         """
 
-        min_vals = np.min(self.train_dat, axis=0)
-        max_vals = np.max(self.train_dat, axis=0)
-        return (self.train_dat - min_vals) / (max_vals - min_vals), [min_vals, max_vals]
+        if self.map is None:
+            raise RuntimeError(
+                "SOM has not been trained. Call `train_map` before calculating PVE."
+            )
 
+        # Compute the mean of the dataset
+        global_mean = self.train_dat_scaled.mean(axis=0)
 
-    def _zscore_unscale(self, scaled_data):
+        # Compute Total Sum of Squares (TSS)
+        tss = np.sum(np.linalg.norm(self.train_dat_scaled - global_mean, axis=1) ** 2)
 
-        """
-        Unscale z-score normalized data back to its original scale.
+        # Compute Within-Cluster Sum of Squares (WCSS)
+        wcss = 0
+        for idx in np.arange(len(self.train_dat_scaled)):
+            bmu = self.observation_mapping[idx]
+            bmu_weight = self.weights_scaled.iloc[bmu, :].to_numpy()
+            wcss += np.linalg.norm(self.train_dat_scaled[idx, :] - bmu_weight) ** 2
 
-        Args:
-            scaled_data (np.ndarray): Scaled data, often neuron weights returned from the training
-                process.
+        # Calculate PVE
+        pve = ((tss - wcss) / tss) * 100
 
-        Returns:
-            np.ndarray: The unscaled data.
-        """
-
-        means, stds = self._scaling_factors
-        return scaled_data * stds + means
-
-
-    def _minmax_unscale(self, scaled_data):
-
-        """
-        Unscale z-score normalized data back to its original scale.
-
-        Args:
-            scaled_data (np.ndarray): Scaled data, often neuron weights returned from the training
-                process.
-
-        Returns:
-            np.ndarray: The unscaled data.
-        """
-
-        min_vals, max_vals = self._scaling_factors
-        return scaled_data * (max_vals - min_vals) + min_vals
-
-
-    def _get_observation_neuron_mappings(self):
-
-        """
-        Get the neuron id that each observation in `train_dat` is assigned to.
-
-        Returns:
-            np.ndarray: An array where each element corresponds to the ID of the winning neuron for
-                the respective data point.
-        """
-
-        # Get the x-y coordiantes of the winning neurons
-        winner_coordinates = np.array([
-            self.map.winner(x) for x in self.train_dat_scaled
-        ]).T
-
-        # Convert x-y coordinate to "neuron id"
-        winner_neuron = np.ravel_multi_index(
-            multi_index=winner_coordinates,
-            dims=(self.xdim, self.ydim)
-        )
-        return winner_neuron
-
-
-    def _get_neuron_coordinates(self):
-
-        """
-        Retrieve the coordinates of all neurons in the SOM grid.
-
-        Returns:
-            pd.DataFrame: A DataFrame containing the x and y coordinates of each neuron, where the
-                first column corresponds to x and the second column corresponds to y.
-        """
-
-        HEX_CORRECTION = np.sqrt(3)/2
-
-        xx, yy = self.map.get_euclidean_coordinates()
-
-        x_coords = [xx[(i, j)] for i in range(self.xdim) for j in range(self.ydim)]
-        if self.topology == 'hexagonal':
-            y_coords = [
-                yy[(i, j)] * HEX_CORRECTION for i in range(self.xdim) for j in range(self.ydim)
-            ]
-        else:
-            y_coords = [yy[(i, j)] for i in range(self.xdim) for j in range(self.ydim)]
-
-        return pd.DataFrame({
-            'x': x_coords,
-            'y': y_coords
-        })
-
-
-    def _get_weights(self):
-
-        """
-        Retrieve the weight vector of each neuron after training.
-
-        Returns:
-            pd.DataFrame: A DataFrame where each row corresponds to a neuron's weight vector and 
-                the number of columns equal the dimensionality of the original dataset.
-        """
-
-        weights_scaled = [
-            self.map.get_weights()[i, j, :] for i in range(self.xdim) for j in range(self.ydim)
-        ]
-        return pd.DataFrame(weights_scaled)
+        return pve
 
 
     def plot_component_planes(
@@ -763,6 +721,141 @@ class SOM():
         return fig, ax
 
 
+    def _zscore_scale(self):
+
+        """
+        Scale data using z-score normalization.
+
+        Returns:
+            Tuple[np.ndarray, List[np.ndarray]]:
+                - (np.ndarray): The scaled data
+                - (List[np.ndarray]): A list containing the means and standard deviations used for
+                    scaling.
+        """
+
+        means = np.mean(self.train_dat, axis=0)
+        stds = np.std(self.train_dat, axis=0)
+        return (self.train_dat - means) / stds, [means, stds]
+
+
+    def _minmax_scale(self):
+
+        """
+        Scale data using min/max normalization.
+
+        Returns:
+            Tuple[np.ndarray, List[np.ndarray]]:
+                - np.ndarray: The scaled data
+                - List[np.ndarray]: A list containing the minimum and maximum values used for
+                    scaling.
+        """
+
+        min_vals = np.min(self.train_dat, axis=0)
+        max_vals = np.max(self.train_dat, axis=0)
+        return (self.train_dat - min_vals) / (max_vals - min_vals), [min_vals, max_vals]
+
+
+    def _zscore_unscale(self, scaled_data):
+
+        """
+        Unscale z-score normalized data back to its original scale.
+
+        Args:
+            scaled_data (np.ndarray): Scaled data, often neuron weights returned from the training
+                process.
+
+        Returns:
+            np.ndarray: The unscaled data.
+        """
+
+        means, stds = self._scaling_factors
+        return scaled_data * stds + means
+
+
+    def _minmax_unscale(self, scaled_data):
+
+        """
+        Unscale min/max normalized data back to its original scale.
+
+        Args:
+            scaled_data (np.ndarray): Scaled data, often neuron weights returned from the training
+                process.
+
+        Returns:
+            np.ndarray: The unscaled data.
+        """
+
+        min_vals, max_vals = self._scaling_factors
+        return scaled_data * (max_vals - min_vals) + min_vals
+
+
+    def _get_observation_neuron_mappings(self):
+
+        """
+        Get the neuron id that each observation in `train_dat` is assigned to.
+
+        Returns:
+            np.ndarray: An array where each element corresponds to the ID of the winning neuron for
+                the respective data point.
+        """
+
+        # Get the x-y coordiantes of the winning neurons
+        winner_coordinates = np.array([
+            self.map.winner(x) for x in self.train_dat_scaled
+        ]).T
+
+        # Convert x-y coordinate to "neuron id"
+        winner_neuron = np.ravel_multi_index(
+            multi_index=winner_coordinates,
+            dims=(self.xdim, self.ydim)
+        )
+        return winner_neuron
+
+
+    def _get_neuron_coordinates(self):
+
+        """
+        Retrieve the coordinates of all neurons in the SOM grid.
+
+        Returns:
+            pd.DataFrame: A DataFrame containing the x and y coordinates of each neuron, where the
+                first column corresponds to x and the second column corresponds to y.
+        """
+
+        HEX_CORRECTION = np.sqrt(3)/2
+
+        xx, yy = self.map.get_euclidean_coordinates()
+
+        x_coords = [xx[(i, j)] for i in range(self.xdim) for j in range(self.ydim)]
+        if self.topology == 'hexagonal':
+            y_coords = [
+                yy[(i, j)] * HEX_CORRECTION for i in range(self.xdim) for j in range(self.ydim)
+            ]
+        else:
+            y_coords = [yy[(i, j)] for i in range(self.xdim) for j in range(self.ydim)]
+
+        return pd.DataFrame({
+            'x': x_coords,
+            'y': y_coords
+        })
+
+
+    def _get_weights(self):
+
+        """
+        Retrieve the weight vector of each neuron after training.
+
+        Returns:
+            pd.DataFrame: A DataFrame where each row corresponds to a neuron's weight vector and 
+                the number of columns equal the dimensionality of the original dataset.
+        """
+
+        weights_scaled = [
+            self.map.get_weights()[i, j, :] for i in range(self.xdim) for j in range(self.ydim)
+        ]
+        return pd.DataFrame(weights_scaled)
+
+
     @staticmethod
     def _draw_circle(
         ax: plt.axes,
@@ -906,7 +999,7 @@ class SOM():
     def _check_output_path(
         path: str
     ):
-        
+
         """
         Ensure the specified output path exists. If the directory does not exist, it is created.
 
@@ -919,86 +1012,6 @@ class SOM():
 
         if not os.path.exists(path):
             os.makedirs(path)
-
-
-    def calculate_topographic_error(self) -> float:
-
-        """
-        Calculate the topographic error of the trained SOM.
-
-        Topographic error measures the proportion of data points for which the two closest neurons
-        (BMUs) are not adjacent in the SOM grid. A lower topographic error indicates better 
-        topology preservation.
-
-        Returns:
-            float: The topographic error, ranging from 0 (perfect preservation) to 1 (poor 
-                preservation).
-        """
-
-        if self.map is None:
-            raise RuntimeError(
-                "SOM has not been trained. Call `train_map` before calculating topographic error."
-            )
-
-        topographic_error_count = 0
-
-        for idx in np.arange(len(self.train_dat_scaled)):
-            # Find the BMU (Best Matching Unit) for the current data point
-            bmu1 = self.observation_mapping[idx]
-
-            # Get the weights for all nodes
-            all_weights = self.weights_scaled.to_numpy()
-
-            # Compute distances from current data point to all nodes
-            distances = np.linalg.norm(all_weights - self.train_dat_scaled[idx, :], axis=1)
-
-            # Identify the second-best matching unit
-            bmu2 = np.argsort(distances)[1]
-
-            # Check if the two BMUs are adjacent in the SOM grid
-            if not self._are_nodes_adjacent(bmu1, bmu2):
-                topographic_error_count += 1
-
-        # Calculate the topographic error as the proportion of non-adjacent BMUs
-        return topographic_error_count / len(self.train_dat_scaled)
-
-
-    def calculate_percent_variance_explained(self) -> float:
-
-        """
-        Calculate the Percent Variance Explained (PVE) for the trained SOM.
-
-        PVE is the proportion of the total variance in the data explained by the SOM.
-        It is computed as: PVE = ((TSS - WCSS) / TSS) * 100, where:
-            - TSS = total sum of squares
-            - WCSS = within cluster (i.e., within neuron) sum of squares
-
-        Returns:
-            float: Percent Variance Explained (PVE)
-        """
-
-        if self.map is None:
-            raise RuntimeError(
-                "SOM has not been trained. Call `train_map` before calculating PVE."
-            )
-
-        # Compute the mean of the dataset
-        global_mean = self.train_dat_scaled.mean(axis=0)
-
-        # Compute Total Sum of Squares (TSS)
-        tss = np.sum(np.linalg.norm(self.train_dat_scaled - global_mean, axis=1) ** 2)
-
-        # Compute Within-Cluster Sum of Squares (WCSS)
-        wcss = 0
-        for idx in np.arange(len(self.train_dat_scaled)):
-            bmu = self.observation_mapping[idx]
-            bmu_weight = self.weights_scaled.iloc[bmu, :].to_numpy()
-            wcss += np.linalg.norm(self.train_dat_scaled[idx, :] - bmu_weight) ** 2
-
-        # Calculate PVE
-        pve = ((tss - wcss) / tss) * 100
-
-        return pve
 
 
     def _are_nodes_adjacent(
