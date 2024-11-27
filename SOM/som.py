@@ -1,3 +1,68 @@
+"""
+SOM Hyperparameter Tuning and Fitting
+=====================================
+
+Description:
+------------
+This script provides a command-line interface for fitting and visualizing a Self-Organizing Map
+(SOM). It supports both direct SOM fitting and hyperparameter tuning, depending on the inputs 
+provided.
+
+Inputs:
+=======
+- **Training Data (-t / --train_dat)** *(required)*:  
+        Path to a CSV file containing the numerical training data. Each row represents a data
+        point, and each column represents a feature.
+
+- **Categorical Data (-c / --other_dat)** *(optional)*:  
+        Path to a CSV file containing additional categorical or other metadata associated with
+        the training data. If only one column is provided, it will still be treated as a DataFrame.
+
+- **Output Directory (-o / --output_directory)** *(required)*:  
+        Path to the directory where results, including metrics and visualizations, will be saved.
+
+- **Scaling Method (-s / --scale_method)** *(required)*:  
+        The method used to scale the data before training the SOM. Accepts one or more values:  
+        `zscore` or `minmax`.
+
+- **x-dimension (-x / --x_dim)** *(required)*:  
+        Number of neurons in the x-dimension of the SOM grid. Accepts one or more integer values.
+
+- **y-dimension (-y / --y_dim)** *(required)*:  
+        Number of neurons in the y-dimension of the SOM grid. Accepts one or more integer values.
+
+- **Topology (-p / --topology)** *(required)*:  
+        The grid topology for the SOM. Accepts one or more values: `rectangular` or `hexagonal`.
+
+- **Neighborhood Function (-n / --neighborhood_fnc)** *(required)*:  
+        The neighborhood function for training the SOM. Accepts one or more values: `gaussian` or
+        `bubble`.
+
+- **Epochs (-e / --epochs)** *(required)*:  
+        Number of training epochs for the SOM. Accepts one or more integer values.
+
+- **Component Plane Plots (-m / --plot_component_planes)** *(optional)*:  
+        Whether to generate component plane plots for each feature in the training data. Defaults
+        to `True`.
+
+Usage:
+======
+Run the script from the command line with the required input paths and hyperparameters. If a single
+value is passed for each hyperparameter, the SOM is fitted directly. If multiple values are 
+provided, the script performs hyperparameter tuning to find the optimal configuration.
+
+Example command to perform hyperparameter tuning:
+-------------------------------------------------
+python som_script.py -t train_data.csv -c categorical_data.csv -o output_dir \
+    -s zscore minmax -x 3 5 7 -y 2 4 -p rectangular hexagonal \
+    -n gaussian bubble -e 50 100
+
+Example command to fit a SOM with predetermined hyperparameters:
+----------------------------------------------------------------
+python som_script.py -t train_data.csv -c categorical_data.csv -o output_dir \
+    -s zscore -x 5  -y 4 -p hexagonal -n gaussian bubble -e 50 100
+"""
+
 # Standard imports
 import argparse
 from itertools import product
@@ -13,8 +78,46 @@ from SOM.utils.som_utils import SOM
 
 
 def main():
-    """_summary_
+
     """
+    Main function to fit and/or tune a Self-Organizing Map (SOM) using user-provided inputs.
+
+    This function reads in training data and optional categorical data, accepts user-specified 
+    hyperparameters, and performs SOM fitting or hyperparameter tuning based on the number of 
+    hyperparameter values provided. Results, including performance metrics and visualizations,
+    are saved to the specified output directory.  
+
+    Functionality:
+    --------------
+    - If **single values** are provided for all hyperparameters:
+        - The SOM is fitted directly with the specified parameters, and results are saved and 
+          visualized.
+    - If **multiple values** are provided for any hyperparameter:
+        - Performs hyperparameter tuning using all combinations of provided values.
+        - Evaluates each combination based on Percent Variance Explained (PVE) and Topographic 
+          Error.
+        - Identifies and outputs the best hyperparameter combination and retrains the SOM using 
+          these parameters.
+
+    Outputs:
+    --------
+    - **Metrics**:  
+      Displays PVE and Topographic Error for the fitted SOM or for each hyperparameter combination
+      during tuning.
+
+    - **Best Parameters** (if tuning):  
+      Outputs the combination of hyperparameters that yielded the best performance.
+
+    - **Visualizations**:  
+      - Component plane plots for each feature (if enabled).  
+      - SOM grid mapping of categorical data (if provided).
+
+    Notes:
+    ------
+    - Hyperparameter tuning may take considerable time for large datasets or extensive
+      hyperparameter grids.
+    """
+
     parser = argparse.ArgumentParser(
         description=(
             "Fit a Self-Organizing Map (SOM) with specified hyperparameters. Performs"
