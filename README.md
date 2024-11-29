@@ -92,7 +92,7 @@ This project depends on several libraries and software packages. You can find th
 ### **Generating Sequencing Data**
   > Note: The code (`Seq_Sim/seq_sim.py` and `Seq_Sim/utils/seq_sim_utils.py`) is based on R scripts from the [Zhang Lab](https://fanzhanglab.org/). These R scripts have been modified and streamlined for this project. The biological relevance may not be fully retained, and it serves as a showcase for potential sequencing simulations. For more information please see [`Seq_Sim/README.md`](Seq_Sim/README.md)
 
-  **Step 1. Generate Simulated Single Cell Sequencing Data**
+  **Generate Simulated Single Cell Sequencing Data**
   
   You can generate simulated sequencing data by running the following command:
 
@@ -174,26 +174,47 @@ We would like to thank the contributors and open-source community for their valu
 ``` bash 
 SOM_Seq_Sim/
 ├── docs/
-│   ├── img/                     # Contains images used in Read the Docs
-│   ├── pipelines/               # Additional MD files for pipelines and packages
-│   ├── index.md                 # Initial page for Read the Docs
-│   └── requirements.txt         # Dependencies for Read the Docs 
+│   ├── img/                              # Contains images used in Read the Docs
+│   ├── pipelines/                        # Additional MD files for pipelines and packages
+│   ├── index.md                          # Initial page for Read the Docs
+│   └── requirements.txt                  # Dependencies for Read the Docs 
 ├── SOM/
+│   ├── utils/
+│   │       └── som_utils.py              # Contains the core implementation of the `SOM` class
+│   ├── data/              
+│   │   ├── iris_categorical_data.csv     # Categorical data for the Iris dataset
+│   │   ├── iris_training_data.csv        # Training data for the Iris dataset
+│   │   ├── seq_sim_categorical_data.csv  # Categorical data for the sequencing dataset
+│   │   ├── seq_sim_training_data.csv     # Training data for the sequencing dataset
+│   │   ├── titanic_categorical_data.csv  # Categorical data for the Titanic dataset
+│   │   └── titanic_training_data.csv     # Training data for the Titanic dataset
+│   ├── examples/           
+│   │   ├── output/
+│   │   │   ├── iris/                     # Directory containing output figures from `som_example_iris.py`
+│   │   │   ├── seq/                      # Directory containing output figures from `som_example_seq.py`
+│   │   │   └── titanic/                  # Directory containing output figures from `som_example_titanic.py`
+│   │   ├── som_example_iris.py           # Example script for applying the SOM to the Iris dataset
+│   │   ├── som_example_seq.py            # Example script for applying the SOM to the Sequencing dataset
+│   │   └── som_example_titanic.py        # Example script for applying the SOM to the Titanic dataset
+│   ├── README.md/                        # README file for SOM directory
+│   └── som.py                            # A command-line interface for fitting and visualizing SOMs. 
 ├── Seq_Sim/
-│   ├── utils/                  # folder containg additional utility functions
-│   │   └── seq_sim_utils.py    # contains all necessary functions for simulation.R
-│   ├── config.yml              # configuration file use to specify all components in simulation.R
-│   ├── README.md               # information specific to running this simulation sequencing generation code
-│   ├── seq_sim.py              # main function which runs the seqeucning generation code
-│   └── simulation.sh           # shell script for running sequencing generating code multiple times, see Seq_Sim/README.md for more information
+│   ├── utils/                            # folder containg additional utility functions
+│   │   └── seq_sim_utils.py              # contains all necessary functions for simulation.R
+│   ├── config.yml                        # configuration file use to specify all components in simulation.R
+│   ├── README.md                         # information specific to running this simulation sequencing generation code
+│   ├── seq_sim.py                        # main function which runs the seqeucning generation code
+│   └── simulation.sh                     # shell script for running sequencing generating code multiple times, see Seq_Sim/README.md for more information
 ├── test/
 │   ├── Seq_Sim/ 
 │   │   ├── test_seq_sim_utils.py
-│   │   └── test_seq_sim.py 
-├── .gitignore                  # Git ignore file to exclude files and directories from Git
-├── .readthedocs.yaml           # YAML file specifying dependencies for Read the Docs
-├── CODE_OF_CONDUCT.md          # markdown file explaining our code of conduct
-├── CONTRIBUTING.md             # markdown file explaining how to contribute to this repo
+│   │   └── test_seq_sim.py
+│   └── SOM/
+│       └── test_SOM.py                   # Tests for SOM functionality
+├── .gitignore                            # Git ignore file to exclude files and directories from Git
+├── .readthedocs.yaml                     # YAML file specifying dependencies for Read the Docs
+├── CODE_OF_CONDUCT.md                    # markdown file explaining our code of conduct
+├── CONTRIBUTING.md                       # markdown file explaining how to contribute to this repo
 ├── env.yml                     # YAML file specifying dependencies for the entire package
 ├── README.md                   # README file
 └── LICENSE                     # License for the project
