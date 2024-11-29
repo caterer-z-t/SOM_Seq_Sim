@@ -1,8 +1,6 @@
 <img src="assets/som_package_logo.png" alt="SOM SIM SEQ Logo" width="25%">
 
-# **Self-Organizing Maps for Genetic Sequencing Simulation (SOM-Seq)**
-
-**Simulation of Genetic Sequencing Data using Statistically Similar Distributions from Original Datasets**
+# **Self-Organizing Maps to Explore Genetic Sequencing Simulation Data (SOM-Seq)**
 
 [![GitHub release](https://img.shields.io/github/v/release/caterer-z-t/SOM_Seq_Sim)](https://github.com/caterer-z-t/SOM_Seq_Sim/releases) 
 [![GitHub Release Date](https://img.shields.io/github/release-date/caterer-z-t/SOM_Seq_Sim)](https://github.com/caterer-z-t/SOM_Seq_Sim/releases) 
@@ -24,8 +22,7 @@
 
 ## **Project Overview**
 
-Welcome to **SOM-Seq**, a cutting-edge approach to **simulating genetic sequencing data** using **Self-Organizing Maps (SOMs)**! 🎉  
-This project leverages SOMs to capture the statistical distributions of genetic data and generate **new, statistically similar datasets**. Whether you're diving into **population genetics**, **personalized medicine**, or **genomic data analysis**, SOM-Seq can help create synthetic, yet realistic datasets, a critical tool when real-world data is scarce. 🚀
+Welcome to **SOM-Seq** 🎉, a versatile toolbox designed to tackle two distinct but complementary tasks: **sequence data generation/simulation** and the use of **Self-Organizing Maps (SOMs)** for clustering and visualizing high-dimensional data. By combining these efforts, this project explores the applicability and value of SOMs as a powerful tool for analyzing and uncovering patterns within complex sequencing data. Additionally, each part of this project can be used independently, catering to those who are specifically interested in either generating sequence data or leveraging SOMs for data analysis. 🚀
 
 ---
 
@@ -113,7 +110,7 @@ Alternatively, you can run:
 By default, the output CSV files will be saved in the `SOM_Seq_Sim/data/` directory.
 
 #### Running SOMs
-For running Self-Organizing Maps on the generated sequencing data, further instructions are required. Please refer to the documentation or instructions provided by @madrpernat
+For running Self-Organizing Maps, whether on the generated sequencing data or your own data, please consult the SOM directory's [README file](SOM/).
 
 ## Documentation
 Include information about documentation here @victoria-hurd
