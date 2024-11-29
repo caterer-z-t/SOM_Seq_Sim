@@ -6,6 +6,8 @@ This repository provides an implementation of Self-Organizing Maps (SOMs), a clu
 
 A Self-Organizing Map (SOM) is a type of unsupervised neural network, designed to cluster and represent data by grouping similar data points. Unlike traditional clustering methods, SOMs map complex, high-dimensional datasets onto a simplified two-dimensional grid. This makes SOMs a valuable tool for identifying patterns and relationships within complex datasets.
 
+<img src="assets/som.png" alt="Basic SOM visual" width="35%">
+[Source]([http://example.com/source-link](https://ritikpatel17.medium.com/self-organising-maps-a-brief-overview-6f6ff3c0168a)
 ## How do SOMs work?
 
 SOMs create a **grid of neurons**, representing clusters in a two-dimensional space that can be visualized. Each neuron is linked to a **weight vector** extending into the original high-dimensional input space. These weight vectors function similarly to centroids in k-means clustering by summarizing the data points associated with each neuron.
