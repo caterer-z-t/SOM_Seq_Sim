@@ -8,7 +8,7 @@ import pandas as pd
 
 # Local imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from SOM.utils.SOM import SOM
+from SOM.SOM import SOM
 
 # Load data
 train_dat = pd.read_csv("../../data/sim_data_pseudo_feature.csv")

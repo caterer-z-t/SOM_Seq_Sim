@@ -177,27 +177,41 @@ We would like to thank the contributors and open-source community for their valu
 ``` bash 
 SOM_Seq_Sim/
 ├── docs/
-│   ├── img/                     # Contains images used in Read the Docs
-│   ├── pipelines/               # Additional MD files for pipelines and packages
-│   ├── index.md                 # Initial page for Read the Docs
-│   └── requirements.txt         # Dependencies for Read the Docs 
-├── SOM/
+│   ├── img/                    # Contains images used in Read the Docs
+│   ├── pipelines/              # Additional MD files for pipelines and packages
+│   ├── index.md                # Initial page for Read the Docs
+│   └── requirements.txt        # Dependencies for Read the Docs 
+├── SOM/                        # Main Folder for the SOM's
+│   ├── examples/               # folder containing usage of SOM's and its resulatant output file and figures
+│   │   ├── output_figs/
+│   │   └── som_example.py      # Script for SOM example
+│   └── SOM.py                  # SOM main source code
 ├── Seq_Sim/
 │   ├── utils/                  # folder containg additional utility functions
 │   │   └── seq_sim_utils.py    # contains all necessary functions for simulation.R
+│   ├── zhang_lab/              # Original R scripts from the Zhang Lab to generate Single Cell Sequencing Data
+│   │   ├── function.R          # Utitlity functions for generating the single cell sequencing
+│   │   ├── simulation.R        # Main R script to call the utility function and create the sequencing datasets and figures
+│   │   ├── simulation.sh       # Shell script to run simulations with various parameters
+│   │   └── config.yml          # Configuration file containing simulation parameters
 │   ├── config.yml              # configuration file use to specify all components in simulation.R
 │   ├── README.md               # information specific to running this simulation sequencing generation code
 │   ├── seq_sim.py              # main function which runs the seqeucning generation code
 │   └── simulation.sh           # shell script for running sequencing generating code multiple times, see Seq_Sim/README.md for more information
 ├── test/
+│   ├── SOM/ 
+│   │   └── test_SOM_obj.py
 │   ├── Seq_Sim/ 
 │   │   ├── test_seq_sim_utils.py
 │   │   └── test_seq_sim.py 
+├── .gitattributes              # Git attributes file to use Github's large file storage service
 ├── .gitignore                  # Git ignore file to exclude files and directories from Git
 ├── .readthedocs.yaml           # YAML file specifying dependencies for Read the Docs
 ├── CODE_OF_CONDUCT.md          # markdown file explaining our code of conduct
 ├── CONTRIBUTING.md             # markdown file explaining how to contribute to this repo
 ├── env.yml                     # YAML file specifying dependencies for the entire package
+├── mkdocs.yml                  # Yaml file for setup and configuration of readthedocs
+├── pyproject.toml              # Pyproject toml file for configuring this package into an installable software
 ├── README.md                   # README file
 └── LICENSE                     # License for the project
 ```

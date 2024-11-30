@@ -8,7 +8,7 @@ import matplotlib.patches as patches
 import matplotlib.colors as mcolors
 from unittest import TestCase
 import pandas as pd
-from SOM.utils.SOM import SOM
+from SOM.SOM import SOM
 
 # In[2]: Test cases for the initialization of the SOM class --
 

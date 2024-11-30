@@ -1,6 +1,0 @@
-[submodule "data/benchmarkDA"]
-	path = data/benchmarkDA
-	url = https://github.com/CompCy-lab/benchmarkDA.git
-[submodule "data/data/synthetic"]
-	path = data/data/synthetic
-	url = https://github.com/CompCy-lab/benchmarkDA.git
