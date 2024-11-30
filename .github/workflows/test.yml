@@ -41,7 +41,7 @@ jobs:
       - name: Install pytest and coverage
         run: |
           conda activate som-sim-env
-          conda install pytest coverage
+          conda install pytest pytest-cov -y
 
       # Run tests with coverage
       - name: Run tests with coverage
@@ -49,18 +49,9 @@ jobs:
           conda activate som-sim-env
           export PYTHONPATH=$(pwd)
           coverage run -m pytest test/ -v
-          coverage report
+          pytest --cov --cov-report=xml
 
-      # Upload coverage to Codecov (you can replace with Coveralls if desired)
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}  # Required if private repo or specific settings
-          
-      # Optional: If you want to persist the coverage report as an artifact
-      - name: Upload coverage report as artifact
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-report
-          path: coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
