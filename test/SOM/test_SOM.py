@@ -37,7 +37,6 @@ class TestSOM:
 
         return train_data, other_data
 
-
     @pytest.fixture
     def som_instance(self, sample_data):
         """
@@ -56,14 +55,13 @@ class TestSOM:
         )
         return som
 
-
     def test_som_initialization(self, som_instance):
         """
         Test that the SOM instance initializes properly.
         """
         assert som_instance.xdim == 3
         assert som_instance.ydim == 2
-        assert som_instance.topology == "hexagonal"
+        assert som_instance.topology == "rectangular"
         assert som_instance.neighborhood_fnc == "gaussian"
         assert som_instance.epochs == 10
         assert som_instance.map is None
@@ -71,7 +69,6 @@ class TestSOM:
         assert som_instance.weights_scaled is None
         assert som_instance.observation_mapping is None
         assert som_instance.neuron_coordinates is None
-
 
     def test_som_train_map(self, som_instance):
         """
@@ -83,7 +80,6 @@ class TestSOM:
         assert som_instance.weights_scaled is not None
         assert som_instance.observation_mapping is not None
         assert som_instance.neuron_coordinates is not None
-
 
     def test_non_numeric_training_data(self):
         """
@@ -113,7 +109,6 @@ class TestSOM:
                 epochs=10
             )
 
-
     def test_empty_training_data(self):
         """
         Test that ValueError is returned when training data is empty.
@@ -135,7 +130,6 @@ class TestSOM:
                 neighborhood_fnc="gaussian",
                 epochs=10
             )
-
 
     def test_unequal_data_sizes(self, sample_data):
         """
@@ -162,7 +156,6 @@ class TestSOM:
                 epochs=100
             )
 
-
     def test_invalid_scaling_method(self, sample_data):
         """
         Test that ValueError is returned for invalid scaling method.
@@ -182,7 +175,6 @@ class TestSOM:
                 neighborhood_fnc="gaussian",
                 epochs=10
             )
-
 
     def test_invalid_x_dimension(self, sample_data):
         """
@@ -204,7 +196,6 @@ class TestSOM:
                 epochs=10
             )
 
-
     def test_invalid_y_dimension(self, sample_data):
         """
         Test that ValueError is returned for invalid y-dimension (non-integer).
@@ -225,7 +216,6 @@ class TestSOM:
                 epochs=10
             )
 
-
     def test_calculate_percent_variance_explained(self, som_instance):
         """
         Test Percent Variance Explained calculation.
@@ -236,7 +226,6 @@ class TestSOM:
         # PVE should be a value between 0 and 100
         assert 0 <= pve <= 100
 
-
     def test_calculate_topographic_error(self, som_instance):
         """
         Test Topographic Error calculation.
@@ -246,7 +235,6 @@ class TestSOM:
 
         # Topographic error should be a value between 0 and 1
         assert 0 <= topo_error <= 1
-
 
     def test_zscore_scaling(self, som_instance):
         """
@@ -269,7 +257,6 @@ class TestSOM:
             unscaled_data, original_data, decimal=5
         )
 
-
     def test_minmax_scaling(self, som_instance):
         """
         Test that scaling and unscaling with min-max normalization returns the original data.
@@ -291,7 +278,6 @@ class TestSOM:
             unscaled_data, original_data, decimal=5
         )
 
-
     def test_plot_component_planes(self, som_instance, tmp_path):
         """
         Test plotting component planes.
@@ -303,7 +289,6 @@ class TestSOM:
         # The number of component planes generated should equal the number of features in the
         # training data
         assert len(list(output_dir.iterdir())) == 3
-
 
     def test_plot_categorical_data(self, som_instance, tmp_path):
         """
