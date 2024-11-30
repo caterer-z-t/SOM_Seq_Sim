@@ -8,6 +8,7 @@
 [![Build Status](https://img.shields.io/github/actions/workflow/status/caterer-z-t/SOM_Seq_Sim/build.yml?label=build&logo=github)](https://github.com/caterer-z-t/SOM_Seq_Sim/actions)
 [![License](https://img.shields.io/github/license/caterer-z-t/SOM_Seq_Sim?label=License)](https://github.com/caterer-z-t/SOM_Seq_Sim/blob/main/LICENSE)
 [![Repo Size](https://img.shields.io/github/repo-size/caterer-z-t/SOM_Seq_Sim?label=Repo%20Size)](https://github.com/caterer-z-t/SOM_Seq_Sim)
+[![codecov](https://codecov.io/gh/<your-username>/<your-repo>/branch/main/graph/badge.svg)](https://codecov.io/gh/caterer-z-t/SOM_Seq_Sim)
 [![Contributors](https://img.shields.io/github/contributors/caterer-z-t/SOM_Seq_Sim?label=Contributors)](https://github.com/caterer-z-t/SOM_Seq_Sim/graphs/contributors)
 [![Pull Requests](https://img.shields.io/github/issues-pr/caterer-z-t/SOM_Seq_Sim?label=Pull%20Requests)](https://github.com/caterer-z-t/SOM_Seq_Sim/pulls)
 [![Discussions](https://img.shields.io/github/discussions/caterer-z-t/SOM_Seq_Sim?label=Discussions&logo=github)](https://github.com/caterer-z-t/SOM_Seq_Sim/discussions)

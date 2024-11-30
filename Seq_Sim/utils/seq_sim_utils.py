@@ -5,6 +5,7 @@ import yaml
 import os
 import argparse
 
+
 # Constant for seed to ensure reproducibility
 DEFAULT_SEED = 1234
 
@@ -699,7 +700,6 @@ def case_when(condition_list: List[Tuple[bool, any]], default_value: any) -> any
     return default_value
 
 
-
 # Function to create a directory if it does not exist
 def create_directory_if_not_exists(directory: str) -> None:
     """
@@ -789,12 +789,20 @@ def arg_parser():
     Returns:
         argparse.ArgumentParser: Argument parser object.
     """
-    parser = argparse.ArgumentParser(description="Generate and save features for the given number of samples and fold change.")
-    parser.add_argument("num_samples", type=int, help="Number of samples to generate.")
-    parser.add_argument("fold_change", type=float, help="Fold change for interaction effects.")
-    parser.add_argument("config_file", type=str, help="Path to the configuration file.")
-    args = parser.parse_args()
-    return args
+    parser = argparse.ArgumentParser(
+        description="Generate and save features for the given number of samples and fold change."
+    )
+    parser.add_argument(
+        "--num_samples", type=int, required=True, help="Number of samples to generate."
+    )
+    parser.add_argument(
+        "--fold_change", type=float, required=True, help="Fold change value."
+    )
+    parser.add_argument(
+        "--config_file", type=str, required=True, help="Path to configuration file."
+    )
+    return parser.parse_args()
+
 
 # Function to validate and parse command-line arguments
 def validate_arguments(args: list[str]) -> tuple[int, float, str]:
