@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=42", "wheel", "pyyaml"]  # Include pyyaml to parse env.yml
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "SOM Seq Sim"
+version = "1.0.0"
+description = "Self-Organizing Maps for Genetic Sequencing Simulation"
+readme = "README.md"
+readme-content-type = "text/markdown"
+authors = [
+    {name = "Zachary Caterer", email = "ztcaterer@colorado.edu"},
+    {name = "Victoria Hurd"},
+    {name = "Maddy Pernat"},
+    {name = "Con Muangkod"}
+]
+license = "MIT"
+keywords = ["genetics", "self-organizing-maps", "simulation"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = ['minisom', 'pandas', 'numpy', 'seaborn', 'matplotlib']  # Dependencies will be dynamically loaded
+python-requires = ">=3.12"
+
+[project.optional-dependencies]
+dev = ['pytest']  # Dev dependencies will be dynamically loaded
+
+[project.urls]
+homepage = "https://github.com/caterer-z-t/SOM_Sew_Sim"
+repository = "https://github.com/caterer-z-t/SOM-Seq_Sim"
+bug-tracker = "https://github.com/caterer-z-t/SOM-Seq_Sim/issues"
