@@ -1,8 +1,6 @@
 <img src="assets/som_package_logo.png" alt="SOM SIM SEQ Logo" width="25%">
 
-# **Self-Organizing Maps for Genetic Sequencing Simulation (SOM-Seq)**
-
-**Simulation of Genetic Sequencing Data using Statistically Similar Distributions from Original Datasets**
+# **Self-Organizing Maps to Explore Genetic Sequencing Simulation Data (SOM-Seq)**
 
 [![GitHub release](https://img.shields.io/github/v/release/caterer-z-t/SOM_Seq_Sim)](https://github.com/caterer-z-t/SOM_Seq_Sim/releases) 
 [![GitHub Release Date](https://img.shields.io/github/release-date/caterer-z-t/SOM_Seq_Sim)](https://github.com/caterer-z-t/SOM_Seq_Sim/releases) 
@@ -18,6 +16,7 @@
 ---
 
 ## **Course:**
+
 [CSCI 6118](https://github.com/swe4s): Software Engineering for Scientists at the [University of Colorado Boulder](https://www.colorado.edu/)
 
 ---
@@ -30,6 +29,7 @@ This project leverages SOMs to capture the statistical distributions of genetic 
 ---
 
 ## **Table of Contents**
+
 - [Usage](#usage)
   - [Project Setup](#project-setup)
   - [Requirements](#requirements)
@@ -55,7 +55,7 @@ This project leverages SOMs to capture the statistical distributions of genetic 
 
 This project depends on several libraries and software packages. You can find the list in the `env.yml` file, which makes setting up the environment a breeze.
 
-> Key libraries in the environment:  
+> Key libraries in the environment:
 >   - `numpy`  
 >   - `pandas`  
 >   - `matplotlib`  
