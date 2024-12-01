@@ -162,15 +162,16 @@ pytest test/ -v
 </table>
 
 ## License
+
 This project is licensed under the MIT License - see the `LICENSE` file for details.
 
 ## Acknowledgements
 
 We would like to thank the contributors and open-source community for their valuable contributions to this project.
 
-
 ## Project Structure
-``` bash 
+
+``` bash
 SOM_Seq_Sim/
 ├── docs/
 │   ├── img/                              # Contains images used in Read the Docs
@@ -214,7 +215,7 @@ SOM_Seq_Sim/
 ├── .readthedocs.yaml                     # YAML file specifying dependencies for Read the Docs
 ├── CODE_OF_CONDUCT.md                    # markdown file explaining our code of conduct
 ├── CONTRIBUTING.md                       # markdown file explaining how to contribute to this repo
-├── env.yml                     # YAML file specifying dependencies for the entire package
-├── README.md                   # README file
-└── LICENSE                     # License for the project
+├── env.yml                               # YAML file specifying dependencies for the entire package
+├── README.md                             # README file
+└── LICENSE                               # License for the project
 ```
