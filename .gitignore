@@ -17,6 +17,7 @@ Seq_Sim/notes.md
 *.csv
 *.log
 
+
 # Generated cache files from running the code
 __pycache__
 .pytest_cache
@@ -25,3 +26,5 @@ __pycache__
 .vscode/launch.json
 .vscode/settings.json
 .coverage
+
+TODO.md
