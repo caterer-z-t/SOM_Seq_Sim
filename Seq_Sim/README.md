@@ -26,8 +26,7 @@ Seq_Sim/
 │   └── config.yml              # Configuration file containing simulation parameters
 ├── simulation.sh               # Shell script to run simulations with various parameters
 ├── config.yml                  # Configuration file containing simulation parameters
-├── seq_sim.py                  # Main Python script for data simulation
-└── seq_sim.py                  # Python file which calls all the utility functions
+└── seq_sim.py                  # Main Python script for data simulation
 ```
 
 ### File Descriptions
@@ -54,7 +53,7 @@ Seq_Sim/
      - `fold_changes`: A list of fold change values that will be used in the simulation.
      - `log_file`: Path to the log file where errors and output are saved.
      - `file_path_to_simulation`: Path to the `seq_sim.py` script, relative to the `Seq_Sim/` directory.
-   
+
    - Example of the structure and layout of this configuration file is shown below. 
    ``` yaml
    log_file: "error.log"
@@ -142,7 +141,7 @@ Seq_Sim/
 
    This will run the simulation using the parameters specified in the `config.yml` file.
 
-   Alternatively, you can run
+   Alternatively, you can run a single simulation with a single value for `num_samples` and `fold_change` with:
    ``` bash 
    python seq_sim.py \ 
         --num_samples 30                   \ # num samples 
