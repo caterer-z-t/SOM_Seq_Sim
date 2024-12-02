@@ -1,5 +1,5 @@
-Functions
-=========
+Seq_Sim Core Functions
+========================
 
 
 Module contents

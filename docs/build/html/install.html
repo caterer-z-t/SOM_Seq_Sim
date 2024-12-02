@@ -2,10 +2,12 @@
 <html class="no-js" lang="en" data-content_root="./">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" />
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Walkthroughs" href="walkthrough.html" /><link rel="prev" title="Seq_Sim Core Functions" href="Seq_Sim.html" />
 
-    <!-- Generated with Sphinx 7.3.7 and Furo 2024.08.06 --><title>Python Module Index - SOM_Seq_Sim 1.0 documentation</title>
-<link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
+    <!-- Generated with Sphinx 7.3.7 and Furo 2024.08.06 -->
+        <title>Installation Instructions - SOM_Seq_Sim 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
     
@@ -210,10 +212,8 @@
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Setup &amp; Walkthroughs</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation Instructions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="generate_data.html">Generating Sequencing Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="make_soms.html">Creating SOMs</a></li>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Installation Instructions</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="walkthrough.html">Walkthroughs</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Walkthroughs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="iris.html">Iris Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="seq_example.html">Sequencing Dataset</a></li>
@@ -246,7 +246,13 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/install.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
@@ -261,53 +267,58 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          
-<section class="domainindex-section">
-  <h1>Python Module Index</h1>
-  <div class="domainindex-jumpbox"><a href="#cap-s"><strong>s</strong></a></div>
+          <section id="installation-instructions">
+<h1>Installation Instructions<a class="headerlink" href="#installation-instructions" title="Link to this heading">¶</a></h1>
+<ol class="arabic">
+<li><p><strong>Clone the repository</strong>:</p>
+<p><code class="docutils literal notranslate"><span class="pre">`</span> <span class="pre">bash</span>
+<span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/caterer-z-t/SOM_Seq_Sim.git</span>
+<span class="pre">cd</span> <span class="pre">/path/to/SOM_Seq_Sim</span>
+<span class="pre">`</span></code></p>
+</li>
+<li><p><strong>Create a virtual environment (optional but recommended):</strong></p>
+<blockquote>
+<div><p>If you’re using <cite>conda</cite>, <cite>mamba</cite>, or <cite>micromamba</cite>, you can create the environment directly from the <cite>env.yml</cite> file:
+<code class="docutils literal notranslate"><span class="pre">`</span> <span class="pre">bash</span>
+<span class="pre">conda</span> <span class="pre">env</span> <span class="pre">create</span> <span class="pre">-f</span> <span class="pre">env.yml</span>
+<span class="pre">`</span></code></p>
+</div></blockquote>
+</li>
+<li><p><strong>Activate environment using conda (please change {conda} to be whatever used to create the environment):</strong></p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">`</span> <span class="pre">bash</span>
+<span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">som-sim-env</span>
+<span class="pre">`</span></code></p>
+</div></blockquote>
+</li>
+</ol>
 </section>
-<table class="domainindex-table">
-  <tr class="pcap">
-    <td></td><td>&#160;</td><td></td>
-  </tr>
-  <tr class="cap" id="cap-s">
-    <td></td><td><strong>s</strong></td><td></td>
-  </tr>
-  <tr>
-    <td><img src="_static/minus.png" class="toggler"
-              id="toggle-1" style="display: none" alt="-" /></td>
-    <td>
-        <code class="xref">Seq_Sim</code></td><td>
-    <em></em></td>
-  </tr>
-  <tr class="cg-1">
-    <td></td>
-    <td>&#160;&#160;&#160;
-        <a href="Seq_Sim.html#module-Seq_Sim.utils.seq_sim_utils"><code class="xref">Seq_Sim.utils.seq_sim_utils</code></a></td><td>
-    <em></em></td>
-  </tr>
-  <tr>
-    <td><img src="_static/minus.png" class="toggler"
-              id="toggle-2" style="display: none" alt="-" /></td>
-    <td>
-        <code class="xref">SOM</code></td><td>
-    <em></em></td>
-  </tr>
-  <tr class="cg-2">
-    <td></td>
-    <td>&#160;&#160;&#160;
-        <a href="SOM_Seq_Sim.html#module-SOM.utils.som_utils"><code class="xref">SOM.utils.som_utils</code></a></td><td>
-    <em></em></td>
-  </tr>
-</table>
 
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="walkthrough.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Walkthroughs</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="Seq_Sim.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Seq_Sim Core Functions</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
