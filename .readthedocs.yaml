@@ -8,10 +8,22 @@ build:
   jobs:
     post_checkout:
       - git fetch --unshallow || true
-    post_create_environment:
-      - pip install --upgrade pip
-      - pip install -r docs/requirements.txt
+
+  # Disable the default Sphinx build process
+  build-html: false
 
 sphinx:
-  builder: html
-  configuration: docs/source/conf.py
+  builder: none  # Disable Sphinx builds
+
+# Add this section to serve pre-built HTML files
+documentation_type: "sphinx_html"
+
+# The directory where your pre-built HTML files are stored
+python:
+  install:
+    - method: pip
+      path: .
+
+# Ensure the correct directory is set for your HTML files
+extra:
+  build_dir: docs/build
