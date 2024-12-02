@@ -16,7 +16,3 @@ build:
 sphinx:
   builder: html
   configuration: docs/source/conf.py
-python:
-  install:
-    - method: pip
-      path: .
