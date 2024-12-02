@@ -1,19 +1,22 @@
-# Read the Docs configuration file for MkDocs projects
-# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
-
-# Required
+# Read the Docs configuration file
 version: 2
 
-# Set the version of Python and other tools you might need
 build:
   os: ubuntu-22.04
   tools:
-    python: "3.12"
+    python: "3.11"
+  jobs:
+    post_checkout:
+      - git fetch --unshallow || true
 
-mkdocs:
-  configuration: mkdocs.yml
+sphinx:
+  builder: html  # Default Sphinx builder to maintain compatibility
 
-# Optionally declare the Python requirements required to build your docs
+# Specify the location of the pre-built HTML files
+extra:
+  build_dir: docs/build  # Adjust this to the path where your built HTML files are stored
+
+# Install your dependencies, if necessary
 python:
   install:
-  - requirements: docs/requirements.txt
+    - requirements: docs/requirements.txt
