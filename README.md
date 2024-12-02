@@ -17,6 +17,7 @@
 ---
 
 ## **Course:**
+
 [CSCI 6118](https://github.com/swe4s): Software Engineering for Scientists at the [University of Colorado Boulder](https://www.colorado.edu/)
 
 ---
@@ -28,6 +29,7 @@ Welcome to **SOM-Seq** 🎉, a versatile toolbox designed to tackle two distinct
 ---
 
 ## **Table of Contents**
+
 - [Usage](#usage)
   - [Project Setup](#project-setup)
   - [Requirements](#requirements)
@@ -53,7 +55,7 @@ Welcome to **SOM-Seq** 🎉, a versatile toolbox designed to tackle two distinct
 
 This project depends on several libraries and software packages. You can find the list in the `env.yml` file, which makes setting up the environment a breeze.
 
-> Key libraries in the environment:  
+> Key libraries in the environment:
 >   - `numpy`  
 >   - `pandas`  
 >   - `matplotlib`  
