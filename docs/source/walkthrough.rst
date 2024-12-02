@@ -1,15 +1,11 @@
 Walkthroughs
 ============
 
-ln -s ../../SOM/examples/ .
-
-Below are four tutorials on how to run SOM_Seq_Sim. These Jupyter Notebooks 
-use our dataset, the iris dataset, and the titanic dataset. 
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
 
-   iris.rst
-   seq_example.rst
-   titanic.rst
-
+   seq_sim_workflow
+   som_example_iris
+   som_example_seq
+   som_example_titanic
