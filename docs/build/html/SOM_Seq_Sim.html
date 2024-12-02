@@ -1,0 +1,1094 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Seq_Sim Core Functions" href="Seq_Sim.html" /><link rel="prev" title="Core Function Descriptions" href="modules.html" />
+
+    <!-- Generated with Sphinx 7.1.2 and Furo 2024.08.06 -->
+        <title>SOM Core Functions - SOM_Seq_Sim 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">SOM_Seq_Sim 1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/som_package_logo.svg" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">SOM_Seq_Sim 1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Project Overview</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html"><strong>Self-Organizing Maps to Explore Genetic Sequencing Simulation Data (SOM-Seq)</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_overview.html">Data Overview</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">Core Function Descriptions</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Core Function Descriptions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">SOM Core Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Seq_Sim.html">Seq_Sim Core Functions</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Setup &amp; Walkthroughs</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generate_data.html">Generating Sequencing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="make_soms.html">Creating SOMs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="make_soms.html#inputs">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="make_soms.html#usage">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="make_soms.html#outputs">Outputs</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="walkthrough.html">Walkthroughs</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Walkthroughs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="seq_sim_workflow.html">Seq Sim Workflow</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Seq Sim Workflow</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/seq_sim_workflow.html">1. Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/seq_sim_workflow.html#2.-Specify-Number-of-Samples-and-Fold-Change">2. Specify Number of Samples and Fold Change</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/seq_sim_workflow.html#3.-Specify-Configuration-File-Parameters">3. Specify Configuration File Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/seq_sim_workflow.html#4.-Generate-and-Save-Sequencing-Data">4. Generate and Save Sequencing Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/seq_sim_workflow.html#5.-Ensure-files-were-saved-properly">5. Ensure files were saved properly</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="som_example_iris.html">SOM Example Iris</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of SOM Example Iris</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_iris.html">Basic Example of Using the Self-Organizing Map (SOM) Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_iris.html#1.-Imports">1. Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_iris.html#2.-Load-Data">2. Load Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_iris.html#3.-Train-SOM">3. Train SOM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_iris.html#4.-Get-Fit-Metrics">4. Get Fit Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_iris.html#5.-Plot-SOM's-(see-output-directory-for-figures)">5. Plot SOM’s (see output directory for figures)</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="som_example_seq.html">SOM Example Seq</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of SOM Example Seq</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_seq.html">Application of Self-Organizing Maps (SOM) for Cell Type Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_seq.html#1.-Imports">1. Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_seq.html#2.-Load-Data">2. Load Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_seq.html#3.-Train-SOM">3. Train SOM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_seq.html#4.-Plot-layout-of-SOM-with-neuron-IDs">4. Plot layout of SOM with neuron IDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_seq.html#5.-Plot-component-planes-and-categorical-data-(see-output-directory-for-figures)">5. Plot component planes and categorical data (see output directory for figures)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_seq.html#6.-Custom-plotting-for-seq-visualization-for-each-neuron">6. Custom plotting for seq visualization for each neuron</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="som_example_titanic.html">SOM Example Titanic</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of SOM Example Titanic</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_titanic.html">Hyperparameter Tuning Example for Self-Organizing Maps (SOM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_titanic.html#1.-Imports">1. Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_titanic.html#2.-Load-Data">2. Load Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_titanic.html#3.-Define-Hyperparameters">3. Define Hyperparameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_titanic.html#4.-Grid-Search-for-Optimal-Parameters">4. Grid Search for Optimal Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_titanic.html#5.-Show-the-best-parameters">5. Show the best parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_titanic.html#6.-Train-SOM">6. Train SOM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_titanic.html#7.-Get-the-Fit-Metrics">7. Get the Fit Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/som_example_titanic.html#8.-Plot-component-planes-and-categorical-data-(see-output-directory-for-figures)">8. Plot component planes and categorical data (see output directory for figures)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References &amp; Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/caterer-z-t/SOM_Seq_Sim">Link to Github</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing to SOM_Seq_Sim</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CODE_OF_CONDUCT.html">Code of Conduct - SOM_Seq_Sim</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/SOM_Seq_Sim.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="som-core-functions">
+<h1>SOM Core Functions<a class="headerlink" href="#som-core-functions" title="Permalink to this heading">¶</a></h1>
+<section id="som-object">
+<h2>SOM object<a class="headerlink" href="#som-object" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="SOM.utils.som_utils.SOM">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">SOM.utils.som_utils.</span></span><span class="sig-name descname"><span class="pre">SOM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale_method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topology</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighborhood_fnc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_dat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SOM.utils.som_utils.SOM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for building, training, and visualizing Self-Organizing Maps (SOMs).</p>
+<p>This class provides tools to train a Self-Organizing Map on high-dimensional data, including
+scaling and unscaling data, calculating various fit metrics (e.g., topographic error, percent
+variance explained), and visualizing the SOM grid after fitting.</p>
+<section id="attributes-set-before-training">
+<h3>Attributes (set before training):<a class="headerlink" href="#attributes-set-before-training" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>train_dat (np.ndarray):</dt><dd><p>The raw (unscaled) training data used to fit the SOM.</p>
+</dd>
+<dt>other_dat (np.ndarray):</dt><dd><p>Additional, non-numeric data associated with each data point in <cite>train_dat</cite>, but
+not used to train the SOM.</p>
+</dd>
+<dt>train_dat_features (List[str]):</dt><dd><p>A list of feature names associated with <cite>train_dat</cite>.</p>
+</dd>
+<dt>other_dat_features (List[str]):</dt><dd><p>A list of feature names associated with <cite>other_dat</cite>.</p>
+</dd>
+<dt>xdim (int):</dt><dd><p>The number of neurons in the x-dimension of the SOM grid.</p>
+</dd>
+<dt>ydim (int):</dt><dd><p>The number of neurons in the y-dimension of the SOM grid.</p>
+</dd>
+<dt>topology (str):</dt><dd><p>The topology of the SOM grid (‘rectangular’ or ‘hexagonal’, associated with 4 and 6
+neighbors, respectively).</p>
+</dd>
+<dt>neighborhood_fnc (str):</dt><dd><p>The neighborhood function used during training (‘gaussian’ or ‘bubble’).</p>
+</dd>
+<dt>epochs (int):</dt><dd><p>The number of training epochs (i.e., how many times the dataset is presented during the
+training process).</p>
+</dd>
+<dt>_scale (Callable):</dt><dd><p>Method for scaling <cite>train_dat</cite> (z-score or min/max).</p>
+</dd>
+<dt>_unscale (Callable):</dt><dd><p>Method for unscaling scaled data (z-score or min/max).</p>
+</dd>
+</dl>
+</section>
+<section id="attributes-set-after-training">
+<h3>Attributes (set after training):<a class="headerlink" href="#attributes-set-after-training" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>map (MiniSom):</dt><dd><p>The trained MiniSom instance, created after calling <cite>train_map</cite>.</p>
+</dd>
+<dt>observation_mapping (np.ndarray):</dt><dd><p>The mapping of data points to their closest neurons (i.e. BMU, best matching unit).</p>
+</dd>
+<dt>neuron_coordinates (pd.DataFrame):</dt><dd><p>The coordinates of neurons in the SOM grid.</p>
+</dd>
+<dt>weights (pd.DataFrame):</dt><dd><p>The unscaled weight vectors of each neuron after training.</p>
+</dd>
+<dt>weights_scaled (pd.DataFrame):</dt><dd><p>The scaled weight vectors of each neuron after training.</p>
+</dd>
+</dl>
+</section>
+<section id="methods">
+<h3>Methods:<a class="headerlink" href="#methods" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>__init__:</dt><dd><p>Initializes the SOM instance with training data, configuration parameters, and scaling
+methods.</p>
+</dd>
+<dt>_validate_inputs:</dt><dd><p>Validates the input parameters for the SOM class, ensuring data types, ranges, and formats
+are correct.</p>
+</dd>
+<dt>train_map:</dt><dd><p>Trains the SOM using scaled training data. Includes initializing neuron weights and mapping
+data points to neurons.</p>
+</dd>
+<dt>calculate_percent_variance_explained:</dt><dd><p>Calculates the Percent Variance Explained (PVE) of the fit SOM, indicating how well the
+SOM represents the variance in the data.</p>
+</dd>
+<dt>calculate_topographic_error:</dt><dd><p>Calculates the topographic error of the fit SOM, a measure of how well the SOM preserves
+the topology of the data.</p>
+</dd>
+<dt>plot_component_planes:</dt><dd><p>Generates and saves component plane plots for each feature in the training data.</p>
+</dd>
+<dt>plot_categorical_data:</dt><dd><p>Generates and saves the distribution of categorical data (from <cite>other_dat</cite>) across the
+SOM grid.</p>
+</dd>
+<dt>plot_map_grid:</dt><dd><p>Plots a blank SOM grid, optionally labeling neurons with their indices.</p>
+</dd>
+<dt>_zscore_scale:</dt><dd><p>Scales the training data (<cite>train_dat</cite>) using z-score normalization.</p>
+</dd>
+<dt>_minmax_scale:</dt><dd><p>Scales the training data (<cite>train_dat</cite>) using min-max normalization.</p>
+</dd>
+<dt>_zscore_unscale:</dt><dd><p>Reverses z-score normalization to unscale data back to its original range.</p>
+</dd>
+<dt>_minmax_unscale:</dt><dd><p>Reverses min-max scaling to unscale data back to its original range.</p>
+</dd>
+<dt>_get_observation_neuron_mappings:</dt><dd><p>Maps each data point in the training set (<cite>train_dat</cite>) to its Best Matching Unit (BMU).</p>
+</dd>
+<dt>_get_neuron_coordinates:</dt><dd><p>Retrieves the x and y coordinates of all neurons in the SOM grid.</p>
+</dd>
+<dt>_get_weights:</dt><dd><p>Retrieves the weight vectors of all neurons in the SOM grid after training.</p>
+</dd>
+<dt>_draw_circle:</dt><dd><p>Draws a circle at specified coordinates in a matplotlib plot, representing a neuron.</p>
+</dd>
+<dt>_map_value_to_color:</dt><dd><p>Maps numeric feature values to colors using a specified colormap.</p>
+</dd>
+<dt>_add_colorbar:</dt><dd><p>Adds a colorbar to a matplotlib plot to represent feature value ranges.</p>
+</dd>
+<dt>_get_distinct_colors:</dt><dd><p>Generates distinct colors for categorical data using a seaborn palette.</p>
+</dd>
+<dt>_check_output_path:</dt><dd><p>Ensures the specified directory exists, creating it if necessary.</p>
+</dd>
+<dt>_are_nodes_adjacent:</dt><dd><p>Determines if two neurons in the SOM grid are adjacent based on their coordinates, used
+when calculating topographic error.</p>
+</dd>
+</dl>
+<p>Initialize the Self-Organizing Map (SOM) class with user-defined parameters.</p>
+<p>This constructor sets up the SOM by validating inputs, scaling the training data, and
+preparing the attributes needed for training and analysis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">param train_dat<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A DataFrame containing the numerical training data for the
+SOM.</p>
+</dd>
+<dt class="field-even">type train_dat<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+<dt class="field-odd">param other_dat<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A DataFrame with non-numeric data associated with each row in
+<cite>train_dat</cite>, not used for training the SOM but for analysis.</p>
+</dd>
+<dt class="field-even">type other_dat<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+<dt class="field-odd">param scale_method<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Method for scaling the data; must be either ‘zscore’ or ‘minmax’.</p>
+</dd>
+<dt class="field-even">type scale_method<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param x_dim<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of neurons in the x-dimension of the SOM grid. Must be a
+positive integer.</p>
+</dd>
+<dt class="field-even">type x_dim<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">param y_dim<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of neurons in the y-dimension of the SOM grid. Must be a
+positive integer.</p>
+</dd>
+<dt class="field-even">type y_dim<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">param topology<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Topology of the SOM grid; must be ‘rectangular’ or ‘hexagonal’.</p>
+</dd>
+<dt class="field-even">type topology<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param neighborhood_fnc<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Neighborhood function to use during training; must be
+‘gaussian’ or ‘bubble’.</p>
+</dd>
+<dt class="field-even">type neighborhood_fnc<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param epochs<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of epochs (iterations over the dataset) for training the SOM. Must
+be a positive integer.</p>
+</dd>
+<dt class="field-even">type epochs<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="SOM.utils.som_utils.SOM.calculate_percent_variance_explained">
+<span class="sig-name descname"><span class="pre">calculate_percent_variance_explained</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#SOM.utils.som_utils.SOM.calculate_percent_variance_explained" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Percent Variance Explained (PVE) for the trained SOM.</p>
+<p>PVE is the proportion of the total variance in the data explained by the SOM.
+It is computed as: PVE = ((TSS - WCSS) / TSS) * 100, where:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>TSS = total sum of squares</p></li>
+<li><p>WCSS = within cluster (i.e., within neuron) sum of squares</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Percent Variance Explained (PVE)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SOM.utils.som_utils.SOM.calculate_topographic_error">
+<span class="sig-name descname"><span class="pre">calculate_topographic_error</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#SOM.utils.som_utils.SOM.calculate_topographic_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the topographic error of the trained SOM.</p>
+<p>Topographic error measures the proportion of data points for which the two closest neurons
+(BMUs) are not adjacent in the SOM grid. A lower topographic error indicates better
+topology preservation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The topographic error, ranging from 0 (perfect preservation) to 1 (poor</dt><dd><p>preservation).</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SOM.utils.som_utils.SOM.plot_categorical_data">
+<span class="sig-name descname"><span class="pre">plot_categorical_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SOM.utils.som_utils.SOM.plot_categorical_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate and save categorical data distribution plots across the SOM grid.</p>
+<p>This method visualizes how the SOM, trained using <cite>train_dat</cite>, organizes the data points
+relative to the separate, categorical dataset (<cite>other_dat</cite>). While the SOM is trained only
+on numerical features in <cite>train_dat</cite>, the resulting clustering/organization of the data
+points may aligns with categories in <cite>other_dat</cite>. By examining these plot, we can explore
+whether and how the organization of the SOM reflects patterns in these categorical
+variables.</p>
+<p>Categorical data plots help in assessing whether the SOM’s training on numerical data leads
+to meaningful grouping or separation of associated categorical variables. These plots can:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Reveal clusters of similar categories across the SOM grid.</p></li>
+<li><p>Provide insights into the relationship between numerical and categorical data.</p></li>
+<li><p>Suggest whether the SOM’s organization inherently captures distinctions present in
+the categorical dataset.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>output_dir</strong> (<em>str</em>) – The directory where the categorical data distribution plots will be
+saved.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Saves:</dt><dd><p>One plot per categorical feature as a .png file in the specified directory. Each plot
+displays the SOM grid with neurons colored based on the value of the feature being
+plotted.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SOM.utils.som_utils.SOM.plot_component_planes">
+<span class="sig-name descname"><span class="pre">plot_component_planes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SOM.utils.som_utils.SOM.plot_component_planes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate and save component plane plots for each feature in the training data.</p>
+<p>A component plane is a visualization that shows how the values of a specific feature
+in <cite>train_dat</cite> are distributed across the SOM grid. Each neuron on the grid is assigned
+a color based on the value of the feature it represents, allowing you to see patterns and
+relationships in the data.</p>
+<p>Component planes help in understanding how individual features contribute to the
+organization of the SOM. By examining these plots, you can:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Identify clusters and trends in specific features.</p></li>
+<li><dl class="simple">
+<dt>Compare how different features vary across the grid, potentially highlighting</dt><dd><p>relationships/correlations between features.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>output_dir</strong> (<em>str</em>) – The directory where the component plane plots will be saved.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Saves:</dt><dd><p>One plot per feature as a .png file in the specified directory. Each plot displays
+the SOM grid with neurons colored based on the value of the feature being plotted.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SOM.utils.som_utils.SOM.plot_map_grid">
+<span class="sig-name descname"><span class="pre">plot_map_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">print_neuron_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Figure</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Axes</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#SOM.utils.som_utils.SOM.plot_map_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a blank SOM grid where each neuron is represented by a circle.</p>
+<p>This method creates a visual representation of the SOM grid without any feature or category
+values. Optionally, you can display the index of each neuron within its circle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>print_neuron_idx</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to display the neuron indices on the plot.
+Defaults to False.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The matplotlib figure and axis objects for the plot.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[plt.Figure, plt.Axes]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SOM.utils.som_utils.SOM.train_map">
+<span class="sig-name descname"><span class="pre">train_map</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#SOM.utils.som_utils.SOM.train_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train the Self-Organizing Map on the scaled training data.</p>
+<p>This method initializes the SOM using PCA-based weight initialization and trains it using
+the specified parameters. It also calculates neuron weights and maps observations to their
+corresponding neurons.</p>
+<dl class="simple">
+<dt>Sets the following attributes:</dt><dd><ul class="simple">
+<li><p>map: The trained MiniSom instance.</p></li>
+<li><p>observation_mapping: Mapping of observations to neurons.</p></li>
+<li><p>neuron_coordinates: Coordinates of neurons in the SOM grid.</p></li>
+<li><p>weights_scaled: Scaled weights of each neuron.</p></li>
+<li><p>weights: Unscaled weights of each neuron.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+<section id="module-SOM.utils.som_utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-SOM.utils.som_utils" title="Permalink to this heading">¶</a></h2>
+<section id="self-organizing-maps-soms-module">
+<h3>Self-Organizing Maps (SOMs) Module<a class="headerlink" href="#self-organizing-maps-soms-module" title="Permalink to this heading">¶</a></h3>
+<section id="what-is-a-self-organizing-map">
+<h4>What is a Self-Organizing Map?<a class="headerlink" href="#what-is-a-self-organizing-map" title="Permalink to this heading">¶</a></h4>
+<p>A Self-Organizing Map (SOM) is a type of unsupervised artificial neural network used to group and
+visualize data points that are similar to each other. What makes SOMs unique is that they visualize
+these groups (or clusters) in simple 2D grid configuration, even though the original data that they
+represent is high-dimensional. This makes SOMs very useful for exploring and discovering hidden
+patterns with complex datasets.</p>
+</section>
+<section id="how-does-a-som-work">
+<h4>How Does a SOM Work?<a class="headerlink" href="#how-does-a-som-work" title="Permalink to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>The 2D Grid: A SOM is visualized as a grid of “neurons,” arranged in rows and columns. Each
+neuron represents a part of the dataset being modeled.</p></li>
+<li><p>Weight Vectors: Behind the scenes, each neuron is associated with a “weight vector.” This weight
+vector has the same number of dimensions as the original data. Think of the weight vector as the
+neuron’s “position” in the high-dimensional space, summarizing the features of the data it
+represents.</p></li>
+<li><p>Training the SOM: During training, the SOM adjusts the weight vectors of the neurons to better
+represent the dataset. When a neuron’s weight vector is updated, its neighboring neurons on the
+grid are also updated. This ensures that similar data points are mapped to nearby neurons on the
+grid, preserving the topology of the dataset.</p></li>
+<li><p>Mapping Data Points to the Grid: For each data point, the SOM calculates how “close” it is to
+each neuron’s weight vector using a distance metric (e.g., Euclidean distance). The data point is
+then assigned to the neuron with the closest weight vector. This process transforms the high-
+dimensional data points into positions on the 2D grid.</p></li>
+</ul>
+</section>
+<section id="how-does-a-som-compare-to-other-clustering-methods">
+<h4>How Does a SOM Compare to Other Clustering Methods?<a class="headerlink" href="#how-does-a-som-compare-to-other-clustering-methods" title="Permalink to this heading">¶</a></h4>
+<p>SOMs are similar to k-means clustering in that they group data points by assigning them to a central
+representative (a “neuron” in SOMs, or a “centroid” in k-means). However, SOMs are more structured
+because neurons are part of a grid, and their updates are influenced by neighboring neurons. This
+constraint creates a smooth, organized map where similar clusters are close to each other, making
+SOMs ideal for data visualization.</p>
+</section>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">SOM.utils.som_utils.</span></span><span class="sig-name descname"><span class="pre">SOM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale_method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topology</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighborhood_fnc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_dat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for building, training, and visualizing Self-Organizing Maps (SOMs).</p>
+<p>This class provides tools to train a Self-Organizing Map on high-dimensional data, including
+scaling and unscaling data, calculating various fit metrics (e.g., topographic error, percent
+variance explained), and visualizing the SOM grid after fitting.</p>
+<section id="id1">
+<h3>Attributes (set before training):<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>train_dat (np.ndarray):</dt><dd><p>The raw (unscaled) training data used to fit the SOM.</p>
+</dd>
+<dt>other_dat (np.ndarray):</dt><dd><p>Additional, non-numeric data associated with each data point in <cite>train_dat</cite>, but
+not used to train the SOM.</p>
+</dd>
+<dt>train_dat_features (List[str]):</dt><dd><p>A list of feature names associated with <cite>train_dat</cite>.</p>
+</dd>
+<dt>other_dat_features (List[str]):</dt><dd><p>A list of feature names associated with <cite>other_dat</cite>.</p>
+</dd>
+<dt>xdim (int):</dt><dd><p>The number of neurons in the x-dimension of the SOM grid.</p>
+</dd>
+<dt>ydim (int):</dt><dd><p>The number of neurons in the y-dimension of the SOM grid.</p>
+</dd>
+<dt>topology (str):</dt><dd><p>The topology of the SOM grid (‘rectangular’ or ‘hexagonal’, associated with 4 and 6
+neighbors, respectively).</p>
+</dd>
+<dt>neighborhood_fnc (str):</dt><dd><p>The neighborhood function used during training (‘gaussian’ or ‘bubble’).</p>
+</dd>
+<dt>epochs (int):</dt><dd><p>The number of training epochs (i.e., how many times the dataset is presented during the
+training process).</p>
+</dd>
+<dt>_scale (Callable):</dt><dd><p>Method for scaling <cite>train_dat</cite> (z-score or min/max).</p>
+</dd>
+<dt>_unscale (Callable):</dt><dd><p>Method for unscaling scaled data (z-score or min/max).</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h3>Attributes (set after training):<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>map (MiniSom):</dt><dd><p>The trained MiniSom instance, created after calling <cite>train_map</cite>.</p>
+</dd>
+<dt>observation_mapping (np.ndarray):</dt><dd><p>The mapping of data points to their closest neurons (i.e. BMU, best matching unit).</p>
+</dd>
+<dt>neuron_coordinates (pd.DataFrame):</dt><dd><p>The coordinates of neurons in the SOM grid.</p>
+</dd>
+<dt>weights (pd.DataFrame):</dt><dd><p>The unscaled weight vectors of each neuron after training.</p>
+</dd>
+<dt>weights_scaled (pd.DataFrame):</dt><dd><p>The scaled weight vectors of each neuron after training.</p>
+</dd>
+</dl>
+</section>
+<section id="id3">
+<h3>Methods:<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>__init__:</dt><dd><p>Initializes the SOM instance with training data, configuration parameters, and scaling
+methods.</p>
+</dd>
+<dt>_validate_inputs:</dt><dd><p>Validates the input parameters for the SOM class, ensuring data types, ranges, and formats
+are correct.</p>
+</dd>
+<dt>train_map:</dt><dd><p>Trains the SOM using scaled training data. Includes initializing neuron weights and mapping
+data points to neurons.</p>
+</dd>
+<dt>calculate_percent_variance_explained:</dt><dd><p>Calculates the Percent Variance Explained (PVE) of the fit SOM, indicating how well the
+SOM represents the variance in the data.</p>
+</dd>
+<dt>calculate_topographic_error:</dt><dd><p>Calculates the topographic error of the fit SOM, a measure of how well the SOM preserves
+the topology of the data.</p>
+</dd>
+<dt>plot_component_planes:</dt><dd><p>Generates and saves component plane plots for each feature in the training data.</p>
+</dd>
+<dt>plot_categorical_data:</dt><dd><p>Generates and saves the distribution of categorical data (from <cite>other_dat</cite>) across the
+SOM grid.</p>
+</dd>
+<dt>plot_map_grid:</dt><dd><p>Plots a blank SOM grid, optionally labeling neurons with their indices.</p>
+</dd>
+<dt>_zscore_scale:</dt><dd><p>Scales the training data (<cite>train_dat</cite>) using z-score normalization.</p>
+</dd>
+<dt>_minmax_scale:</dt><dd><p>Scales the training data (<cite>train_dat</cite>) using min-max normalization.</p>
+</dd>
+<dt>_zscore_unscale:</dt><dd><p>Reverses z-score normalization to unscale data back to its original range.</p>
+</dd>
+<dt>_minmax_unscale:</dt><dd><p>Reverses min-max scaling to unscale data back to its original range.</p>
+</dd>
+<dt>_get_observation_neuron_mappings:</dt><dd><p>Maps each data point in the training set (<cite>train_dat</cite>) to its Best Matching Unit (BMU).</p>
+</dd>
+<dt>_get_neuron_coordinates:</dt><dd><p>Retrieves the x and y coordinates of all neurons in the SOM grid.</p>
+</dd>
+<dt>_get_weights:</dt><dd><p>Retrieves the weight vectors of all neurons in the SOM grid after training.</p>
+</dd>
+<dt>_draw_circle:</dt><dd><p>Draws a circle at specified coordinates in a matplotlib plot, representing a neuron.</p>
+</dd>
+<dt>_map_value_to_color:</dt><dd><p>Maps numeric feature values to colors using a specified colormap.</p>
+</dd>
+<dt>_add_colorbar:</dt><dd><p>Adds a colorbar to a matplotlib plot to represent feature value ranges.</p>
+</dd>
+<dt>_get_distinct_colors:</dt><dd><p>Generates distinct colors for categorical data using a seaborn palette.</p>
+</dd>
+<dt>_check_output_path:</dt><dd><p>Ensures the specified directory exists, creating it if necessary.</p>
+</dd>
+<dt>_are_nodes_adjacent:</dt><dd><p>Determines if two neurons in the SOM grid are adjacent based on their coordinates, used
+when calculating topographic error.</p>
+</dd>
+</dl>
+<p>Initialize the Self-Organizing Map (SOM) class with user-defined parameters.</p>
+<p>This constructor sets up the SOM by validating inputs, scaling the training data, and
+preparing the attributes needed for training and analysis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">param train_dat<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A DataFrame containing the numerical training data for the
+SOM.</p>
+</dd>
+<dt class="field-even">type train_dat<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+<dt class="field-odd">param other_dat<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A DataFrame with non-numeric data associated with each row in
+<cite>train_dat</cite>, not used for training the SOM but for analysis.</p>
+</dd>
+<dt class="field-even">type other_dat<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+<dt class="field-odd">param scale_method<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Method for scaling the data; must be either ‘zscore’ or ‘minmax’.</p>
+</dd>
+<dt class="field-even">type scale_method<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param x_dim<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of neurons in the x-dimension of the SOM grid. Must be a
+positive integer.</p>
+</dd>
+<dt class="field-even">type x_dim<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">param y_dim<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of neurons in the y-dimension of the SOM grid. Must be a
+positive integer.</p>
+</dd>
+<dt class="field-even">type y_dim<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">param topology<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Topology of the SOM grid; must be ‘rectangular’ or ‘hexagonal’.</p>
+</dd>
+<dt class="field-even">type topology<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param neighborhood_fnc<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Neighborhood function to use during training; must be
+‘gaussian’ or ‘bubble’.</p>
+</dd>
+<dt class="field-even">type neighborhood_fnc<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param epochs<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of epochs (iterations over the dataset) for training the SOM. Must
+be a positive integer.</p>
+</dd>
+<dt class="field-even">type epochs<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">calculate_percent_variance_explained</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Percent Variance Explained (PVE) for the trained SOM.</p>
+<p>PVE is the proportion of the total variance in the data explained by the SOM.
+It is computed as: PVE = ((TSS - WCSS) / TSS) * 100, where:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>TSS = total sum of squares</p></li>
+<li><p>WCSS = within cluster (i.e., within neuron) sum of squares</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Percent Variance Explained (PVE)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">calculate_topographic_error</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the topographic error of the trained SOM.</p>
+<p>Topographic error measures the proportion of data points for which the two closest neurons
+(BMUs) are not adjacent in the SOM grid. A lower topographic error indicates better
+topology preservation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The topographic error, ranging from 0 (perfect preservation) to 1 (poor</dt><dd><p>preservation).</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">plot_categorical_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate and save categorical data distribution plots across the SOM grid.</p>
+<p>This method visualizes how the SOM, trained using <cite>train_dat</cite>, organizes the data points
+relative to the separate, categorical dataset (<cite>other_dat</cite>). While the SOM is trained only
+on numerical features in <cite>train_dat</cite>, the resulting clustering/organization of the data
+points may aligns with categories in <cite>other_dat</cite>. By examining these plot, we can explore
+whether and how the organization of the SOM reflects patterns in these categorical
+variables.</p>
+<p>Categorical data plots help in assessing whether the SOM’s training on numerical data leads
+to meaningful grouping or separation of associated categorical variables. These plots can:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Reveal clusters of similar categories across the SOM grid.</p></li>
+<li><p>Provide insights into the relationship between numerical and categorical data.</p></li>
+<li><p>Suggest whether the SOM’s organization inherently captures distinctions present in
+the categorical dataset.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>output_dir</strong> (<em>str</em>) – The directory where the categorical data distribution plots will be
+saved.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Saves:</dt><dd><p>One plot per categorical feature as a .png file in the specified directory. Each plot
+displays the SOM grid with neurons colored based on the value of the feature being
+plotted.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">plot_component_planes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate and save component plane plots for each feature in the training data.</p>
+<p>A component plane is a visualization that shows how the values of a specific feature
+in <cite>train_dat</cite> are distributed across the SOM grid. Each neuron on the grid is assigned
+a color based on the value of the feature it represents, allowing you to see patterns and
+relationships in the data.</p>
+<p>Component planes help in understanding how individual features contribute to the
+organization of the SOM. By examining these plots, you can:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Identify clusters and trends in specific features.</p></li>
+<li><dl class="simple">
+<dt>Compare how different features vary across the grid, potentially highlighting</dt><dd><p>relationships/correlations between features.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>output_dir</strong> (<em>str</em>) – The directory where the component plane plots will be saved.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Saves:</dt><dd><p>One plot per feature as a .png file in the specified directory. Each plot displays
+the SOM grid with neurons colored based on the value of the feature being plotted.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">plot_map_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">print_neuron_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Figure</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Axes</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a blank SOM grid where each neuron is represented by a circle.</p>
+<p>This method creates a visual representation of the SOM grid without any feature or category
+values. Optionally, you can display the index of each neuron within its circle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>print_neuron_idx</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to display the neuron indices on the plot.
+Defaults to False.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The matplotlib figure and axis objects for the plot.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[plt.Figure, plt.Axes]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">train_map</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train the Self-Organizing Map on the scaled training data.</p>
+<p>This method initializes the SOM using PCA-based weight initialization and trains it using
+the specified parameters. It also calculates neuron weights and maps observations to their
+corresponding neurons.</p>
+<dl class="simple">
+<dt>Sets the following attributes:</dt><dd><ul class="simple">
+<li><p>map: The trained MiniSom instance.</p></li>
+<li><p>observation_mapping: Mapping of observations to neurons.</p></li>
+<li><p>neuron_coordinates: Coordinates of neurons in the SOM grid.</p></li>
+<li><p>weights_scaled: Scaled weights of each neuron.</p></li>
+<li><p>weights: Unscaled weights of each neuron.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="Seq_Sim.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Seq_Sim Core Functions</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="modules.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Core Function Descriptions</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Victoria Hurd
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">SOM Core Functions</a><ul>
+<li><a class="reference internal" href="#som-object">SOM object</a><ul>
+<li><a class="reference internal" href="#SOM.utils.som_utils.SOM"><code class="docutils literal notranslate"><span class="pre">SOM</span></code></a><ul>
+<li><a class="reference internal" href="#SOM.utils.som_utils.SOM.calculate_percent_variance_explained"><code class="docutils literal notranslate"><span class="pre">SOM.calculate_percent_variance_explained()</span></code></a></li>
+<li><a class="reference internal" href="#SOM.utils.som_utils.SOM.calculate_topographic_error"><code class="docutils literal notranslate"><span class="pre">SOM.calculate_topographic_error()</span></code></a></li>
+<li><a class="reference internal" href="#SOM.utils.som_utils.SOM.plot_categorical_data"><code class="docutils literal notranslate"><span class="pre">SOM.plot_categorical_data()</span></code></a></li>
+<li><a class="reference internal" href="#SOM.utils.som_utils.SOM.plot_component_planes"><code class="docutils literal notranslate"><span class="pre">SOM.plot_component_planes()</span></code></a></li>
+<li><a class="reference internal" href="#SOM.utils.som_utils.SOM.plot_map_grid"><code class="docutils literal notranslate"><span class="pre">SOM.plot_map_grid()</span></code></a></li>
+<li><a class="reference internal" href="#SOM.utils.som_utils.SOM.train_map"><code class="docutils literal notranslate"><span class="pre">SOM.train_map()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-SOM.utils.som_utils">Module contents</a><ul>
+<li><a class="reference internal" href="#self-organizing-maps-soms-module">Self-Organizing Maps (SOMs) Module</a><ul>
+<li><a class="reference internal" href="#what-is-a-self-organizing-map">What is a Self-Organizing Map?</a></li>
+<li><a class="reference internal" href="#how-does-a-som-work">How Does a SOM Work?</a></li>
+<li><a class="reference internal" href="#how-does-a-som-compare-to-other-clustering-methods">How Does a SOM Compare to Other Clustering Methods?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">SOM</span></code></a><ul>
+<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">SOM.calculate_percent_variance_explained()</span></code></a></li>
+<li><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">SOM.calculate_topographic_error()</span></code></a></li>
+<li><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">SOM.plot_categorical_data()</span></code></a></li>
+<li><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">SOM.plot_component_planes()</span></code></a></li>
+<li><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">SOM.plot_map_grid()</span></code></a></li>
+<li><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">SOM.train_map()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=359c27e9"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/scripts/furo.js?v=5fa4622c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>

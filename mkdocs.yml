@@ -1,5 +1,5 @@
 site_name: SOM Sequence Simulation
-# site_url: https://example.com  # Customize with your project URL
+site_url: https://SOMseqsim.com  
 site_description: >
   A collection of tools for simulating and analyzing sequence data, using the template from wrmXpress-gui found at https://github.com/wheelerlab-uwec/wrmXpress-gui
 
@@ -7,13 +7,17 @@ theme: readthedocs
 
 nav:
   - Home: index.md
+  - Data Overview: data_overview.md
   - Pipelines:
     - Sequence Simulation: pipelines/seq_sim.md
-  - Github: https://github.com/caterer-z-t/SOM_Seq_Sim
+  - How-To Guides:
+    - Guide 1: tutorial1.md
+    - Guide 2: tutorial2.md
+  - Link to Github: https://github.com/caterer-z-t/SOM_Seq_Sim
+  - References & Acknowledgements: references.md
 
 plugins:
   - search
-  - mkdocstrings
 
 markdown_extensions:
   - admonition  # Enables 'Note' and 'Warning' blocks
