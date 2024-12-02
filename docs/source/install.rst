@@ -1,22 +1,25 @@
 Installation Instructions
-===========================
+=========================
 
 1. **Clone the repository**:
 
-   ``` bash
-   git clone https://github.com/caterer-z-t/SOM_Seq_Sim.git
-   cd /path/to/SOM_Seq_Sim
-   ```
+   .. code-block:: bash
+
+      git clone https://github.com/caterer-z-t/SOM_Seq_Sim.git
+      cd /path/to/SOM_Seq_Sim
 
 2. **Create a virtual environment (optional but recommended):**
 
-    If you're using `conda`, `mamba`, or `micromamba`, you can create the environment directly from the `env.yml` file:
-    ``` bash 
-    conda env create -f env.yml
-    ```
+   If you're using `conda`, `mamba`, or `micromamba`, you can create the environment directly from the `env.yml` file:
 
-3. **Activate environment using conda (please change {conda} to be whatever used to create the environment):**
+   .. code-block:: bash
 
-    ``` bash
-    conda activate som-sim-env
-    ```
+      conda env create -f env.yml
+
+3. **Activate the environment using conda**:
+
+   Replace `{conda}` with the command used to create the environment:
+
+   .. code-block:: bash
+
+      conda activate som-sim-env
