@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Walkthroughs" href="walkthrough.html" /><link rel="prev" title="Generating Sequencing Data" href="generate_data.html" />
 
     <!-- Generated with Sphinx 7.3.7 and Furo 2024.08.06 -->
         <title>Creating SOMs - SOM_Seq_Sim 1.0 documentation</title>
@@ -212,8 +212,10 @@
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Setup &amp; Walkthroughs</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generate_data.html">Generating Sequencing Data</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Creating SOMs</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="walkthrough.html">Walkthroughs</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Walkthroughs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="iris.html">Iris Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="seq_example.html">Sequencing Dataset</a></li>
@@ -269,6 +271,72 @@
         <article role="main" id="furo-main-content">
           <section id="creating-soms">
 <h1>Creating SOMs<a class="headerlink" href="#creating-soms" title="Link to this heading">¶</a></h1>
+<p>This code can be utilized in two main ways, depending on your goals. The first is through a command-line interface (CLI), which offers a streamlined and efficient approach for training and visualizing a SOM, as well as performing hyperparameter tuning. The second option involves writing a custom script that leverages the <cite>SOM</cite> class in <cite>som_utils.py</cite>. This method is more flexible and is recommended if you plan to perform additional analyses beyond hyperparameter tuning, clustering, and visualization—for example, implementing secondary clustering of the SOM, which is outside the scope of this project.</p>
+<p>## Using the Command-Line Interface</p>
+<p>Assuming you are located in the <cite>SOM_Seq_Sim</cite> repository, navigate to this SOM directory.</p>
+<p><code class="docutils literal notranslate"><span class="pre">`bash</span>
+<span class="pre">cd</span> <span class="pre">SOM</span>
+<span class="pre">`</span></code></p>
+<p>Within this directory, the <cite>som.py</cite> script provides a command-line interface (CLI) for training and visualizing SOMs. The CLI supports both direct SOM fitting with user-specified hyperparameters <strong>or</strong> tuning to identify the optimal hyperparameter configuration for your dataset.</p>
+<p>### Inputs</p>
+<p>#### Required Inputs
+- <strong>Training Data (`-t` or `–train_dat`)</strong>:</p>
+<blockquote>
+<div><p>Path to a CSV file containing numerical training data. Each row represents a data point, and each column represents a feature.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><strong>Output Directory (`-o` or `–output_directory`)</strong>:
+Path to save SOM results, including metrics and visualizations.</p></li>
+<li><p><strong>Scaling Method (`-s` or `–scale_method`)</strong>:
+Scaling method for the data. Accepted values: <cite>zscore</cite> or <cite>minmax</cite>.</p></li>
+<li><p><strong>Grid Dimensions (`-x` and `-y` or `–x_dim` and `–y_dim`)</strong>:
+Number of neurons in the x and y dimensions of the SOM grid.</p></li>
+<li><p><strong>Topology (`-p` or `–topology`)</strong>:
+Grid topology for the SOM. Accepted values: <cite>rectangular</cite> or <cite>hexagonal</cite>.</p></li>
+<li><p><strong>Neighborhood Function (`-n` or `–neighborhood_fnc`)</strong>:
+Neighborhood function for training the SOM. Accepted values: <cite>gaussian</cite> or <cite>bubble</cite>.</p></li>
+<li><p><strong>Epochs (`-e` or `–epochs`)</strong>:
+Number of training epochs.</p></li>
+</ul>
+<p>#### Optional Inputs
+- <strong>Categorical Data (`-c` or `–other_dat`)</strong>:</p>
+<blockquote>
+<div><p>Path to a CSV file containing categorical metadata associated with the training data. These categories are not used in training but can be visualized on the SOM grid. This file must have the same number of rows as in Training Data.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><strong>Component Plane Plots (`-m` or `–plot_component_planes`)</strong>:
+Whether to generate component plane plots for each feature. Defaults to <cite>True</cite>.</p></li>
+</ul>
+<p>### Usage</p>
+<p>#### Hyperparameter Tuning
+If multiple values are provided for any hyperparameter, the CLI will perform hyperparameter tuning by testing all combinations of the specified values.</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>bash
+python som.py -t data/iris_training_data.csv </p>
+<blockquote>
+<div><p>-c data/iris_categorical_data.csv -o examples/output/iris/ -s zscore minmax -x 3 5 7 -y 2 4 -p rectangular hexagonal -n gaussian bubble -e 50 100</p>
+</div></blockquote>
+<p><a href="#id5"><span class="problematic" id="id6">``</span></a>`
+This command evaluates all combinations of the specified hyperparameters, identifies the best configuration based on PVE and Topographic Error, and retrains the SOM using those parameters.</p>
+<p>#### Direct SOM Fitting
+If a single value is provided for each hyperparameter, the CLI will directly fit the SOM with those parameters.</p>
+<p><a href="#id7"><span class="problematic" id="id8">``</span></a><a href="#id9"><span class="problematic" id="id10">`</span></a>bash
+python som.py -t data/iris_training_data.csv </p>
+<blockquote>
+<div><p>-c data/iris_categorical_data.csv -o examples/output/iris/ -s zscore -x 7 -y 4 -p hexagonal -n gaussian -e 50</p>
+</div></blockquote>
+<p><a href="#id11"><span class="problematic" id="id12">``</span></a><a href="#id13"><span class="problematic" id="id14">`</span></a></p>
+<p>### Outputs</p>
+<p>#### Metrics
+- <strong>Percent Variance Explained (PVE)</strong>: Indicates how well the SOM represents the variance in the dataset. This is comparable to Within Cluster Sum of Squares used in other clustering methods.
+- <strong>Topographic Error</strong>: Measures how well the SOM preserves the topology of the input data. This is calculated as the percentage of data points whose second closest neuron is not adjacent to the neuron it’s mapped to.
+- <strong>Note</strong>: If hyperparameter tuning is performed, these metrics will be output for each configuration tested.</p>
+<p>#### Visualizations
+- <strong>Component Plane Plots</strong>: Figures displaying the distribution of each feature across the SOM grid as heatmaps.
+- <strong>Categorical Data Overlays</strong>: Visualizations showing the distribution of external categories (if provided) across the SOM grid.
+- <strong>Note</strong>: If hyperparameter tuning is performed, these visualizations will be generated only for the best hyperparameter configuration.</p>
+<p>## Writing Your Own Script</p>
+<p>If you prefer greater flexibility in how you utilize the SOM, you can write your own script that imports the <cite>SOM</cite> class from <cite>som_utils.py</cite>. This approach allows you to fully customize the SOM workflow and incorporate additional analyses or operations beyond the scope of the CLI. For instance, you could perform secondary clustering, experiment with alternative visualization methods, or integrate the SOM with other tools in your data analysis pipeline.</p>
+<p>Refer to the [<cite>examples</cite>](examples/) directory for sample scripts, which demonstrate how to set up and use the <cite>SOM</cite> class for various datasets.</p>
 </section>
 
         </article>
@@ -276,8 +344,26 @@
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="walkthrough.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Walkthroughs</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="generate_data.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Generating Sequencing Data</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
