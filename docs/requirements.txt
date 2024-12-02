@@ -34,8 +34,5 @@ paginate~=0.5
 regex>=2022.4
 requests~=2.26
 
-sphinx.ext.autodoc
-sphinx.ext.coverage
-sphinx.ext.napoleon
 nbsphinx
 myst_parser
