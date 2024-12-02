@@ -12,9 +12,6 @@ build:
 sphinx:
   builder: html  # Default Sphinx builder to maintain compatibility
 
-# Set the documentation type to pre-built HTML
-documentation_type: "sphinx"
-
 # Specify the location of the pre-built HTML files
 extra:
   build_dir: docs/build  # Adjust this to the path where your built HTML files are stored
