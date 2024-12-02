@@ -1,10 +1,15 @@
 Walkthroughs
 ============
 
-.. toctree::
-   :maxdepth: 1
+ln -s ../../SOM/examples/ .
 
-   examples/seq_sim_workflow.ipynb
-   examples/som_example_iris.ipynb
-   examples/som_example_seq.ipynb
-   examples/som_example_titanic.ipynb
+Below are four tutorials on how to run SOM_Seq_Sim. These Jupyter Notebooks 
+use our dataset, the iris dataset, and the titanic dataset. 
+
+.. toctree::
+   :maxdepth: 4
+
+   iris.rst
+   seq_example.rst
+   titanic.rst
+
