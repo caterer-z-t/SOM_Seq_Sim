@@ -14,6 +14,7 @@
 [![Discussions](https://img.shields.io/github/discussions/caterer-z-t/SOM_Seq_Sim?label=Discussions&logo=github)](https://github.com/caterer-z-t/SOM_Seq_Sim/discussions)
 [![Docs](https://img.shields.io/badge/docs-online-blue?logo=readthedocs)](https://caterer-z-t.github.io/SOM_Seq_Sim/)
 [![Stars](https://img.shields.io/github/stars/caterer-z-t/SOM_Seq_Sim?label=Stars&logo=github)](https://github.com/caterer-z-t/SOM_Seq_Sim/stargazers)
+
 ---
 
 ## **Course:**

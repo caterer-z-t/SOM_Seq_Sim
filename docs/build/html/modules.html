@@ -189,6 +189,9 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/som_package_logo.svg" alt="Logo"/>
+  </div>
   
   <span class="sidebar-brand-text">SOM_Seq_Sim 1.0 documentation</span>
   
@@ -201,10 +204,14 @@
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="README.html"><strong>Self-Organizing Maps to Explore Genetic Sequencing Simulation Data (SOM-Seq)</strong></a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="walkthrough.html">Walkthroughs</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Walkthroughs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing to SOM_Seq_Sim</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CODE_OF_CONDUCT.html">Code of Conduct - SOM_Seq_Sim</a></li>
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">SOM_Seq_Sim</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of SOM_Seq_Sim</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">SOM_Seq_Sim</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of SOM_Seq_Sim</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="SOM_Seq_Sim.html">Core functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Seq_Sim.html">Functions</a></li>
 </ul>
 </li>
 </ul>
@@ -280,6 +287,46 @@
 <li class="toctree-l4"><a class="reference internal" href="SOM_Seq_Sim.html#id9"><code class="docutils literal notranslate"><span class="pre">SOM.train_map()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Seq_Sim.html">Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Seq_Sim.html#module-Seq_Sim.utils.seq_sim_utils">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.add_differential_cell_types"><code class="docutils literal notranslate"><span class="pre">add_differential_cell_types()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.add_rows_for_diff_cells"><code class="docutils literal notranslate"><span class="pre">add_rows_for_diff_cells()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.apply_noise"><code class="docutils literal notranslate"><span class="pre">apply_noise()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.arg_parser"><code class="docutils literal notranslate"><span class="pre">arg_parser()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.calculate_abundance"><code class="docutils literal notranslate"><span class="pre">calculate_abundance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.calculate_diff_expression"><code class="docutils literal notranslate"><span class="pre">calculate_diff_expression()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.case_when"><code class="docutils literal notranslate"><span class="pre">case_when()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.combine_features"><code class="docutils literal notranslate"><span class="pre">combine_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.create_celltype_dataframe"><code class="docutils literal notranslate"><span class="pre">create_celltype_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.create_directory_if_not_exists"><code class="docutils literal notranslate"><span class="pre">create_directory_if_not_exists()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.create_new_rows_for_cell_type"><code class="docutils literal notranslate"><span class="pre">create_new_rows_for_cell_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.encode_categorical_columns"><code class="docutils literal notranslate"><span class="pre">encode_categorical_columns()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.generate_all_features"><code class="docutils literal notranslate"><span class="pre">generate_all_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.generate_and_save_features"><code class="docutils literal notranslate"><span class="pre">generate_and_save_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.generate_cell_counts"><code class="docutils literal notranslate"><span class="pre">generate_cell_counts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.generate_cell_counts_for_subject"><code class="docutils literal notranslate"><span class="pre">generate_cell_counts_for_subject()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.generate_cell_types"><code class="docutils literal notranslate"><span class="pre">generate_cell_types()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.generate_cell_types_from_range"><code class="docutils literal notranslate"><span class="pre">generate_cell_types_from_range()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.generate_cluster_features"><code class="docutils literal notranslate"><span class="pre">generate_cluster_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.generate_diff_cell_types"><code class="docutils literal notranslate"><span class="pre">generate_diff_cell_types()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.generate_disease_features"><code class="docutils literal notranslate"><span class="pre">generate_disease_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.generate_dummy_data_wo_interaction"><code class="docutils literal notranslate"><span class="pre">generate_dummy_data_wo_interaction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.generate_feature"><code class="docutils literal notranslate"><span class="pre">generate_feature()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.generate_individual_features"><code class="docutils literal notranslate"><span class="pre">generate_individual_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.generate_major_cell_counts"><code class="docutils literal notranslate"><span class="pre">generate_major_cell_counts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.generate_pseudo_features"><code class="docutils literal notranslate"><span class="pre">generate_pseudo_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.generate_rare_cell_counts"><code class="docutils literal notranslate"><span class="pre">generate_rare_cell_counts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.generate_variance"><code class="docutils literal notranslate"><span class="pre">generate_variance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.identify_diff_clusters"><code class="docutils literal notranslate"><span class="pre">identify_diff_clusters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.load_config"><code class="docutils literal notranslate"><span class="pre">load_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.process_feature"><code class="docutils literal notranslate"><span class="pre">process_feature()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.save_data_to_csv"><code class="docutils literal notranslate"><span class="pre">save_data_to_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.set_random_seed"><code class="docutils literal notranslate"><span class="pre">set_random_seed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.validate_arguments"><code class="docutils literal notranslate"><span class="pre">validate_arguments()</span></code></a></li>
 </ul>
 </li>
 </ul>
