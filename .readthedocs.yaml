@@ -9,6 +9,7 @@ build:
     post_checkout:
       - git fetch --unshallow || true
     post_create_environment:
+      - pip install --upgrade pip
       - pip install -r docs/requirements.txt
       - pip install .
 
