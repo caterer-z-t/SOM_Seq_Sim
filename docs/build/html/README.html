@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Self-Organizing Maps to Explore Genetic Sequencing Simulation Data (SOM-Seq) &#8212; SOM_Seq_Sim 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributing to SOM_Seq_Sim" href="CONTRIBUTING.html" />
+    <link rel="prev" title="Welcome to SOM_Seq_Sim’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <img src="assets/som_package_logo.png" alt="SOM SIM SEQ Logo" width="25%">
+<section id="self-organizing-maps-to-explore-genetic-sequencing-simulation-data-som-seq">
+<h1><strong>Self-Organizing Maps to Explore Genetic Sequencing Simulation Data (SOM-Seq)</strong><a class="headerlink" href="#self-organizing-maps-to-explore-genetic-sequencing-simulation-data-som-seq" title="Link to this heading">¶</a></h1>
+<section id="id1">
+<h2><a class="reference external" href="https://github.com/caterer-z-t/SOM_Seq_Sim/releases"><img alt="GitHub release" src="https://img.shields.io/github/v/release/caterer-z-t/SOM_Seq_Sim" /></a>
+<a class="reference external" href="https://github.com/caterer-z-t/SOM_Seq_Sim/releases"><img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/caterer-z-t/SOM_Seq_Sim" /></a>
+<a class="reference external" href="https://github.com/caterer-z-t/SOM_Seq_Sim/actions"><img alt="Tests" src="https://img.shields.io/github/actions/workflow/status/caterer-z-t/SOM_Seq_Sim/test.yml?label=tests&amp;logo=github" /></a>
+<a class="reference external" href="https://github.com/caterer-z-t/SOM_Seq_Sim/actions"><img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/caterer-z-t/SOM_Seq_Sim/build.yml?label=build&amp;logo=github" /></a>
+<a class="reference external" href="https://github.com/caterer-z-t/SOM_Seq_Sim/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/caterer-z-t/SOM_Seq_Sim?label=License" /></a>
+<a class="reference external" href="https://github.com/caterer-z-t/SOM_Seq_Sim"><img alt="Repo Size" src="https://img.shields.io/github/repo-size/caterer-z-t/SOM_Seq_Sim?label=Repo%20Size" /></a>
+<a class="reference external" href="https://codecov.io/gh/caterer-z-t/SOM_Seq_Sim/tree/zac"><img alt="codecov" src="https://codecov.io/gh/%3Cyour-username%3E/%3Cyour-repo%3E/branch/main/graph/badge.svg" /></a>
+<a class="reference external" href="https://github.com/caterer-z-t/SOM_Seq_Sim/graphs/contributors"><img alt="Contributors" src="https://img.shields.io/github/contributors/caterer-z-t/SOM_Seq_Sim?label=Contributors" /></a>
+<a class="reference external" href="https://github.com/caterer-z-t/SOM_Seq_Sim/pulls"><img alt="Pull Requests" src="https://img.shields.io/github/issues-pr/caterer-z-t/SOM_Seq_Sim?label=Pull%20Requests" /></a>
+<a class="reference external" href="https://github.com/caterer-z-t/SOM_Seq_Sim/discussions"><img alt="Discussions" src="https://img.shields.io/github/discussions/caterer-z-t/SOM_Seq_Sim?label=Discussions&amp;logo=github" /></a>
+<a class="reference external" href="https://caterer-z-t.github.io/SOM_Seq_Sim/"><img alt="Docs" src="https://img.shields.io/badge/docs-online-blue?logo=readthedocs" /></a>
+<a class="reference external" href="https://github.com/caterer-z-t/SOM_Seq_Sim/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/caterer-z-t/SOM_Seq_Sim?label=Stars&amp;logo=github" /></a><a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+</section>
+<section id="course">
+<h2><strong>Course:</strong><a class="headerlink" href="#course" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://github.com/swe4s">CSCI 6118</a>: Software Engineering for Scientists at the <a class="reference external" href="https://www.colorado.edu/">University of Colorado Boulder</a></p>
+</section>
+<hr class="docutils" />
+<section id="project-overview">
+<h2><strong>Project Overview</strong><a class="headerlink" href="#project-overview" title="Link to this heading">¶</a></h2>
+<p>Welcome to <strong>SOM-Seq</strong> 🎉, a versatile toolbox designed to tackle two distinct but complementary tasks: <strong>sequence data generation/simulation</strong> and the use of <strong>Self-Organizing Maps (SOMs)</strong> for clustering and visualizing high-dimensional data. By combining these efforts, this project explores the applicability and value of SOMs as a powerful tool for analyzing and uncovering patterns within complex sequencing data. Additionally, each part of this project can be used independently, catering to those who are specifically interested in either generating sequence data or leveraging SOMs for data analysis. 🚀</p>
+</section>
+<hr class="docutils" />
+<section id="table-of-contents">
+<h2><strong>Table of Contents</strong><a class="headerlink" href="#table-of-contents" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#usage"><span class="std std-ref">Usage</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#project-setup"><span class="std std-ref">Project Setup</span></a></p></li>
+<li><p><a class="reference internal" href="#requirements"><span class="std std-ref">Requirements</span></a></p></li>
+<li><p><a class="reference internal" href="#installation"><span class="std std-ref">Installation</span></a></p></li>
+<li><p><a class="reference internal" href="#generating-sequencing-data"><span class="std std-ref">Generating Sequencing Data</span></a></p></li>
+<li><p><a class="reference internal" href="#running-soms"><span class="std std-ref">Running SOMs</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#documentation"><span class="std std-ref">Documentation</span></a></p></li>
+<li><p><a class="reference internal" href="#contributing"><span class="std std-ref">Contributing</span></a></p></li>
+<li><p><a class="reference internal" href="#code-of-conduct"><span class="std std-ref">Code of Conduct</span></a></p></li>
+<li><p><a class="reference internal" href="#testing"><span class="std std-ref">Testing</span></a></p></li>
+<li><p><a class="reference internal" href="#contributors"><span class="std std-ref">Contributors</span></a></p></li>
+<li><p><a class="reference internal" href="#license"><span class="std std-ref">License</span></a></p></li>
+<li><p><a class="reference internal" href="#acknowledgements"><span class="std std-ref">Acknowledgements</span></a></p></li>
+<li><p><a class="reference internal" href="#project-structure"><span class="std std-ref">Project Structure</span></a></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="usage">
+<h2><strong>Usage</strong><a class="headerlink" href="#usage" title="Link to this heading">¶</a></h2>
+<section id="project-setup">
+<h3><strong>Project Setup</strong><a class="headerlink" href="#project-setup" title="Link to this heading">¶</a></h3>
+<section id="requirements">
+<h4><strong>Requirements</strong><a class="headerlink" href="#requirements" title="Link to this heading">¶</a></h4>
+<p>This project depends on several libraries and software packages. You can find the list in the <code class="docutils literal notranslate"><span class="pre">env.yml</span></code> file, which makes setting up the environment a breeze.</p>
+<blockquote>
+<div><p>Key libraries in the environment:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pandas</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seaborn</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scipy</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">statsmodels</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simpy</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jupyter</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jupyterlab</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">black</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mkdocs</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code></p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils" />
+<section id="installation">
+<h3><strong>Installation</strong><a class="headerlink" href="#installation" title="Link to this heading">¶</a></h3>
+<ol class="arabic">
+<li><p><strong>Clone the repository</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/caterer-z-t/SOM_Seq_Sim.git
+<span class="nb">cd</span><span class="w"> </span>/path/to/SOM_Seq_Sim
+</pre></div>
+</div>
+</li>
+<li><p><strong>Create a virtual environment (optional but recommended):</strong></p>
+<p>If you’re using <code class="docutils literal notranslate"><span class="pre">conda</span></code>, <code class="docutils literal notranslate"><span class="pre">mamba</span></code>, or <code class="docutils literal notranslate"><span class="pre">micromamba</span></code>, you can create the environment directly from the <code class="docutils literal notranslate"><span class="pre">env.yml</span></code> file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>env.yml
+</pre></div>
+</div>
+</li>
+<li><p>Activate environment using conda (please change {conda} to be whatever used to create the environemnt):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>som-sim-env
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="generating-sequencing-data">
+<h3><strong>Generating Sequencing Data</strong><a class="headerlink" href="#generating-sequencing-data" title="Link to this heading">¶</a></h3>
+<blockquote>
+<div><p>Note: The code (<code class="docutils literal notranslate"><span class="pre">Seq_Sim/seq_sim.py</span></code> and <code class="docutils literal notranslate"><span class="pre">Seq_Sim/utils/seq_sim_utils.py</span></code>) is based on R scripts from the <a class="reference external" href="https://fanzhanglab.org/">Zhang Lab</a>. These R scripts have been modified and streamlined for this project. The biological relevance may not be fully retained, and it serves as a showcase for potential sequencing simulations. For more information please see <a class="reference internal" href="#Seq_Sim/README.md"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">Seq_Sim/README.md</span></code></span></a></p>
+</div></blockquote>
+<p>You can generate simulated sequencing data by running the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/Seq_Sim/simulations.sh<span class="w"> </span>-c<span class="w"> </span>/Seq_Sim/config.yml
+</pre></div>
+</div>
+<p>Alternatively, you can run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>/Seq_Sim/seq_sim.py<span class="w"> </span><span class="se">\ </span>
+<span class="w">      </span>--num_samples<span class="w"> </span><span class="m">30</span><span class="w">                   </span><span class="se">\ </span><span class="c1"># num samples </span>
+<span class="w">      </span>--fold_change<span class="w"> </span><span class="m">0</span>.5<span class="w">                  </span><span class="se">\ </span><span class="c1"># fold change between disease and healthy samples </span>
+<span class="w">      </span>--config_file<span class="w"> </span>/Seq_Sim/config.yml<span class="w">    </span><span class="c1"># configuration file</span>
+</pre></div>
+</div>
+<p>By default, the output CSV files will be saved in the <code class="docutils literal notranslate"><span class="pre">SOM_Seq_Sim/data/</span></code> directory.</p>
+</section>
+<section id="running-soms">
+<h3>Running SOMs<a class="headerlink" href="#running-soms" title="Link to this heading">¶</a></h3>
+<p>For running Self-Organizing Maps, whether on the generated sequencing data or your own data, please consult the SOM directory’s <a class="reference internal" href="#SOM/"><span class="xref myst">README file</span></a>.</p>
+</section>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h2>
+<p>Include information about documentation here &#64;victoria-hurd</p>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">¶</a></h2>
+<p>To contribute to this project, please see the <a class="reference internal" href="CONTRIBUTING.html"><span class="std std-doc">CONTRIBUTING.md</span></a> file.</p>
+</section>
+<section id="code-of-conduct">
+<h2>Code of Conduct<a class="headerlink" href="#code-of-conduct" title="Link to this heading">¶</a></h2>
+<p>For our code of conduct for this project, please see the <a class="reference internal" href="CODE_OF_CONDUCT.html"><span class="std std-doc">CODE_OF_CONDUCt.md</span></a> file.</p>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">¶</a></h2>
+<p>Run the following command to execute tests:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>test/<span class="w"> </span>-v
+</pre></div>
+</div>
+</section>
+<section id="contributors">
+<h2>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">¶</a></h2>
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/madrpernat">
+        <img src="https://github.com/madrpernat.png" width="200" />
+      </a>
+      <br />
+      <b>Maddy</b>
+    </td>
+    <td align="center">
+      <a href="https://github.com/pnnoc">
+        <img src="https://github.com/pnnoc.png" width="200" />
+      </a>
+      <br />
+      <b>Con</b>
+    </td>
+    <td align="center">
+      <a href="https://github.com/victoria-hurd">
+        <img src="https://github.com/victoria-hurd.png" width="200" />
+      </a>
+      <br />
+      <b>Vicki</b>
+    </td>
+    <td align="center">
+      <a href="https://github.com/caterer-z-t">
+        <img src="https://github.com/caterer-z-t.png" width="200" />
+      </a>
+      <br />
+      <b>Zac</b>
+    </td>
+  </tr>
+</table>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Link to this heading">¶</a></h2>
+<p>This project is licensed under the MIT License - see the <code class="docutils literal notranslate"><span class="pre">LICENSE</span></code> file for details.</p>
+</section>
+<section id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Link to this heading">¶</a></h2>
+<p>We would like to thank the contributors and open-source community for their valuable contributions to this project.</p>
+</section>
+<section id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>SOM_Seq_Sim/
+├──<span class="w"> </span>docs/
+│<span class="w">   </span>├──<span class="w"> </span>img/<span class="w">                              </span><span class="c1"># Contains images used in Read the Docs</span>
+│<span class="w">   </span>├──<span class="w"> </span>pipelines/<span class="w">                        </span><span class="c1"># Additional MD files for pipelines and packages</span>
+│<span class="w">   </span>├──<span class="w"> </span>index.md<span class="w">                          </span><span class="c1"># Initial page for Read the Docs</span>
+│<span class="w">   </span>└──<span class="w"> </span>requirements.txt<span class="w">                  </span><span class="c1"># Dependencies for Read the Docs </span>
+├──<span class="w"> </span>SOM/
+│<span class="w">   </span>├──<span class="w"> </span>utils/
+│<span class="w">   </span>│<span class="w">       </span>└──<span class="w"> </span>som_utils.py<span class="w">              </span><span class="c1"># Contains the core implementation of the `SOM` class</span>
+│<span class="w">   </span>├──<span class="w"> </span>data/<span class="w">              </span>
+│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>iris_categorical_data.csv<span class="w">     </span><span class="c1"># Categorical data for the Iris dataset</span>
+│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>iris_training_data.csv<span class="w">        </span><span class="c1"># Training data for the Iris dataset</span>
+│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>seq_sim_categorical_data.csv<span class="w">  </span><span class="c1"># Categorical data for the sequencing dataset</span>
+│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>seq_sim_training_data.csv<span class="w">     </span><span class="c1"># Training data for the sequencing dataset</span>
+│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>titanic_categorical_data.csv<span class="w">  </span><span class="c1"># Categorical data for the Titanic dataset</span>
+│<span class="w">   </span>│<span class="w">   </span>└──<span class="w"> </span>titanic_training_data.csv<span class="w">     </span><span class="c1"># Training data for the Titanic dataset</span>
+│<span class="w">   </span>├──<span class="w"> </span>examples/<span class="w">           </span>
+│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>output/
+│<span class="w">   </span>│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>iris/<span class="w">                     </span><span class="c1"># Directory containing output figures from `som_example_iris.py`</span>
+│<span class="w">   </span>│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>seq/<span class="w">                      </span><span class="c1"># Directory containing output figures from `som_example_seq.py`</span>
+│<span class="w">   </span>│<span class="w">   </span>│<span class="w">   </span>└──<span class="w"> </span>titanic/<span class="w">                  </span><span class="c1"># Directory containing output figures from `som_example_titanic.py`</span>
+│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>som_example_iris.py<span class="w">           </span><span class="c1"># Example script for applying the SOM to the Iris dataset</span>
+│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>som_example_seq.py<span class="w">            </span><span class="c1"># Example script for applying the SOM to the Sequencing dataset</span>
+│<span class="w">   </span>│<span class="w">   </span>└──<span class="w"> </span>som_example_titanic.py<span class="w">        </span><span class="c1"># Example script for applying the SOM to the Titanic dataset</span>
+│<span class="w">   </span>├──<span class="w"> </span>README.md/<span class="w">                        </span><span class="c1"># README file for SOM directory</span>
+│<span class="w">   </span>└──<span class="w"> </span>som.py<span class="w">                            </span><span class="c1"># A command-line interface for fitting and visualizing SOMs. </span>
+├──<span class="w"> </span>Seq_Sim/
+│<span class="w">   </span>├──<span class="w"> </span>utils/<span class="w">                            </span><span class="c1"># folder containg additional utility functions</span>
+│<span class="w">   </span>│<span class="w">   </span>└──<span class="w"> </span>seq_sim_utils.py<span class="w">              </span><span class="c1"># contains all necessary functions for simulation.R</span>
+│<span class="w">   </span>├──<span class="w"> </span>config.yml<span class="w">                        </span><span class="c1"># configuration file use to specify all components in simulation.R</span>
+│<span class="w">   </span>├──<span class="w"> </span>README.md<span class="w">                         </span><span class="c1"># information specific to running this simulation sequencing generation code</span>
+│<span class="w">   </span>├──<span class="w"> </span>seq_sim.py<span class="w">                        </span><span class="c1"># main function which runs the seqeucning generation code</span>
+│<span class="w">   </span>└──<span class="w"> </span>simulation.sh<span class="w">                     </span><span class="c1"># shell script for running sequencing generating code multiple times, see Seq_Sim/README.md for more information</span>
+├──<span class="w"> </span>test/
+│<span class="w">   </span>├──<span class="w"> </span>Seq_Sim/<span class="w"> </span>
+│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>test_seq_sim_utils.py
+│<span class="w">   </span>│<span class="w">   </span>└──<span class="w"> </span>test_seq_sim.py
+│<span class="w">   </span>└──<span class="w"> </span>SOM/
+│<span class="w">       </span>└──<span class="w"> </span>test_SOM.py<span class="w">                   </span><span class="c1"># Tests for SOM functionality</span>
+├──<span class="w"> </span>.gitignore<span class="w">                            </span><span class="c1"># Git ignore file to exclude files and directories from Git</span>
+├──<span class="w"> </span>.readthedocs.yaml<span class="w">                     </span><span class="c1"># YAML file specifying dependencies for Read the Docs</span>
+├──<span class="w"> </span>CODE_OF_CONDUCT.md<span class="w">                    </span><span class="c1"># markdown file explaining our code of conduct</span>
+├──<span class="w"> </span>CONTRIBUTING.md<span class="w">                       </span><span class="c1"># markdown file explaining how to contribute to this repo</span>
+├──<span class="w"> </span>env.yml<span class="w">                               </span><span class="c1"># YAML file specifying dependencies for the entire package</span>
+├──<span class="w"> </span>README.md<span class="w">                             </span><span class="c1"># README file</span>
+└──<span class="w"> </span>LICENSE<span class="w">                               </span><span class="c1"># License for the project</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">SOM_Seq_Sim</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><strong>Self-Organizing Maps to Explore Genetic Sequencing Simulation Data (SOM-Seq)</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">
+
+
+
+
+
+
+
+
+
+
+</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#course"><strong>Course:</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#project-overview"><strong>Project Overview</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#table-of-contents"><strong>Table of Contents</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage"><strong>Usage</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributing">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-of-conduct">Code of Conduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributors">Contributors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#project-structure">Project Structure</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing to SOM_Seq_Sim</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CODE_OF_CONDUCT.html">Code of Conduct - SOM_Seq_Sim</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to SOM_Seq_Sim’s documentation!</a></li>
+      <li>Next: <a href="CONTRIBUTING.html" title="next chapter">Contributing to SOM_Seq_Sim</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Victoria Hurd.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/README.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
