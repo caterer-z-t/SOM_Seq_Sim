@@ -1,0 +1,471 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Hyperparameter Tuning Example for Self-Organizing Maps (SOM)\n",
+    "===========================================================\n",
+    "\n",
+    "This script demonstrates how to use the SOM class to perform hyperparameter tuning. By defining a\n",
+    "grid of hyperparameters and systematically testing all combinations, the script identifies the\n",
+    "optimal configuration of hyperparameters for a given dataset.\n",
+    "\n",
+    "Features of This Script:\n",
+    "-------------------------\n",
+    "1. Grid Search Implementation:\n",
+    "    - Hyperparameters such as `scale_method`, `x_dim`, `y_dim`, `topology`, `neighborhood_fnc`,\n",
+    "      and `epochs` are systematically tested over a predefined range of values.\n",
+    "    - The metrics Percent Variance Explained (PVE) and Topographic Error are combined into\n",
+    "      a scoring function to evaluate the SOM's performance for each combination.\n",
+    "\n",
+    "2. Ease of Use:\n",
+    "    - The script leverages Python's `itertools.product` for a clean and systematic exploration of\n",
+    "      hyperparameter combinations.\n",
+    "    - Metrics are calculated using the SOM class' built-in methods, making the evaluation process\n",
+    "      seamless.\n",
+    "\n",
+    "3. Visualization of Results:\n",
+    "    - Once the best hyperparameters are identified, the SOM is retrained, and component planes\n",
+    "      and categorical data distributions are visualized and saved.\n",
+    "\n",
+    "Considerations:\n",
+    "---------------\n",
+    "- Time Complexity:\n",
+    "    - Depending on the size of the dataset and the number of hyperparameter combinations, this \n",
+    "      process may take significant time. Adjust the ranges of the hyperparameters to balance \n",
+    "      between thoroughness and computational efficiency.\n",
+    "    \n",
+    "- Extensibility:\n",
+    "    - The scoring function can be adjusted based on specific requirements. In this example, the \n",
+    "      score is computed as PVE minus a scaled Topographic Error.\n",
+    "\n",
+    "Output:\n",
+    "-------\n",
+    "- Best hyperparameters and their resulting score\n",
+    "- Final SOM trained with the best parameters.\n",
+    "- Saved visualizations of component planes and categorical data distributions.\n",
+    "\n",
+    "Usage:\n",
+    "------\n",
+    "Modify the dataset path and hyperparameter grid as needed."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# 1. Imports"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Standard imports\n",
+    "import itertools\n",
+    "import os\n",
+    "import sys\n",
+    "\n",
+    "# Third party imports\n",
+    "import pandas as pd\n",
+    "import seaborn as sns\n",
+    "import matplotlib.pyplot as plt\n",
+    "\n",
+    "# Local imports\n",
+    "notebook_dir = os.getcwd()\n",
+    "parent_dir = os.path.abspath(os.path.join(notebook_dir, '..', '..'))\n",
+    "sys.path.append(parent_dir)\n",
+    "from SOM.utils.som_utils import SOM"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# 2. Load Data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Load data\n",
+    "train_dat_path = os.path.join(parent_dir, 'SOM', 'data', 'titanic_training_data.csv')\n",
+    "other_dat_path = os.path.join(parent_dir, 'SOM', 'data', 'titanic_categorical_data.csv')\n",
+    "\n",
+    "train_dat = pd.read_csv(train_dat_path)\n",
+    "other_dat = pd.read_csv(other_dat_path)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# 3. Define Hyperparameters"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Define hyperparameter grid\n",
+    "hyperparameter_grid = {\n",
+    "    \"scale_method\": [\"zscore\", \"minmax\"],\n",
+    "    \"x_dim\": [3, 5, 7],\n",
+    "    \"y_dim\": [2, 4, 6],\n",
+    "    \"topology\": [\"rectangular\", \"hexagonal\"],\n",
+    "    \"neighborhood_fnc\": [\"gaussian\", \"bubble\"],\n",
+    "    \"epochs\": [50, 100, 200],\n",
+    "}\n",
+    "\n",
+    "# Initialize variables to store the best parameters and score\n",
+    "best_params = None\n",
+    "best_score = -float(\"inf\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# 4. Grid Search for Optimal Parameters"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Tested params: ('zscore', 3, 2, 'rectangular', 'gaussian', 50) | Score: 3.07\n",
+      "Tested params: ('zscore', 3, 2, 'rectangular', 'gaussian', 100) | Score: 22.30\n",
+      "Tested params: ('zscore', 3, 2, 'rectangular', 'gaussian', 200) | Score: 3.37\n",
+      "Tested params: ('zscore', 3, 2, 'rectangular', 'bubble', 50) | Score: 44.65\n",
+      "Tested params: ('zscore', 3, 2, 'rectangular', 'bubble', 100) | Score: 32.29\n",
+      "Tested params: ('zscore', 3, 2, 'rectangular', 'bubble', 200) | Score: -31.86\n",
+      "Tested params: ('zscore', 3, 2, 'hexagonal', 'gaussian', 50) | Score: 4.90\n",
+      "Tested params: ('zscore', 3, 2, 'hexagonal', 'gaussian', 100) | Score: 34.35\n",
+      "Tested params: ('zscore', 3, 2, 'hexagonal', 'gaussian', 200) | Score: 29.17\n",
+      "Tested params: ('zscore', 3, 2, 'hexagonal', 'bubble', 50) | Score: 44.93\n",
+      "Tested params: ('zscore', 3, 2, 'hexagonal', 'bubble', 100) | Score: 47.56\n",
+      "Tested params: ('zscore', 3, 2, 'hexagonal', 'bubble', 200) | Score: 33.27\n",
+      "Tested params: ('zscore', 3, 4, 'rectangular', 'gaussian', 50) | Score: 27.55\n",
+      "Tested params: ('zscore', 3, 4, 'rectangular', 'gaussian', 100) | Score: 54.05\n",
+      "Tested params: ('zscore', 3, 4, 'rectangular', 'gaussian', 200) | Score: 56.14\n",
+      "Tested params: ('zscore', 3, 4, 'rectangular', 'bubble', 50) | Score: 34.40\n",
+      "Tested params: ('zscore', 3, 4, 'rectangular', 'bubble', 100) | Score: -6.10\n",
+      "Tested params: ('zscore', 3, 4, 'rectangular', 'bubble', 200) | Score: -1.29\n",
+      "Tested params: ('zscore', 3, 4, 'hexagonal', 'gaussian', 50) | Score: 56.96\n",
+      "Tested params: ('zscore', 3, 4, 'hexagonal', 'gaussian', 100) | Score: 60.51\n",
+      "Tested params: ('zscore', 3, 4, 'hexagonal', 'gaussian', 200) | Score: 46.69\n",
+      "Tested params: ('zscore', 3, 4, 'hexagonal', 'bubble', 50) | Score: 39.58\n",
+      "Tested params: ('zscore', 3, 4, 'hexagonal', 'bubble', 100) | Score: -5.54\n",
+      "Tested params: ('zscore', 3, 4, 'hexagonal', 'bubble', 200) | Score: 44.09\n",
+      "Tested params: ('zscore', 3, 6, 'rectangular', 'gaussian', 50) | Score: 47.69\n",
+      "Tested params: ('zscore', 3, 6, 'rectangular', 'gaussian', 100) | Score: 64.72\n",
+      "Tested params: ('zscore', 3, 6, 'rectangular', 'gaussian', 200) | Score: 41.66\n",
+      "Tested params: ('zscore', 3, 6, 'rectangular', 'bubble', 50) | Score: 0.07\n",
+      "Tested params: ('zscore', 3, 6, 'rectangular', 'bubble', 100) | Score: -8.68\n",
+      "Tested params: ('zscore', 3, 6, 'rectangular', 'bubble', 200) | Score: -10.00\n",
+      "Tested params: ('zscore', 3, 6, 'hexagonal', 'gaussian', 50) | Score: 65.04\n",
+      "Tested params: ('zscore', 3, 6, 'hexagonal', 'gaussian', 100) | Score: 61.91\n",
+      "Tested params: ('zscore', 3, 6, 'hexagonal', 'gaussian', 200) | Score: 62.98\n",
+      "Tested params: ('zscore', 3, 6, 'hexagonal', 'bubble', 50) | Score: 2.17\n",
+      "Tested params: ('zscore', 3, 6, 'hexagonal', 'bubble', 100) | Score: -0.42\n",
+      "Tested params: ('zscore', 3, 6, 'hexagonal', 'bubble', 200) | Score: -9.16\n",
+      "Tested params: ('zscore', 5, 2, 'rectangular', 'gaussian', 50) | Score: 32.92\n",
+      "Tested params: ('zscore', 5, 2, 'rectangular', 'gaussian', 100) | Score: 37.05\n",
+      "Tested params: ('zscore', 5, 2, 'rectangular', 'gaussian', 200) | Score: 20.39\n",
+      "Tested params: ('zscore', 5, 2, 'rectangular', 'bubble', 50) | Score: -24.19\n",
+      "Tested params: ('zscore', 5, 2, 'rectangular', 'bubble', 100) | Score: 2.37\n",
+      "Tested params: ('zscore', 5, 2, 'rectangular', 'bubble', 200) | Score: -4.35\n",
+      "Tested params: ('zscore', 5, 2, 'hexagonal', 'gaussian', 50) | Score: 44.14\n",
+      "Tested params: ('zscore', 5, 2, 'hexagonal', 'gaussian', 100) | Score: 49.50\n",
+      "Tested params: ('zscore', 5, 2, 'hexagonal', 'gaussian', 200) | Score: 17.55\n",
+      "Tested params: ('zscore', 5, 2, 'hexagonal', 'bubble', 50) | Score: -23.91\n",
+      "Tested params: ('zscore', 5, 2, 'hexagonal', 'bubble', 100) | Score: 4.89\n",
+      "Tested params: ('zscore', 5, 2, 'hexagonal', 'bubble', 200) | Score: 2.65\n",
+      "Tested params: ('zscore', 5, 4, 'rectangular', 'gaussian', 50) | Score: 46.99\n",
+      "Tested params: ('zscore', 5, 4, 'rectangular', 'gaussian', 100) | Score: 60.28\n",
+      "Tested params: ('zscore', 5, 4, 'rectangular', 'gaussian', 200) | Score: 60.30\n",
+      "Tested params: ('zscore', 5, 4, 'rectangular', 'bubble', 50) | Score: -4.70\n",
+      "Tested params: ('zscore', 5, 4, 'rectangular', 'bubble', 100) | Score: 33.40\n",
+      "Tested params: ('zscore', 5, 4, 'rectangular', 'bubble', 200) | Score: 30.51\n",
+      "Tested params: ('zscore', 5, 4, 'hexagonal', 'gaussian', 50) | Score: 73.81\n",
+      "Tested params: ('zscore', 5, 4, 'hexagonal', 'gaussian', 100) | Score: 65.29\n",
+      "Tested params: ('zscore', 5, 4, 'hexagonal', 'gaussian', 200) | Score: 60.89\n",
+      "Tested params: ('zscore', 5, 4, 'hexagonal', 'bubble', 50) | Score: 29.75\n",
+      "Tested params: ('zscore', 5, 4, 'hexagonal', 'bubble', 100) | Score: 36.90\n",
+      "Tested params: ('zscore', 5, 4, 'hexagonal', 'bubble', 200) | Score: 32.61\n",
+      "Tested params: ('zscore', 5, 6, 'rectangular', 'gaussian', 50) | Score: 66.65\n",
+      "Tested params: ('zscore', 5, 6, 'rectangular', 'gaussian', 100) | Score: 72.04\n",
+      "Tested params: ('zscore', 5, 6, 'rectangular', 'gaussian', 200) | Score: 61.56\n",
+      "Tested params: ('zscore', 5, 6, 'rectangular', 'bubble', 50) | Score: 0.09\n",
+      "Tested params: ('zscore', 5, 6, 'rectangular', 'bubble', 100) | Score: 1.35\n",
+      "Tested params: ('zscore', 5, 6, 'rectangular', 'bubble', 200) | Score: -2.59\n",
+      "Tested params: ('zscore', 5, 6, 'hexagonal', 'gaussian', 50) | Score: 83.97\n",
+      "Tested params: ('zscore', 5, 6, 'hexagonal', 'gaussian', 100) | Score: 74.98\n",
+      "Tested params: ('zscore', 5, 6, 'hexagonal', 'gaussian', 200) | Score: 72.04\n",
+      "Tested params: ('zscore', 5, 6, 'hexagonal', 'bubble', 50) | Score: 7.37\n",
+      "Tested params: ('zscore', 5, 6, 'hexagonal', 'bubble', 100) | Score: 7.94\n",
+      "Tested params: ('zscore', 5, 6, 'hexagonal', 'bubble', 200) | Score: 1.47\n",
+      "Tested params: ('zscore', 7, 2, 'rectangular', 'gaussian', 50) | Score: 56.91\n",
+      "Tested params: ('zscore', 7, 2, 'rectangular', 'gaussian', 100) | Score: 46.95\n",
+      "Tested params: ('zscore', 7, 2, 'rectangular', 'gaussian', 200) | Score: 49.48\n",
+      "Tested params: ('zscore', 7, 2, 'rectangular', 'bubble', 50) | Score: -9.63\n",
+      "Tested params: ('zscore', 7, 2, 'rectangular', 'bubble', 100) | Score: -10.19\n",
+      "Tested params: ('zscore', 7, 2, 'rectangular', 'bubble', 200) | Score: 37.30\n",
+      "Tested params: ('zscore', 7, 2, 'hexagonal', 'gaussian', 50) | Score: 61.36\n",
+      "Tested params: ('zscore', 7, 2, 'hexagonal', 'gaussian', 100) | Score: 69.85\n",
+      "Tested params: ('zscore', 7, 2, 'hexagonal', 'gaussian', 200) | Score: 34.88\n",
+      "Tested params: ('zscore', 7, 2, 'hexagonal', 'bubble', 50) | Score: -9.63\n",
+      "Tested params: ('zscore', 7, 2, 'hexagonal', 'bubble', 100) | Score: -3.89\n",
+      "Tested params: ('zscore', 7, 2, 'hexagonal', 'bubble', 200) | Score: 40.95\n",
+      "Tested params: ('zscore', 7, 4, 'rectangular', 'gaussian', 50) | Score: 60.39\n",
+      "Tested params: ('zscore', 7, 4, 'rectangular', 'gaussian', 100) | Score: 70.44\n",
+      "Tested params: ('zscore', 7, 4, 'rectangular', 'gaussian', 200) | Score: 38.54\n",
+      "Tested params: ('zscore', 7, 4, 'rectangular', 'bubble', 50) | Score: 7.52\n",
+      "Tested params: ('zscore', 7, 4, 'rectangular', 'bubble', 100) | Score: -1.38\n",
+      "Tested params: ('zscore', 7, 4, 'rectangular', 'bubble', 200) | Score: -0.51\n",
+      "Tested params: ('zscore', 7, 4, 'hexagonal', 'gaussian', 50) | Score: 74.47\n",
+      "Tested params: ('zscore', 7, 4, 'hexagonal', 'gaussian', 100) | Score: 53.62\n",
+      "Tested params: ('zscore', 7, 4, 'hexagonal', 'gaussian', 200) | Score: 66.44\n",
+      "Tested params: ('zscore', 7, 4, 'hexagonal', 'bubble', 50) | Score: 15.36\n",
+      "Tested params: ('zscore', 7, 4, 'hexagonal', 'bubble', 100) | Score: 3.38\n",
+      "Tested params: ('zscore', 7, 4, 'hexagonal', 'bubble', 200) | Score: 3.83\n",
+      "Tested params: ('zscore', 7, 6, 'rectangular', 'gaussian', 50) | Score: 51.34\n",
+      "Tested params: ('zscore', 7, 6, 'rectangular', 'gaussian', 100) | Score: 58.08\n",
+      "Tested params: ('zscore', 7, 6, 'rectangular', 'gaussian', 200) | Score: 67.50\n",
+      "Tested params: ('zscore', 7, 6, 'rectangular', 'bubble', 50) | Score: 38.08\n",
+      "Tested params: ('zscore', 7, 6, 'rectangular', 'bubble', 100) | Score: 33.44\n",
+      "Tested params: ('zscore', 7, 6, 'rectangular', 'bubble', 200) | Score: 25.62\n",
+      "Tested params: ('zscore', 7, 6, 'hexagonal', 'gaussian', 50) | Score: 72.78\n",
+      "Tested params: ('zscore', 7, 6, 'hexagonal', 'gaussian', 100) | Score: 75.29\n",
+      "Tested params: ('zscore', 7, 6, 'hexagonal', 'gaussian', 200) | Score: 71.43\n",
+      "Tested params: ('zscore', 7, 6, 'hexagonal', 'bubble', 50) | Score: 40.32\n",
+      "Tested params: ('zscore', 7, 6, 'hexagonal', 'bubble', 100) | Score: 44.36\n",
+      "Tested params: ('zscore', 7, 6, 'hexagonal', 'bubble', 200) | Score: 30.94\n",
+      "Tested params: ('minmax', 3, 2, 'rectangular', 'gaussian', 50) | Score: 54.92\n",
+      "Tested params: ('minmax', 3, 2, 'rectangular', 'gaussian', 100) | Score: 73.38\n",
+      "Tested params: ('minmax', 3, 2, 'rectangular', 'gaussian', 200) | Score: 77.83\n",
+      "Tested params: ('minmax', 3, 2, 'rectangular', 'bubble', 50) | Score: 42.49\n",
+      "Tested params: ('minmax', 3, 2, 'rectangular', 'bubble', 100) | Score: 62.43\n",
+      "Tested params: ('minmax', 3, 2, 'rectangular', 'bubble', 200) | Score: 73.67\n",
+      "Tested params: ('minmax', 3, 2, 'hexagonal', 'gaussian', 50) | Score: 79.08\n",
+      "Tested params: ('minmax', 3, 2, 'hexagonal', 'gaussian', 100) | Score: 79.40\n",
+      "Tested params: ('minmax', 3, 2, 'hexagonal', 'gaussian', 200) | Score: 79.19\n",
+      "Tested params: ('minmax', 3, 2, 'hexagonal', 'bubble', 50) | Score: 42.49\n",
+      "Tested params: ('minmax', 3, 2, 'hexagonal', 'bubble', 100) | Score: 62.43\n",
+      "Tested params: ('minmax', 3, 2, 'hexagonal', 'bubble', 200) | Score: 73.67\n",
+      "Tested params: ('minmax', 3, 4, 'rectangular', 'gaussian', 50) | Score: 71.42\n",
+      "Tested params: ('minmax', 3, 4, 'rectangular', 'gaussian', 100) | Score: 54.54\n",
+      "Tested params: ('minmax', 3, 4, 'rectangular', 'gaussian', 200) | Score: 67.86\n",
+      "Tested params: ('minmax', 3, 4, 'rectangular', 'bubble', 50) | Score: 75.14\n"
+     ]
+    },
+    {
+     "ename": "KeyboardInterrupt",
+     "evalue": "",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mKeyboardInterrupt\u001b[0m                         Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[6], line 22\u001b[0m\n\u001b[0;32m     11\u001b[0m \u001b[38;5;66;03m# Train SOM with the current hyperparameter combination\u001b[39;00m\n\u001b[0;32m     12\u001b[0m som \u001b[38;5;241m=\u001b[39m SOM(\n\u001b[0;32m     13\u001b[0m     train_dat\u001b[38;5;241m=\u001b[39mtrain_dat,\n\u001b[0;32m     14\u001b[0m     other_dat\u001b[38;5;241m=\u001b[39mother_dat,\n\u001b[1;32m   (...)\u001b[0m\n\u001b[0;32m     20\u001b[0m     epochs\u001b[38;5;241m=\u001b[39mepochs,\n\u001b[0;32m     21\u001b[0m )\n\u001b[1;32m---> 22\u001b[0m \u001b[43msom\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mtrain_map\u001b[49m\u001b[43m(\u001b[49m\u001b[43m)\u001b[49m\n\u001b[0;32m     24\u001b[0m \u001b[38;5;66;03m# Calculate evaluation metrics\u001b[39;00m\n\u001b[0;32m     25\u001b[0m pve \u001b[38;5;241m=\u001b[39m som\u001b[38;5;241m.\u001b[39mcalculate_percent_variance_explained()\n",
+      "File \u001b[1;32m~\\OneDrive - UCB-O365\\Grad School\\Courses\\Fa2024\\SoftwareDevelopment\\SOM_Seq_Sim\\SOM\\utils\\som_utils.py:370\u001b[0m, in \u001b[0;36mSOM.train_map\u001b[1;34m(self)\u001b[0m\n\u001b[0;32m    367\u001b[0m som\u001b[38;5;241m.\u001b[39mpca_weights_init(\u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mtrain_dat_scaled)\n\u001b[0;32m    369\u001b[0m \u001b[38;5;66;03m# SOM training\u001b[39;00m\n\u001b[1;32m--> 370\u001b[0m \u001b[43msom\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mtrain\u001b[49m\u001b[43m(\u001b[49m\n\u001b[0;32m    371\u001b[0m \u001b[43m    \u001b[49m\u001b[43mdata\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mtrain_dat_scaled\u001b[49m\u001b[43m,\u001b[49m\n\u001b[0;32m    372\u001b[0m \u001b[43m    \u001b[49m\u001b[43mnum_iteration\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mepochs\u001b[49m\u001b[43m \u001b[49m\u001b[38;5;241;43m*\u001b[39;49m\u001b[43m \u001b[49m\u001b[43mn_samples\u001b[49m\u001b[43m,\u001b[49m\n\u001b[0;32m    373\u001b[0m \u001b[43m    \u001b[49m\u001b[43mrandom_order\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[38;5;28;43;01mTrue\u001b[39;49;00m\u001b[43m,\u001b[49m\n\u001b[0;32m    374\u001b[0m \u001b[43m    \u001b[49m\u001b[43mverbose\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[38;5;28;43;01mFalse\u001b[39;49;00m\n\u001b[0;32m    375\u001b[0m \u001b[43m\u001b[49m\u001b[43m)\u001b[49m\n\u001b[0;32m    377\u001b[0m \u001b[38;5;66;03m# Set attributes yielded from training\u001b[39;00m\n\u001b[0;32m    378\u001b[0m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mmap \u001b[38;5;241m=\u001b[39m som\n",
+      "File \u001b[1;32m~\\miniforge3\\envs\\class-env\\Lib\\site-packages\\minisom.py:407\u001b[0m, in \u001b[0;36mMiniSom.train\u001b[1;34m(self, data, num_iteration, random_order, verbose)\u001b[0m\n\u001b[0;32m    404\u001b[0m iterations \u001b[38;5;241m=\u001b[39m _build_iteration_indexes(\u001b[38;5;28mlen\u001b[39m(data), num_iteration,\n\u001b[0;32m    405\u001b[0m                                       verbose, random_generator)\n\u001b[0;32m    406\u001b[0m \u001b[38;5;28;01mfor\u001b[39;00m t, iteration \u001b[38;5;129;01min\u001b[39;00m \u001b[38;5;28menumerate\u001b[39m(iterations):\n\u001b[1;32m--> 407\u001b[0m     \u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mupdate\u001b[49m\u001b[43m(\u001b[49m\u001b[43mdata\u001b[49m\u001b[43m[\u001b[49m\u001b[43miteration\u001b[49m\u001b[43m]\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mwinner\u001b[49m\u001b[43m(\u001b[49m\u001b[43mdata\u001b[49m\u001b[43m[\u001b[49m\u001b[43miteration\u001b[49m\u001b[43m]\u001b[49m\u001b[43m)\u001b[49m\u001b[43m,\u001b[49m\n\u001b[0;32m    408\u001b[0m \u001b[43m                \u001b[49m\u001b[43mt\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mnum_iteration\u001b[49m\u001b[43m)\u001b[49m\n\u001b[0;32m    409\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m verbose:\n\u001b[0;32m    410\u001b[0m     \u001b[38;5;28mprint\u001b[39m(\u001b[38;5;124m'\u001b[39m\u001b[38;5;130;01m\\n\u001b[39;00m\u001b[38;5;124m quantization error:\u001b[39m\u001b[38;5;124m'\u001b[39m, \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mquantization_error(data))\n",
+      "File \u001b[1;32m~\\miniforge3\\envs\\class-env\\Lib\\site-packages\\minisom.py:338\u001b[0m, in \u001b[0;36mMiniSom.update\u001b[1;34m(self, x, win, t, max_iteration)\u001b[0m\n\u001b[0;32m    336\u001b[0m g \u001b[38;5;241m=\u001b[39m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mneighborhood(win, sig)\u001b[38;5;241m*\u001b[39meta\n\u001b[0;32m    337\u001b[0m \u001b[38;5;66;03m# w_new = eta * neighborhood_function * (x-w)\u001b[39;00m\n\u001b[1;32m--> 338\u001b[0m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_weights \u001b[38;5;241m+\u001b[39m\u001b[38;5;241m=\u001b[39m \u001b[43meinsum\u001b[49m\u001b[43m(\u001b[49m\u001b[38;5;124;43m'\u001b[39;49m\u001b[38;5;124;43mij, ijk->ijk\u001b[39;49m\u001b[38;5;124;43m'\u001b[39;49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mg\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mx\u001b[49m\u001b[38;5;241;43m-\u001b[39;49m\u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43m_weights\u001b[49m\u001b[43m)\u001b[49m\n",
+      "\u001b[1;31mKeyboardInterrupt\u001b[0m: "
+     ]
+    }
+   ],
+   "source": [
+    "for params in itertools.product(\n",
+    "    hyperparameter_grid[\"scale_method\"],\n",
+    "    hyperparameter_grid[\"x_dim\"],\n",
+    "    hyperparameter_grid[\"y_dim\"],\n",
+    "    hyperparameter_grid[\"topology\"],\n",
+    "    hyperparameter_grid[\"neighborhood_fnc\"],\n",
+    "    hyperparameter_grid[\"epochs\"],\n",
+    "):\n",
+    "    scale_method, x_dim, y_dim, topology, neighborhood_fnc, epochs = params\n",
+    "\n",
+    "    # Train SOM with the current hyperparameter combination\n",
+    "    som = SOM(\n",
+    "        train_dat=train_dat,\n",
+    "        other_dat=other_dat,\n",
+    "        scale_method=scale_method,\n",
+    "        x_dim=x_dim,\n",
+    "        y_dim=y_dim,\n",
+    "        topology=topology,\n",
+    "        neighborhood_fnc=neighborhood_fnc,\n",
+    "        epochs=epochs,\n",
+    "    )\n",
+    "    som.train_map()\n",
+    "\n",
+    "    # Calculate evaluation metrics\n",
+    "    pve = som.calculate_percent_variance_explained()\n",
+    "    topographic_error = som.calculate_topographic_error()\n",
+    "\n",
+    "    # Combine metrics into a single score (higher PVE and lower error are better)\n",
+    "    score = pve - topographic_error * 100\n",
+    "\n",
+    "    print(f\"Tested params: {params} | Score: {score:.2f}\")\n",
+    "\n",
+    "    # Update the best parameters if the current score is better\n",
+    "    if score > best_score:\n",
+    "        best_score = score\n",
+    "        best_params = params"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# 5. Show the best parameters"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\n",
+      "Best Hyperparameters:\n",
+      "Scale Method: zscore\n",
+      "x_dim: 5\n",
+      "y_dim: 6\n",
+      "Topology: hexagonal\n",
+      "Neighborhood Function: gaussian\n",
+      "Epochs: 50\n",
+      "Best Score: 83.97\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Output the best hyperparameters\n",
+    "print(\"\\nBest Hyperparameters:\")\n",
+    "print(f\"Scale Method: {best_params[0]}\")\n",
+    "print(f\"x_dim: {best_params[1]}\")\n",
+    "print(f\"y_dim: {best_params[2]}\")\n",
+    "print(f\"Topology: {best_params[3]}\")\n",
+    "print(f\"Neighborhood Function: {best_params[4]}\")\n",
+    "print(f\"Epochs: {best_params[5]}\")\n",
+    "print(f\"Best Score: {best_score:.2f}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# 6. Train SOM"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Train and visualize the best SOM\n",
+    "best_som = SOM(\n",
+    "    train_dat=train_dat,\n",
+    "    other_dat=other_dat,\n",
+    "    scale_method=best_params[0],\n",
+    "    x_dim=best_params[1],\n",
+    "    y_dim=best_params[2],\n",
+    "    topology=best_params[3],\n",
+    "    neighborhood_fnc=best_params[4],\n",
+    "    epochs=best_params[5],\n",
+    ")\n",
+    "best_som.train_map()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# 7. Get the Fit Metrics"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\n",
+      "Final SOM Performance:\n",
+      "Percent variance explained = 90.69350053664347%\n",
+      "Topographic error = 0.06722689075630252\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Get fit metrics\n",
+    "pve = best_som.calculate_percent_variance_explained()\n",
+    "topographic_error = best_som.calculate_topographic_error()\n",
+    "\n",
+    "print(\"\\nFinal SOM Performance:\")\n",
+    "print(f\"Percent variance explained = {pve}%\")\n",
+    "print(f\"Topographic error = {topographic_error}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# 8. Plot component planes and categorical data (see output directory for figures)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Plot component planes\n",
+    "best_som.plot_component_planes(output_dir=\"output/titanic\")\n",
+    "\n",
+    "# Plot SOM Map Using Categorical Data\n",
+    "best_som.plot_categorical_data(output_dir=\"output/titanic\")"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "class-env",
+   "language": "python",
+   "name": "class-env"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
