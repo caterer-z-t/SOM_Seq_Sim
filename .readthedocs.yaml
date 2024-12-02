@@ -9,21 +9,17 @@ build:
     post_checkout:
       - git fetch --unshallow || true
 
-  # Disable the default Sphinx build process
-  build-html: false
-
 sphinx:
-  builder: none  # Disable Sphinx builds
+  builder: html  # Default Sphinx builder to maintain compatibility
 
-# Add this section to serve pre-built HTML files
-documentation_type: "sphinx_html"
+# Set the documentation type to pre-built HTML
+documentation_type: "sphinx"
 
-# The directory where your pre-built HTML files are stored
+# Specify the location of the pre-built HTML files
+extra:
+  build_dir: docs/build  # Adjust this to the path where your built HTML files are stored
+
+# Install your dependencies, if necessary
 python:
   install:
-    - method: pip
-      path: .
-
-# Ensure the correct directory is set for your HTML files
-extra:
-  build_dir: docs/build
+    - requirements: docs/requirements.txt
