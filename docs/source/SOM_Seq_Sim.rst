@@ -1,5 +1,5 @@
-Core functions
-==============
+SOM Core Functions
+=====================
 
 SOM object
 -------------------

@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Core functions" href="SOM_Seq_Sim.html" /><link rel="prev" title="Code of Conduct - SOM_Seq_Sim" href="CODE_OF_CONDUCT.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="SOM Core Functions" href="SOM_Seq_Sim.html" /><link rel="prev" title="Code of Conduct - SOM_Seq_Sim" href="CODE_OF_CONDUCT.html" />
 
     <!-- Generated with Sphinx 7.3.7 and Furo 2024.08.06 -->
-        <title>SOM_Seq_Sim - SOM_Seq_Sim 1.0 documentation</title>
+        <title>Core Function Descriptions - SOM_Seq_Sim 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
@@ -204,14 +204,17 @@
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="README.html"><strong>Self-Organizing Maps to Explore Genetic Sequencing Simulation Data (SOM-Seq)</strong></a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="walkthrough.html">Walkthroughs</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Walkthroughs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+<li class="toctree-l1 has-children"><a class="reference internal" href="walkthrough.html">Walkthroughs</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Walkthroughs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="iris.html">Iris Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seq_example.html">Sequencing Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="titanic.html">Titanic Dataset</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing to SOM_Seq_Sim</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CODE_OF_CONDUCT.html">Code of Conduct - SOM_Seq_Sim</a></li>
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">SOM_Seq_Sim</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of SOM_Seq_Sim</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="SOM_Seq_Sim.html">Core functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Seq_Sim.html">Functions</a></li>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Core Function Descriptions</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Core Function Descriptions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="SOM_Seq_Sim.html">SOM Core Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Seq_Sim.html">Seq_Sim Core Functions</a></li>
 </ul>
 </li>
 </ul>
@@ -254,11 +257,14 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="som-seq-sim">
-<h1>SOM_Seq_Sim<a class="headerlink" href="#som-seq-sim" title="Link to this heading">¶</a></h1>
+          <section id="core-function-descriptions">
+<h1>Core Function Descriptions<a class="headerlink" href="#core-function-descriptions" title="Link to this heading">¶</a></h1>
+<p>Below is a live table of contents that will bring you to a summary of each
+core function within SOM_Seq_Sim. Note that the structure of the table of
+contents follows the repo structure; SOM and Seq_Sim functions are separated.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="SOM_Seq_Sim.html">Core functions</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="SOM_Seq_Sim.html">SOM Core Functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="SOM_Seq_Sim.html#som-object">SOM object</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="SOM_Seq_Sim.html#SOM.utils.som_utils.SOM"><code class="docutils literal notranslate"><span class="pre">SOM</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="SOM_Seq_Sim.html#SOM.utils.som_utils.SOM.calculate_percent_variance_explained"><code class="docutils literal notranslate"><span class="pre">SOM.calculate_percent_variance_explained()</span></code></a></li>
@@ -291,7 +297,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Seq_Sim.html">Functions</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="Seq_Sim.html">Seq_Sim Core Functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Seq_Sim.html#module-Seq_Sim.utils.seq_sim_utils">Module contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.add_differential_cell_types"><code class="docutils literal notranslate"><span class="pre">add_differential_cell_types()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="Seq_Sim.html#Seq_Sim.utils.seq_sim_utils.add_rows_for_diff_cells"><code class="docutils literal notranslate"><span class="pre">add_rows_for_diff_cells()</span></code></a></li>
@@ -345,7 +351,7 @@
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Core functions</div>
+                <div class="title">SOM Core Functions</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
