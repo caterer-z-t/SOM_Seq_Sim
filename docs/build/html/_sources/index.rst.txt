@@ -8,6 +8,7 @@ Welcome to SOM_Seq_Sim's documentation!
    ../README.md
    ../CONTRIBUTING.md
    ../CODE_OF_CONDUCT.md
+   modules
 
 Indices and tables
 ==================
