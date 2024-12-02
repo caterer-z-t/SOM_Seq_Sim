@@ -6,6 +6,7 @@ Welcome to SOM_Seq_Sim's documentation!
    :caption: Contents:
 
    ../README.md
+   walkthrough
    ../CONTRIBUTING.md
    ../CODE_OF_CONDUCT.md
    modules

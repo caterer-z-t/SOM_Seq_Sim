@@ -5,3 +5,4 @@ SOM_Seq_Sim
    :maxdepth: 4
 
    SOM_Seq_Sim
+   Seq_Sim
