@@ -1,22 +1,21 @@
-# Read the Docs configuration file for Sphinx-based projects
-# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
-
+# Read the Docs configuration file
 version: 2
 
-# Set the version of Python and other tools you might need
 build:
   os: ubuntu-22.04
   tools:
-    python: "3.12"
+    python: "3.11"
   jobs:
     post_checkout:
-      # Optional: Fetch full git history if needed for version calculation
       - git fetch --unshallow || true
     post_create_environment:
-      # Install dependencies from requirements.txt
       - pip install -r docs/requirements.txt
+      - pip install .
 
-# Sphinx configuration
 sphinx:
   builder: html
   configuration: docs/source/conf.py
+python:
+  install:
+    - method: pip
+      path: .
