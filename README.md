@@ -12,7 +12,7 @@
 [![Contributors](https://img.shields.io/github/contributors/caterer-z-t/SOM_Seq_Sim?label=Contributors)](https://github.com/caterer-z-t/SOM_Seq_Sim/graphs/contributors)
 [![Pull Requests](https://img.shields.io/github/issues-pr/caterer-z-t/SOM_Seq_Sim?label=Pull%20Requests)](https://github.com/caterer-z-t/SOM_Seq_Sim/pulls)
 [![Discussions](https://img.shields.io/github/discussions/caterer-z-t/SOM_Seq_Sim?label=Discussions&logo=github)](https://github.com/caterer-z-t/SOM_Seq_Sim/discussions)
-[![Docs](https://img.shields.io/badge/docs-online-blue?logo=readthedocs)](https://caterer-z-t.github.io/SOM_Seq_Sim/)
+[![Docs](https://img.shields.io/badge/docs-online-blue?logo=readthedocs)](https://som-seq-sim.readthedocs.io/en/latest/index.html)
 [![Stars](https://img.shields.io/github/stars/caterer-z-t/SOM_Seq_Sim?label=Stars&logo=github)](https://github.com/caterer-z-t/SOM_Seq_Sim/stargazers)
 
 ---
