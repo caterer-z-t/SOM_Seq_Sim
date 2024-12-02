@@ -36,3 +36,4 @@ requests~=2.26
 
 nbsphinx
 myst_parser
+furo
