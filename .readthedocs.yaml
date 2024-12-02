@@ -19,14 +19,4 @@ build:
 # Sphinx configuration
 sphinx:
   builder: html
-  configuration: docs/conf.py
-
-# Add nbsphinx explicitly if it’s not in your requirements file
-python:
-  install:
-    - requirements: docs/requirements.txt
-    - method: pip
-      path: .
-    - method: pip
-      packages:
-        - nbsphinx
+  configuration: docs/source/conf.py
