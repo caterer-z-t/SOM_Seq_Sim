@@ -33,3 +33,9 @@ colorama~=0.4
 paginate~=0.5
 regex>=2022.4
 requests~=2.26
+
+sphinx>=3.0
+furo
+nbsphinx
+myst-parser
+sphinx-autodoc-typehints
