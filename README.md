@@ -12,12 +12,13 @@
 [![Contributors](https://img.shields.io/github/contributors/caterer-z-t/SOM_Seq_Sim?label=Contributors)](https://github.com/caterer-z-t/SOM_Seq_Sim/graphs/contributors)
 [![Pull Requests](https://img.shields.io/github/issues-pr/caterer-z-t/SOM_Seq_Sim?label=Pull%20Requests)](https://github.com/caterer-z-t/SOM_Seq_Sim/pulls)
 [![Discussions](https://img.shields.io/github/discussions/caterer-z-t/SOM_Seq_Sim?label=Discussions&logo=github)](https://github.com/caterer-z-t/SOM_Seq_Sim/discussions)
-[![Docs](https://img.shields.io/badge/docs-online-blue?logo=readthedocs)](https://caterer-z-t.github.io/SOM_Seq_Sim/)
+[![Docs](https://img.shields.io/badge/docs-online-blue?logo=readthedocs)](https://som-seq-sim.readthedocs.io/en/latest/index.html)
 [![Stars](https://img.shields.io/github/stars/caterer-z-t/SOM_Seq_Sim?label=Stars&logo=github)](https://github.com/caterer-z-t/SOM_Seq_Sim/stargazers)
 
 ---
 
 ## **Course:**
+
 [CSCI 6118](https://github.com/swe4s): Software Engineering for Scientists at the [University of Colorado Boulder](https://www.colorado.edu/)
 
 ---
@@ -29,6 +30,7 @@ Welcome to **SOM-Seq** 🎉, a versatile toolbox designed to tackle two distinct
 ---
 
 ## **Table of Contents**
+
 - [Usage](#usage)
   - [Project Setup](#project-setup)
   - [Requirements](#requirements)
@@ -54,7 +56,7 @@ Welcome to **SOM-Seq** 🎉, a versatile toolbox designed to tackle two distinct
 
 This project depends on several libraries and software packages. You can find the list in the `env.yml` file, which makes setting up the environment a breeze.
 
-> Key libraries in the environment:  
+> Key libraries in the environment:
 >   - `numpy`  
 >   - `pandas`  
 >   - `matplotlib`  
@@ -113,7 +115,7 @@ By default, the output CSV files will be saved in the `SOM_Seq_Sim/data/` direct
 For running Self-Organizing Maps, whether on the generated sequencing data or your own data, please consult the SOM directory's [README file](SOM/).
 
 ## Documentation
-Include information about documentation here @victoria-hurd
+For our documentation, please see the [readthedocs](https://som-seq-sim.readthedocs.io/en/latest/) page.
 
 ## Contributing 
 To contribute to this project, please see the [CONTRIBUTING.md](CONTRIBUTING.md) file.

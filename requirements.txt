@@ -8,5 +8,8 @@ scipy
 pyyaml
 simpy
 sphinx==7.1.2
-mkdocs
-mkdocstrings
+sphinx.ext.autodoc
+sphinx.ext.coverage
+sphinx.ext.napoleon
+nbsphinx
+myst_parser
