@@ -115,7 +115,7 @@ By default, the output CSV files will be saved in the `SOM_Seq_Sim/data/` direct
 For running Self-Organizing Maps, whether on the generated sequencing data or your own data, please consult the SOM directory's [README file](SOM/).
 
 ## Documentation
-Include information about documentation here @victoria-hurd
+For our documentation, please see the [readthedocs](https://som-seq-sim.readthedocs.io/en/latest/) page.
 
 ## Contributing 
 To contribute to this project, please see the [CONTRIBUTING.md](CONTRIBUTING.md) file.
