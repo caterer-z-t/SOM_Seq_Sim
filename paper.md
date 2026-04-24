@@ -135,4 +135,8 @@ SOM-Seq ships with a `pytest` test suite covering both modules, including input 
 
 <!-- TODO: Add acknowledgements (funding, advisors, etc.) -->
 
+# AI usage disclosure
+
+We used Anthropic’s Claude (Sonnet 4.6) to assist with refining documentation, including adding clarity and removing redundant information. All AI-assisted content was reviewed by the authors and subsequently edited to ensure accuracy and quality.
+
 # References
