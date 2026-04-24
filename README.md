@@ -1,224 +1,172 @@
-<img src="assets/som_package_logo.png" alt="SOM SIM SEQ Logo" width="25%">
+<img src="assets/som_package_logo.png" alt="SOM-Seq Logo" width="20%">
 
-# **Self-Organizing Maps to Explore Genetic Sequencing Simulation Data (SOM-Seq)**
+# SOM-Seq
 
-[![GitHub release](https://img.shields.io/github/v/release/caterer-z-t/SOM_Seq_Sim)](https://github.com/caterer-z-t/SOM_Seq_Sim/releases) 
-[![GitHub Release Date](https://img.shields.io/github/release-date/caterer-z-t/SOM_Seq_Sim)](https://github.com/caterer-z-t/SOM_Seq_Sim/releases) 
+[![GitHub release](https://img.shields.io/github/v/release/caterer-z-t/SOM_Seq_Sim)](https://github.com/caterer-z-t/SOM_Seq_Sim/releases)
 [![Tests](https://img.shields.io/github/actions/workflow/status/caterer-z-t/SOM_Seq_Sim/test.yml?label=tests&logo=github)](https://github.com/caterer-z-t/SOM_Seq_Sim/actions)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/caterer-z-t/SOM_Seq_Sim/build.yml?label=build&logo=github)](https://github.com/caterer-z-t/SOM_Seq_Sim/actions)
-[![License](https://img.shields.io/github/license/caterer-z-t/SOM_Seq_Sim?label=License)](https://github.com/caterer-z-t/SOM_Seq_Sim/blob/main/LICENSE)
-[![Repo Size](https://img.shields.io/github/repo-size/caterer-z-t/SOM_Seq_Sim?label=Repo%20Size)](https://github.com/caterer-z-t/SOM_Seq_Sim)
-[![codecov](https://codecov.io/gh/<your-username>/<your-repo>/branch/main/graph/badge.svg)](https://codecov.io/gh/caterer-z-t/SOM_Seq_Sim/tree/zac)
-[![Contributors](https://img.shields.io/github/contributors/caterer-z-t/SOM_Seq_Sim?label=Contributors)](https://github.com/caterer-z-t/SOM_Seq_Sim/graphs/contributors)
-[![Pull Requests](https://img.shields.io/github/issues-pr/caterer-z-t/SOM_Seq_Sim?label=Pull%20Requests)](https://github.com/caterer-z-t/SOM_Seq_Sim/pulls)
-[![Discussions](https://img.shields.io/github/discussions/caterer-z-t/SOM_Seq_Sim?label=Discussions&logo=github)](https://github.com/caterer-z-t/SOM_Seq_Sim/discussions)
-[![Docs](https://img.shields.io/badge/docs-online-blue?logo=readthedocs)](https://som-seq-sim.readthedocs.io/en/latest/index.html)
-[![Stars](https://img.shields.io/github/stars/caterer-z-t/SOM_Seq_Sim?label=Stars&logo=github)](https://github.com/caterer-z-t/SOM_Seq_Sim/stargazers)
+[![Build](https://img.shields.io/github/actions/workflow/status/caterer-z-t/SOM_Seq_Sim/build.yml?label=build&logo=github)](https://github.com/caterer-z-t/SOM_Seq_Sim/actions)
+[![codecov](https://codecov.io/gh/caterer-z-t/SOM_Seq_Sim/branch/main/graph/badge.svg)](https://codecov.io/gh/caterer-z-t/SOM_Seq_Sim)
+[![License](https://img.shields.io/github/license/caterer-z-t/SOM_Seq_Sim)](LICENSE)
+[![Docs](https://img.shields.io/badge/docs-online-blue?logo=readthedocs)](https://som-seq-sim.readthedocs.io)
+
+**SOM-Seq** is a Python toolbox that combines synthetic single-cell sequencing data generation (`Seq_Sim`) with Self-Organizing Map (SOM) clustering and visualization (`SOM`). The two modules can be used together or independently.
 
 ---
 
-## **Course:**
+## Installation
 
-[CSCI 6118](https://github.com/swe4s): Software Engineering for Scientists at the [University of Colorado Boulder](https://www.colorado.edu/)
-
----
-
-## **Project Overview**
-
-Welcome to **SOM-Seq** 🎉, a versatile toolbox designed to tackle two distinct but complementary tasks: **sequence data generation/simulation** and the use of **Self-Organizing Maps (SOMs)** for clustering and visualizing high-dimensional data. By combining these efforts, this project explores the applicability and value of SOMs as a powerful tool for analyzing and uncovering patterns within complex sequencing data. Additionally, each part of this project can be used independently, catering to those who are specifically interested in either generating sequence data or leveraging SOMs for data analysis. 🚀
-
----
-
-## **Table of Contents**
-
-- [Usage](#usage)
-  - [Project Setup](#project-setup)
-  - [Requirements](#requirements)
-  - [Installation](#installation)
-  - [Generating Sequencing Data](#generating-sequencing-data)
-  - [Running SOMs](#running-soms)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
-- [Code of Conduct](#code-of-conduct)
-- [Testing](#testing)
-- [Contributors](#contributors)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
-- [Project Structure](#project-structure)
-
----
-
-## **Usage**
-
-### **Project Setup**
-
-#### **Requirements**
-
-This project depends on several libraries and software packages. You can find the list in the `env.yml` file, which makes setting up the environment a breeze.
-
-> Key libraries in the environment:
->   - `numpy`  
->   - `pandas`  
->   - `matplotlib`  
->   - `seaborn`  
->   - `scikit-learn`  
->   - `scipy`  
->   - `statsmodels`  
->   - `simpy`  
->   - `jupyter`  
->   - `jupyterlab`  
->   - `black`
->   - `mkdocs` 
->   - `pytest`  
-
----
-
-### **Installation**
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/caterer-z-t/SOM_Seq_Sim.git
-   cd /path/to/SOM_Seq_Sim
-   ```
-
-2. **Create a virtual environment (optional but recommended):**
-
-    If you're using `conda`, `mamba`, or `micromamba`, you can create the environment directly from the `env.yml` file:
-    ``` bash 
-    conda env create -f env.yml
-    ```
-
-3. Activate environment using conda (please change {conda} to be whatever used to create the environemnt):
-    ``` bash
-    conda activate som-sim-env
-    ```
-
-### **Generating Sequencing Data**
-  > Note: The code (`Seq_Sim/seq_sim.py` and `Seq_Sim/utils/seq_sim_utils.py`) is based on R scripts from the [Zhang Lab](https://fanzhanglab.org/). These R scripts have been modified and streamlined for this project. The biological relevance may not be fully retained, and it serves as a showcase for potential sequencing simulations. For more information please see [`Seq_Sim/README.md`](Seq_Sim/README.md)
-  
-You can generate simulated sequencing data by running the following command:
-
-``` bash
-/Seq_Sim/simulations.sh -c /Seq_Sim/config.yml
-```
-Alternatively, you can run:
-``` bash
-python /Seq_Sim/seq_sim.py \ 
-      --num_samples 30                   \ # num samples 
-      --fold_change 0.5                  \ # fold change between disease and healthy samples 
-      --config_file /Seq_Sim/config.yml    # configuration file
+**From PyPI:**
+```bash
+pip install som-seq-sim
 ```
 
-By default, the output CSV files will be saved in the `SOM_Seq_Sim/data/` directory.
+**From source:**
+```bash
+git clone https://github.com/caterer-z-t/SOM_Seq_Sim.git
+cd SOM_Seq_Sim
+pip install .
+```
 
-### Running SOMs
-For running Self-Organizing Maps, whether on the generated sequencing data or your own data, please consult the SOM directory's [README file](SOM/).
+**Conda environment (includes all optional dependencies):**
+```bash
+conda env create -f env.yml
+conda activate som-sim-env
+```
+
+---
+
+## Quick Start
+
+### Generate Sequencing Data
+
+```bash
+seq-sim --num_samples 30 --fold_change 0.5 --config_file Seq_Sim/config.yml
+```
+
+Or equivalently:
+```bash
+python Seq_Sim/seq_sim.py \
+    --num_samples 30 \
+    --fold_change 0.5 \
+    --config_file Seq_Sim/config.yml
+```
+
+Output CSV files are written to the directory specified in `config.yml` (default: `data/`).
+
+See [`Seq_Sim/config.yml`](Seq_Sim/config.yml) for all configurable parameters (cell-type counts, batch structure, disease proportions, number of features, etc.).
+
+---
+
+### Fit a SOM
+
+**Single hyperparameter set:**
+```bash
+som-fit \
+    -t data/seq_sim_training_data.csv \
+    -c data/seq_sim_categorical_data.csv \
+    -o output/ \
+    -s zscore -x 5 -y 4 -p hexagonal -n gaussian -e 100
+```
+
+**Hyperparameter tuning (pass multiple values; best combination is selected automatically):**
+```bash
+som-fit \
+    -t data/seq_sim_training_data.csv \
+    -c data/seq_sim_categorical_data.csv \
+    -o output/ \
+    -s zscore minmax -x 3 5 7 -y 3 5 -p rectangular hexagonal -n gaussian -e 50 100
+```
+
+Or equivalently use `python SOM/som.py` with the same flags.
+
+**Python API:**
+```python
+import pandas as pd
+from SOM.utils.som_utils import SOM
+
+train = pd.read_csv("data/seq_sim_training_data.csv")
+meta  = pd.read_csv("data/seq_sim_categorical_data.csv")
+
+som = SOM(
+    train_dat=train,
+    other_dat=meta,
+    scale_method="zscore",
+    x_dim=5,
+    y_dim=4,
+    topology="hexagonal",
+    neighborhood_fnc="gaussian",
+    epochs=100,
+)
+som.train_map()
+
+print(f"PVE:               {som.calculate_percent_variance_explained():.1f}%")
+print(f"Topographic error: {som.calculate_topographic_error():.3f}")
+
+som.plot_component_planes(output_dir="output/")
+som.plot_categorical_data(output_dir="output/")
+```
+
+---
+
+## CLI Reference
+
+### `seq-sim` / `python Seq_Sim/seq_sim.py`
+
+| Flag | Description |
+|------|-------------|
+| `--num_samples` | Number of subjects to simulate |
+| `--fold_change` | Disease-associated fold change magnitude |
+| `--config_file` | Path to `config.yml` |
+
+### `som-fit` / `python SOM/som.py`
+
+| Flag | Description |
+|------|-------------|
+| `-t` | Path to training data CSV (numeric features) |
+| `-c` | Path to categorical/metadata CSV (optional) |
+| `-o` | Output directory for plots and metrics |
+| `-s` | Scaling method: `zscore` or `minmax` (one or more) |
+| `-x` | SOM x-dimension (one or more integers) |
+| `-y` | SOM y-dimension (one or more integers) |
+| `-p` | Topology: `rectangular` or `hexagonal` (one or more) |
+| `-n` | Neighborhood function: `gaussian` or `bubble` (one or more) |
+| `-e` | Number of training epochs (one or more integers) |
+| `-m` | Generate component plane plots (default: `True`) |
+
+When more than one value is provided for any hyperparameter, the CLI performs a grid search and selects the best combination by `PVE − 100 × topographic_error`.
+
+---
 
 ## Documentation
-For our documentation, please see the [readthedocs](https://som-seq-sim.readthedocs.io/en/latest/) page.
 
-## Contributing 
-To contribute to this project, please see the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+Full API reference and tutorials: [som-seq-sim.readthedocs.io](https://som-seq-sim.readthedocs.io)
 
-## Code of Conduct
-For our code of conduct for this project, please see the [CODE_OF_CONDUCt.md](CODE_OF_CONDUCT.md) file. 
+---
 
 ## Testing
-Run the following command to execute tests:
+
 ```bash
 pytest test/ -v
 ```
 
-## Contributors
+---
 
-<table>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/madrpernat">
-        <img src="https://github.com/madrpernat.png" width="200" />
-      </a>
-      <br />
-      <b>Maddy</b>
-    </td>
-    <td align="center">
-      <a href="https://github.com/pnnoc">
-        <img src="https://github.com/pnnoc.png" width="200" />
-      </a>
-      <br />
-      <b>Con</b>
-    </td>
-    <td align="center">
-      <a href="https://github.com/victoria-hurd">
-        <img src="https://github.com/victoria-hurd.png" width="200" />
-      </a>
-      <br />
-      <b>Vicki</b>
-    </td>
-    <td align="center">
-      <a href="https://github.com/caterer-z-t">
-        <img src="https://github.com/caterer-z-t.png" width="200" />
-      </a>
-      <br />
-      <b>Zac</b>
-    </td>
-  </tr>
-</table>
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Please follow the [Code of Conduct](CODE_OF_CONDUCT.md).
+
+---
+
+## Citation
+
+If you use SOM-Seq in your research, please cite:
+
+> Caterer Z., Pernat M., Hurd V. (2024). *SOM-Seq: A Python Toolbox for Single-Cell Sequencing Simulation and Self-Organizing Map Analysis*. <!-- TODO: add journal/DOI after JOSS acceptance -->
+
+A machine-readable citation is available in [CITATION.cff](CITATION.cff).
+
+---
 
 ## License
 
-This project is licensed under the MIT License - see the `LICENSE` file for details.
-
-## Acknowledgements
-
-We would like to thank the contributors and open-source community for their valuable contributions to this project.
-
-## Project Structure
-
-``` bash
-SOM_Seq_Sim/
-├── docs/
-│   ├── img/                              # Contains images used in Read the Docs
-│   ├── pipelines/                        # Additional MD files for pipelines and packages
-│   ├── index.md                          # Initial page for Read the Docs
-│   └── requirements.txt                  # Dependencies for Read the Docs 
-├── SOM/
-│   ├── utils/
-│   │       └── som_utils.py              # Contains the core implementation of the `SOM` class
-│   ├── data/              
-│   │   ├── iris_categorical_data.csv     # Categorical data for the Iris dataset
-│   │   ├── iris_training_data.csv        # Training data for the Iris dataset
-│   │   ├── seq_sim_categorical_data.csv  # Categorical data for the sequencing dataset
-│   │   ├── seq_sim_training_data.csv     # Training data for the sequencing dataset
-│   │   ├── titanic_categorical_data.csv  # Categorical data for the Titanic dataset
-│   │   └── titanic_training_data.csv     # Training data for the Titanic dataset
-│   ├── examples/           
-│   │   ├── output/
-│   │   │   ├── iris/                     # Directory containing output figures from `som_example_iris.py`
-│   │   │   ├── seq/                      # Directory containing output figures from `som_example_seq.py`
-│   │   │   └── titanic/                  # Directory containing output figures from `som_example_titanic.py`
-│   │   ├── som_example_iris.py           # Example script for applying the SOM to the Iris dataset
-│   │   ├── som_example_seq.py            # Example script for applying the SOM to the Sequencing dataset
-│   │   └── som_example_titanic.py        # Example script for applying the SOM to the Titanic dataset
-│   ├── README.md/                        # README file for SOM directory
-│   └── som.py                            # A command-line interface for fitting and visualizing SOMs. 
-├── Seq_Sim/
-│   ├── utils/                            # folder containg additional utility functions
-│   │   └── seq_sim_utils.py              # contains all necessary functions for simulation.R
-│   ├── config.yml                        # configuration file use to specify all components in simulation.R
-│   ├── README.md                         # information specific to running this simulation sequencing generation code
-│   ├── seq_sim.py                        # main function which runs the seqeucning generation code
-│   └── simulation.sh                     # shell script for running sequencing generating code multiple times, see Seq_Sim/README.md for more information
-├── test/
-│   ├── Seq_Sim/ 
-│   │   ├── test_seq_sim_utils.py
-│   │   └── test_seq_sim.py
-│   └── SOM/
-│       └── test_SOM.py                   # Tests for SOM functionality
-├── .gitignore                            # Git ignore file to exclude files and directories from Git
-├── .readthedocs.yaml                     # YAML file specifying dependencies for Read the Docs
-├── CODE_OF_CONDUCT.md                    # markdown file explaining our code of conduct
-├── CONTRIBUTING.md                       # markdown file explaining how to contribute to this repo
-├── env.yml                               # YAML file specifying dependencies for the entire package
-├── README.md                             # README file
-└── LICENSE                               # License for the project
-```
+MIT — see [LICENSE](LICENSE).
