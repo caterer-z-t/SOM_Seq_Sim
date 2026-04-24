@@ -28,3 +28,5 @@ __pycache__
 .coverage
 
 TODO.md
+
+__pycache__/
