@@ -1,0 +1,49 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "SOM-Seq: A Python Toolbox for Single-Cell Sequencing Simulation and Self-Organizing Map Analysis"
+version: 1.0.0  # TODO: update to match the release tag archived on Zenodo
+# TODO: Add Zenodo DOI once archived
+# doi: 10.5281/zenodo.XXXXXXX
+date-released: "2024-12-01"
+license: MIT
+repository-code: "https://github.com/caterer-z-t/SOM_Seq_Sim"
+url: "https://som-seq-sim.readthedocs.io"
+authors:
+  - family-names: Caterer
+    given-names: Zachary
+    orcid: "https://orcid.org/0000-0001-9019-0730"
+    affiliation: >-
+      Department of Chemical and Biological Engineering,
+      University of Colorado Boulder;
+      Department of Biomedical Informatics,
+      University of Colorado Anschutz Medical Campus
+  - family-names: Pernat
+    given-names: Madeline
+    orcid: "https://orcid.org/0000-0003-2814-3428"
+    affiliation: >-
+      Department of Civil, Environmental, and Architectural Engineering,
+      University of Colorado Boulder
+  - family-names: Hurd
+    given-names: Victoria
+    orcid: "https://orcid.org/0000-0002-5548-6883"
+    affiliation: >-
+      Ann and H.J. Smead Department of Aerospace Engineering Sciences,
+      University of Colorado Boulder
+keywords:
+  - bioinformatics
+  - single-cell sequencing
+  - self-organizing maps
+  - dimensionality reduction
+  - clustering
+  - simulation
+  - Python
+abstract: >-
+  SOM-Seq is an open-source Python toolbox that integrates synthetic
+  single-cell sequencing data generation (Seq_Sim) with Self-Organizing
+  Map (SOM) based clustering and visualization. Seq_Sim generates
+  realistic pseudo-bulk datasets with configurable cell-type compositions,
+  batch effects, and disease-associated differential expression. The SOM
+  module provides a high-level Python class and CLI for scaling, training,
+  hyperparameter tuning, quality-metric evaluation, and
+  publication-quality visualization.
