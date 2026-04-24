@@ -11,6 +11,7 @@ build:
 
 sphinx:
   builder: html  # Default Sphinx builder to maintain compatibility
+  configuration: docs/source/conf.py  # Path to your Sphinx configuration file
 
 # Specify the location of the pre-built HTML files
 extra:
