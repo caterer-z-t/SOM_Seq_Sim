@@ -47,4 +47,4 @@ html_theme = 'furo'
 html_static_path = []
 
 autoclass_content = 'both'
-html_logo = '../../assets/som_package_logo.svg'
+html_logo = '../../assets/som_package_logo.png'

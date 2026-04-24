@@ -1,5 +1,5 @@
 site_name: SOM Sequence Simulation
-site_url: https://SOMseqsim.com  
+site_url: https://som-seq-sim.readthedocs.io  
 site_description: >
   A collection of tools for simulating and analyzing sequence data, using the template from wrmXpress-gui found at https://github.com/wheelerlab-uwec/wrmXpress-gui
 
