@@ -15,7 +15,7 @@ sphinx:
 
 # Specify the location of the pre-built HTML files
 extra:
-  build_dir: docs/build  # Adjust this to the path where your built HTML files are stored
+  build_dir: docs/build/html  # Adjust this to the path where your built HTML files are stored
 
 # Install your dependencies, if necessary
 python:
