@@ -301,3 +301,257 @@ class TestSOM:
         # The number of categorical plots generated should equal the number of features in the
         # other/categorical data
         assert len(list(output_dir.iterdir())) == 1
+
+
+class TestSOMValidation:
+    """Tests for input validation errors."""
+
+    @pytest.fixture
+    def valid_data(self):
+        np.random.seed(0)
+        train = pd.DataFrame({
+            "f1": np.random.rand(50),
+            "f2": np.random.rand(50),
+            "f3": np.random.rand(50),
+        })
+        other = pd.DataFrame({"cat": np.random.choice(["A", "B"], 50)})
+        return train, other
+
+    def test_train_dat_not_dataframe(self, valid_data):
+        _, other = valid_data
+        with pytest.raises(TypeError, match="train_dat must be a pandas DataFrame"):
+            SOM(
+                train_dat=np.random.rand(50, 3),
+                other_dat=other,
+                scale_method="zscore",
+                x_dim=3, y_dim=2, topology="rectangular",
+                neighborhood_fnc="gaussian", epochs=5,
+            )
+
+    def test_other_dat_not_dataframe(self, valid_data):
+        train, _ = valid_data
+        with pytest.raises(TypeError, match="`other_dat` must be a pandas DataFrame"):
+            SOM(
+                train_dat=train,
+                other_dat=np.array(["A", "B"] * 25),
+                scale_method="zscore",
+                x_dim=3, y_dim=2, topology="rectangular",
+                neighborhood_fnc="gaussian", epochs=5,
+            )
+
+    def test_invalid_topology(self, valid_data):
+        train, other = valid_data
+        with pytest.raises(ValueError, match="topology must be 'rectangular' or 'hexagonal'"):
+            SOM(
+                train_dat=train, other_dat=other,
+                scale_method="zscore",
+                x_dim=3, y_dim=2, topology="circular",
+                neighborhood_fnc="gaussian", epochs=5,
+            )
+
+    def test_invalid_neighborhood_fnc(self, valid_data):
+        train, other = valid_data
+        with pytest.raises(ValueError, match="neighborhood_fnc must be 'gaussian' or 'bubble'"):
+            SOM(
+                train_dat=train, other_dat=other,
+                scale_method="zscore",
+                x_dim=3, y_dim=2, topology="rectangular",
+                neighborhood_fnc="linear", epochs=5,
+            )
+
+    def test_invalid_epochs_zero(self, valid_data):
+        train, other = valid_data
+        with pytest.raises(ValueError, match="epochs must be a positive integer"):
+            SOM(
+                train_dat=train, other_dat=other,
+                scale_method="zscore",
+                x_dim=3, y_dim=2, topology="rectangular",
+                neighborhood_fnc="gaussian", epochs=0,
+            )
+
+    def test_invalid_epochs_negative(self, valid_data):
+        train, other = valid_data
+        with pytest.raises(ValueError, match="epochs must be a positive integer"):
+            SOM(
+                train_dat=train, other_dat=other,
+                scale_method="zscore",
+                x_dim=3, y_dim=2, topology="rectangular",
+                neighborhood_fnc="gaussian", epochs=-10,
+            )
+
+    def test_invalid_epochs_float(self, valid_data):
+        train, other = valid_data
+        with pytest.raises(ValueError, match="epochs must be a positive integer"):
+            SOM(
+                train_dat=train, other_dat=other,
+                scale_method="zscore",
+                x_dim=3, y_dim=2, topology="rectangular",
+                neighborhood_fnc="gaussian", epochs=5.5,
+            )
+
+
+class TestSOMPreTrainingErrors:
+    """Tests that RuntimeError is raised when metrics/plots are called before train_map."""
+
+    @pytest.fixture
+    def untrained_som(self):
+        np.random.seed(0)
+        train = pd.DataFrame({
+            "f1": np.random.rand(50),
+            "f2": np.random.rand(50),
+        })
+        other = pd.DataFrame({"cat": np.random.choice(["A", "B"], 50)})
+        return SOM(
+            train_dat=train, other_dat=other,
+            scale_method="zscore",
+            x_dim=3, y_dim=2, topology="rectangular",
+            neighborhood_fnc="gaussian", epochs=5,
+        )
+
+    def test_pve_before_training(self, untrained_som):
+        with pytest.raises(RuntimeError, match="SOM has not been trained"):
+            untrained_som.calculate_percent_variance_explained()
+
+    def test_topographic_error_before_training(self, untrained_som):
+        with pytest.raises(RuntimeError, match="SOM has not been trained"):
+            untrained_som.calculate_topographic_error()
+
+    def test_plot_component_planes_before_training(self, untrained_som, tmp_path):
+        with pytest.raises(RuntimeError, match="SOM has not been trained"):
+            untrained_som.plot_component_planes(output_dir=str(tmp_path))
+
+    def test_plot_categorical_data_before_training(self, untrained_som, tmp_path):
+        with pytest.raises(RuntimeError, match="SOM has not been trained"):
+            untrained_som.plot_categorical_data(output_dir=str(tmp_path))
+
+
+class TestSOMAlternativeConfigs:
+    """Tests for non-default topologies, neighborhood functions, and scaling methods."""
+
+    @pytest.fixture
+    def data(self):
+        np.random.seed(42)
+        train = pd.DataFrame({
+            "f1": np.random.rand(80),
+            "f2": np.random.rand(80),
+            "f3": np.random.rand(80),
+        })
+        other = pd.DataFrame({"label": np.random.choice(["X", "Y", "Z"], 80)})
+        return train, other
+
+    def test_hexagonal_topology(self, data):
+        train, other = data
+        som = SOM(
+            train_dat=train, other_dat=other,
+            scale_method="zscore",
+            x_dim=3, y_dim=3, topology="hexagonal",
+            neighborhood_fnc="gaussian", epochs=5,
+        )
+        som.train_map()
+        assert som.map is not None
+        pve = som.calculate_percent_variance_explained()
+        assert 0 <= pve <= 100
+
+    def test_bubble_neighborhood(self, data):
+        train, other = data
+        som = SOM(
+            train_dat=train, other_dat=other,
+            scale_method="minmax",
+            x_dim=3, y_dim=2, topology="rectangular",
+            neighborhood_fnc="bubble", epochs=5,
+        )
+        som.train_map()
+        assert som.map is not None
+
+    def test_minmax_scale_end_to_end(self, data, tmp_path):
+        train, other = data
+        som = SOM(
+            train_dat=train, other_dat=other,
+            scale_method="minmax",
+            x_dim=3, y_dim=2, topology="rectangular",
+            neighborhood_fnc="gaussian", epochs=5,
+        )
+        som.train_map()
+        pve = som.calculate_percent_variance_explained()
+        te = som.calculate_topographic_error()
+        assert 0 <= pve <= 100
+        assert 0 <= te <= 1
+        som.plot_component_planes(output_dir=str(tmp_path / "cp"))
+        som.plot_categorical_data(output_dir=str(tmp_path / "cat"))
+
+
+class TestSOMAreNodesAdjacent:
+    """Tests for the _are_nodes_adjacent helper."""
+
+    @pytest.fixture
+    def trained_som(self):
+        np.random.seed(0)
+        train = pd.DataFrame({
+            "f1": np.random.rand(60),
+            "f2": np.random.rand(60),
+        })
+        other = pd.DataFrame({"cat": np.random.choice(["A", "B"], 60)})
+        som = SOM(
+            train_dat=train, other_dat=other,
+            scale_method="zscore",
+            x_dim=4, y_dim=3, topology="rectangular",
+            neighborhood_fnc="gaussian", epochs=5,
+        )
+        som.train_map()
+        return som
+
+    def test_adjacent_neurons(self, trained_som):
+        # Neurons 0 and 1 are always adjacent in a rectangular grid (x offset of 1)
+        assert trained_som._are_nodes_adjacent(0, 1) or trained_som._are_nodes_adjacent(0, 3)
+
+    def test_non_adjacent_neurons(self, trained_som):
+        # First and last neuron in a 4x3 grid (index 0 and 11) are far apart
+        n_neurons = trained_som.xdim * trained_som.ydim
+        assert not trained_som._are_nodes_adjacent(0, n_neurons - 1)
+
+
+class TestSOMPlotMapGrid:
+    """Tests for plot_map_grid with and without neuron indices."""
+
+    @pytest.fixture
+    def trained_som(self):
+        np.random.seed(7)
+        train = pd.DataFrame({
+            "f1": np.random.rand(40),
+            "f2": np.random.rand(40),
+        })
+        other = pd.DataFrame({"cat": np.random.choice(["A", "B"], 40)})
+        som = SOM(
+            train_dat=train, other_dat=other,
+            scale_method="zscore",
+            x_dim=3, y_dim=2, topology="rectangular",
+            neighborhood_fnc="gaussian", epochs=5,
+        )
+        som.train_map()
+        return som
+
+    def test_plot_map_grid_no_indices(self, trained_som):
+        import matplotlib.pyplot as plt
+        fig, ax = trained_som.plot_map_grid(print_neuron_idx=False)
+        assert fig is not None
+        assert ax is not None
+        plt.close(fig)
+
+    def test_plot_map_grid_with_indices(self, trained_som):
+        import matplotlib.pyplot as plt
+        fig, ax = trained_som.plot_map_grid(print_neuron_idx=True)
+        assert fig is not None
+        assert ax is not None
+        plt.close(fig)
+
+
+class TestSOMCheckOutputPath:
+    """Tests for _check_output_path."""
+
+    def test_creates_new_directory(self, tmp_path):
+        new_dir = str(tmp_path / "new_subdir" / "nested")
+        SOM._check_output_path(new_dir)
+        assert os.path.isdir(new_dir)
+
+    def test_existing_directory_no_error(self, tmp_path):
+        SOM._check_output_path(str(tmp_path))  # should not raise
