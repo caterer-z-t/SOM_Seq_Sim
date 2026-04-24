@@ -39,3 +39,8 @@ furo
 nbsphinx
 myst-parser
 sphinx-autodoc-typehints
+sphinx
+sphinx-rtd-theme
+myst-parser
+ipykernel
+pandoc
