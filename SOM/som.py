@@ -120,7 +120,7 @@ def main():
 
     parser = argparse.ArgumentParser(
         description=(
-            "Fit a Self-Organizing Map (SOM) with specified hyperparameters. Performs"
+            "Fit a Self-Organizing Map (SOM) with specified hyperparameters. Performs "
             "hyperparameter tuning if multiple values/options for hyperparameters are provided."
         )
     )
@@ -131,21 +131,18 @@ def main():
         type=str,
         help='Path to the CSV file containing training data',
         required=True,
-        metavar=""
     )
     parser.add_argument(
         '-c', '--other_dat',
         type=str,
         help='Path to the CSV file containing other/categorical data',
         required=False,
-        metavar=""
     )
     parser.add_argument(
         '-o', '--output_directory',
         type=str,
         help='Path to the output directory for saving results',
         required=True,
-        metavar=""
     )
 
     # Required hyperparameters

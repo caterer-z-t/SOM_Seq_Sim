@@ -13,33 +13,35 @@ authors:
     orcid: 0000-0001-9019-0730
     equal-contrib: true
     corresponding: true
-    affiliation: "1, 2"
+    affiliation: "1, 2, 3"
   - name: Madeline Pernat
     orcid: 0000-0003-2814-3428
     equal-contrib: true
     corresponding: true
-    affiliation: 3
+    affiliation: 4
   - name: Victoria Hurd
     orcid: 0000-0002-5548-6883
     equal-contrib: true
     corresponding: true
-    affiliation: 4
+    affiliation: 5
 affiliations:
   - name: Department of Chemical and Biological Engineering, University of Colorado Boulder, Boulder, CO, USA
     index: 1
   - name: Department of Biomedical Informatics, University of Colorado Anschutz Medical Campus, Aurora, CO, USA
     index: 2
-  - name: Department of Civil, Environmental, and Architectural Engineering, University of Colorado Boulder, Boulder, CO, USA
+  - name: Biofrontiers Institute Interdisciplinary Biology PhD Program, University of Colorado Boulder, Boulder, CO, USA
     index: 3
-  - name: Ann and H.J. Smead Department of Aerospace Engineering Sciences, University of Colorado Boulder, Boulder, CO, USA
+  - name: Department of Civil, Environmental, and Architectural Engineering, University of Colorado Boulder, Boulder, CO, USA
     index: 4
+  - name: Department of Aerospace Engineering Sciences, University of Colorado Boulder, Boulder, CO, USA
+    index: 5
 date: 24 April 2026
 bibliography: paper.bib
 ---
 
 # Summary
 
-SOM-Seq is an open-source Python toolbox that integrates two complementary workflows for single-cell genomics research: synthetic sequencing data generation (`Seq_Sim`) and Self-Organizing Map (SOM) based clustering and visualization (`SOM`). The `Seq_Sim` module generates realistic pseudo-bulk single-cell datasets with configurable cell-type compositions, batch effects, disease states, and differential expression patterns, adapted from simulation approaches developed in the Zhang Lab [@inamo2024scorpio]]. The `SOM` module provides a high-level Python class built on MiniSom [@vettigli2018minisom] that handles data scaling, automated hyperparameter tuning, topographic quality metrics, and publication-quality visualizations including component planes and categorical overlays. Both modules expose command-line interfaces (CLIs), making them composable within broader bioinformatics pipelines or usable as standalone tools.
+SOM-Seq is an open-source Python toolbox that integrates two complementary workflows for single-cell genomics research: synthetic sequencing data generation (`Seq_Sim`) and Self-Organizing Map (SOM) based clustering and visualization (`SOM`). The `Seq_Sim` module generates realistic pseudo-bulk single-cell datasets with configurable cell-type compositions, batch effects, disease states, and differential expression patterns, adapted from simulation approaches developed in the Zhang Lab [@inamo2024scorpio]. The `SOM` module provides a high-level Python class built on MiniSom [@vettigli2018minisom] that handles data scaling, automated hyperparameter tuning, topographic quality metrics, and publication-quality visualizations including component planes and categorical overlays. Both modules expose command-line interfaces (CLIs), making them composable within broader bioinformatics pipelines or usable as standalone tools.
 
 # Statement of Need
 
@@ -50,6 +52,8 @@ Self-Organizing Maps (SOMs), introduced by Kohonen [@kohonen1990], address this 
 SOM-Seq addresses this gap in two ways. First, `Seq_Sim` generates synthetic datasets that statistically mirror real single-cell data—including heterogeneous cell-type proportions, batch variability, and disease-associated fold changes—providing researchers with a reproducible, ground-truth-labeled environment for method comparison without requiring access to patient data. Second, the `SOM` module wraps the complete SOM workflow (scaling, training, metric evaluation, and visualization) into a clean Python API and CLI, lowering the expertise required to apply SOM-based analysis to tabular omics data.
 
 Together, these modules enable researchers to simulate a dataset with known structure, fit a SOM, and immediately evaluate clustering quality using Percent Variance Explained (PVE) and topographic error—a capability not available in existing single-cell analysis frameworks.
+
+Beyond its origin as a course project, SOM-Seq is in active use: the `SOM` module is currently being applied to real single-cell data as part of ongoing biomedical informatics research at the University of Colorado Anschutz Medical Campus, where it is being evaluated as a topology-preserving alternative to graph-based clustering pipelines.
 
 # Design and Implementation
 
@@ -91,8 +95,8 @@ python Seq_Sim/seq_sim.py \
 
 ```bash
 python SOM/som.py \
-    -t data/seq_sim_training_data.csv \
-    -c data/seq_sim_categorical_data.csv \
+    -t data/sim_data_pseudo_feature_num_samples_30_fc_0.5.csv \
+    -c data/sim_data_latent_data_num_samples_30_fc_0.5.csv \
     -o output/ \
     -s zscore \
     -x 5 -y 4 \
@@ -107,8 +111,8 @@ python SOM/som.py \
 import pandas as pd
 from SOM.utils.som_utils import SOM
 
-train = pd.read_csv("data/seq_sim_training_data.csv")
-meta  = pd.read_csv("data/seq_sim_categorical_data.csv")
+train = pd.read_csv("data/sim_data_pseudo_feature_num_samples_30_fc_0.5.csv")
+meta  = pd.read_csv("data/sim_data_latent_data_num_samples_30_fc_0.5.csv")
 
 som = SOM(
     train_dat=train,
@@ -133,10 +137,10 @@ SOM-Seq ships with a `pytest` test suite covering both modules, including input 
 
 # Acknowledgements
 
-<!-- TODO: Add acknowledgements (funding, advisors, etc.) -->
+This work originated as part of the University of Colorado Boulder course **CSCI 6118: Software Engineering for Scientists**, created by **Dr. Ryan Layer** and taught by **Dr. Erik Johnson**. We thank both Dr. Layer and Dr. Johnson for their guidance and for creating the collaborative environment that made this project possible. This work was also supported in part by the U.S. National Science Foundation under **Award No. 2022138**.
 
 # AI usage disclosure
 
-We used Anthropic’s Claude (Sonnet 4.6) to assist with refining documentation, including adding clarity and removing redundant information. All AI-assisted content was reviewed by the authors and subsequently edited to ensure accuracy and quality.
+We used Anthropic's Claude (Sonnet 4.6) to assist with refining documentation, including adding clarity and removing redundant information. We also used Anthropic's Claude (Sonnet 5, via Claude Code) during pre-submission preparation to identify and fix two command-line interface bugs (an argument-parsing crash in the `SOM` CLI and an invalid function call in the `Seq_Sim` CLI), to add continuous integration workflows for package build validation and PyPI publishing, and to correct inconsistencies in the LICENSE, and README. All AI-assisted content and code changes were reviewed by the authors, who validated correctness and made all core design decisions.
 
 # References

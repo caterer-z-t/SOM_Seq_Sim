@@ -2,9 +2,8 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 type: software
 title: "SOM-Seq: A Python Toolbox for Single-Cell Sequencing Simulation and Self-Organizing Map Analysis"
-version: 1.0.0  # TODO: update to match the release tag archived on Zenodo
-# TODO: Add Zenodo DOI once archived
-# doi: 10.5281/zenodo.XXXXXXX
+version: 1.0.0
+doi: 10.5281/zenodo.21400766
 date-released: "2024-12-01"
 license: MIT
 repository-code: "https://github.com/caterer-z-t/SOM_Seq_Sim"

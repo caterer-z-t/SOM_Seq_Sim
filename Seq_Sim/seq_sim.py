@@ -7,7 +7,9 @@ def main() -> None:
     """
     args = arg_parser()
     try:
-        num_samples, fold_change, config_file = validate_arguments(list(args.config, args.num_samples, args.fold_change))
+        num_samples, fold_change, config_file = validate_arguments(
+            [sys.argv[0], args.num_samples, args.fold_change, args.config_file]
+        )
         config = load_config(config_file)
         generate_and_save_features(num_samples, fold_change, config)
         print("Data generation and saving completed successfully.")

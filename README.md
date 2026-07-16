@@ -40,7 +40,7 @@ python Seq_Sim/seq_sim.py \
     --config_file Seq_Sim/config.yml
 ```
 
-Output CSV files are written to the directory specified in `config.yml` (default: `data/`).
+Output CSV files are written to the directory specified in `config.yml` (default: `data/`), named `{file_prefix}_pseudo_feature_num_samples_{num_samples}_fc_{fold_change}.csv` and `{file_prefix}_latent_data_num_samples_{num_samples}_fc_{fold_change}.csv`. With the command above (and the default `file_prefix: sim_data` in `Seq_Sim/config.yml`), that's `data/sim_data_pseudo_feature_num_samples_30_fc_0.5.csv` and `data/sim_data_latent_data_num_samples_30_fc_0.5.csv`.
 
 See [`Seq_Sim/config.yml`](Seq_Sim/config.yml) for all configurable parameters (cell-type counts, batch structure, disease proportions, number of features, etc.).
 
@@ -51,8 +51,8 @@ See [`Seq_Sim/config.yml`](Seq_Sim/config.yml) for all configurable parameters (
 **Single hyperparameter set:**
 ```bash
 som-fit \
-    -t data/seq_sim_training_data.csv \
-    -c data/seq_sim_categorical_data.csv \
+    -t data/sim_data_pseudo_feature_num_samples_30_fc_0.5.csv \
+    -c data/sim_data_latent_data_num_samples_30_fc_0.5.csv \
     -o output/ \
     -s zscore -x 5 -y 4 -p hexagonal -n gaussian -e 100
 ```
@@ -60,8 +60,8 @@ som-fit \
 **Hyperparameter tuning (pass multiple values; best combination is selected automatically):**
 ```bash
 som-fit \
-    -t data/seq_sim_training_data.csv \
-    -c data/seq_sim_categorical_data.csv \
+    -t data/sim_data_pseudo_feature_num_samples_30_fc_0.5.csv \
+    -c data/sim_data_latent_data_num_samples_30_fc_0.5.csv \
     -o output/ \
     -s zscore minmax -x 3 5 7 -y 3 5 -p rectangular hexagonal -n gaussian -e 50 100
 ```
@@ -73,8 +73,8 @@ Or equivalently use `python SOM/som.py` with the same flags.
 import pandas as pd
 from SOM.utils.som_utils import SOM
 
-train = pd.read_csv("data/seq_sim_training_data.csv")
-meta  = pd.read_csv("data/seq_sim_categorical_data.csv")
+train = pd.read_csv("data/sim_data_pseudo_feature_num_samples_30_fc_0.5.csv")
+meta  = pd.read_csv("data/sim_data_latent_data_num_samples_30_fc_0.5.csv")
 
 som = SOM(
     train_dat=train,
@@ -143,6 +143,12 @@ pytest test/ -v
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Please follow the [Code of Conduct](CODE_OF_CONDUCT.md).
+
+---
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a history of notable changes.
 
 ---
 
