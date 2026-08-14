@@ -45,17 +45,21 @@ SOM-Seq is an open-source Python toolbox that integrates two complementary workf
 
 # Statement of Need
 
-High-dimensional single-cell RNA sequencing (scRNA-seq) data requires dimensionality reduction and clustering to reveal biologically meaningful structure [@luecken2019]. Established tools such as Seurat [@hao2021] and Scanpy [@wolf2018] are now standard in single-cell analysis, typically pairing graph-based community detection with t-SNE [@van_der_maaten2008] or UMAP [@mcinnes2018] for visualization. While powerful, these methods embed data into a continuous low-dimensional space that does not explicitly preserve the topological distances between clusters, making it difficult to reason about the relative proximity (i.e., similarity) of cell populations.
-
-Self-Organizing Maps (SOMs), introduced by Kohonen [@kohonen1990], address this limitation by producing a discrete two-dimensional grid of neurons in which neighboring neurons represent similar regions of the input feature space, explicitly encoding topological structure. Despite their interpretive advantages, SOMs remain underutilized in the single-cell community. A key barrier is the absence of a well-tested, end-to-end Python package that combines SOM fitting with single-cell-style simulation, reducing the friction required to benchmark SOM-based clustering against other methods on controlled synthetic data.
+Self-Organizing Maps (SOMs), introduced by Kohonen [@kohonen1990], produce a discrete two-dimensional grid of neurons in which neighboring neurons represent similar regions of the input feature space, explicitly encoding topological structure between clusters. Despite this interpretive advantage, SOMs remain underutilized in the single-cell community. A key barrier is the absence of a well-tested, end-to-end Python package that combines SOM fitting with single-cell-style simulation, reducing the friction required to benchmark SOM-based clustering against other methods on controlled synthetic data.
 
 SOM-Seq addresses this gap in two ways. First, `Seq_Sim` generates synthetic datasets that statistically mirror real single-cell data—including heterogeneous cell-type proportions, batch variability, and disease-associated fold changes—providing researchers with a reproducible, ground-truth-labeled environment for method comparison without requiring access to patient data. Second, the `SOM` module wraps the complete SOM workflow (scaling, training, metric evaluation, and visualization) into a clean Python API and CLI, lowering the expertise required to apply SOM-based analysis to tabular omics data.
 
 Together, these modules enable researchers to simulate a dataset with known structure, fit a SOM, and immediately evaluate clustering quality using Percent Variance Explained (PVE) and topographic error—a capability not available in existing single-cell analysis frameworks.
 
-Beyond its origin as a course project, SOM-Seq is in active use: the `SOM` module is currently being applied to real single-cell data as part of ongoing biomedical informatics research at the University of Colorado Anschutz Medical Campus, where it is being evaluated as a topology-preserving alternative to graph-based clustering pipelines.
+# State of the Field
 
-# Design and Implementation
+High-dimensional single-cell RNA sequencing (scRNA-seq) data requires dimensionality reduction and clustering to reveal biologically meaningful structure [@luecken2019]. Established tools such as Seurat [@hao2021] and Scanpy [@wolf2018] are the standard for single-cell analysis, typically pairing graph-based community detection with t-SNE [@van_der_maaten2008] or UMAP [@mcinnes2018] for visualization. While powerful, these methods embed data into a continuous low-dimensional space that does not explicitly preserve the topological distances between clusters, making it difficult to reason about the relative proximity (i.e., similarity) of cell populations.
+
+At the algorithmic level, general-purpose SOM libraries such as MiniSom [@vettigli2018minisom] provide no single-cell simulation capability, while single-cell simulators such as the SCORPIO framework from the Zhang Lab [@inamo2024scorpio], on which `Seq_Sim` is based, are not paired with an SOM analysis workflow. To our knowledge, no existing package combines SOM-based clustering with single-cell-style data simulation in one tool, so researchers wishing to benchmark SOM-based clustering must currently assemble a simulation tool and a separate SOM library themselves. SOM-Seq fills this gap by integrating both capabilities behind a single, consistent API and CLI.
+
+# Software Design
+
+SOM-Seq's design reflects two deliberate trade-offs. First, rather than requiring real patient-derived single-cell data, `Seq_Sim` generates statistically realistic synthetic data with known ground-truth cell-type labels; this sacrifices biological realism for reproducibility and removes the privacy and data-access barriers that complicate benchmarking clustering methods on human subject data. Second, rather than reimplementing SOM training, the `SOM` module wraps the existing, well-tested MiniSom library [@vettigli2018minisom] and adds the scaling, tuning, metric, and visualization steps that a complete single-cell workflow requires; this keeps the core training algorithm maintained upstream while concentrating SOM-Seq's engineering effort on the parts of the workflow specific to omics data analysis.
 
 ## Sequence Simulation (`Seq_Sim`)
 
@@ -134,6 +138,10 @@ som.plot_categorical_data(output_dir="output/")
 # Testing and Documentation
 
 SOM-Seq ships with a `pytest` test suite covering both modules, including input validation, scaling round-trips, training, metric calculations, and plot generation. Continuous integration via GitHub Actions runs the full suite on each push. API documentation is hosted on Read the Docs.
+
+# Research Impact Statement
+
+Beyond its origin as a course project, SOM-Seq is in active use: the `SOM` module is currently being applied to real single-cell data as part of ongoing biomedical informatics research at the University of Colorado Anschutz Medical Campus, where it is being evaluated as a topology-preserving alternative to graph-based clustering pipelines. Community-readiness is further supported by a `pytest` test suite exercising both modules, continuous integration on every push, published API documentation, an OSI-approved open-source license, and packaging for installation via PyPI, lowering the barrier for other groups to adopt or extend the software.
 
 # Acknowledgements
 
