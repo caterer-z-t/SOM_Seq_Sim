@@ -35,7 +35,7 @@ to <ztcaterer@colorado.edu>.
 
 ## I Have a Question
 
-> If you want to ask a question, we assume that you have read the available [Documentation]().
+> If you want to ask a question, we assume that you have read the available [Documentation](https://som-seq-sim.readthedocs.io/en/latest/).
 
 Before you ask a question, it is best to search for existing [Issues](https://github.com/caterer-z-t/SOM_Seq_Sim/issues) that might help you. In case you have found a suitable issue and still need clarification, you can write your question in this issue. It is also advisable to search the internet for answers first.
 
@@ -59,7 +59,7 @@ We will then take care of the issue as soon as possible.
 A good bug report shouldn't leave others needing to chase you up for more information. Therefore, we ask you to investigate carefully, collect information and describe the issue in detail in your report. Please complete the following steps in advance to help us fix any potential bug as fast as possible.
 
 - Make sure that you are using the latest version.
-- Determine if your bug is really a bug and not an error on your side e.g. using incompatible environment components/versions (Make sure that you have read the [documentation](). If you are looking for support, you might want to check [this section](#i-have-a-question)).
+- Determine if your bug is really a bug and not an error on your side e.g. using incompatible environment components/versions (Make sure that you have read the [documentation](https://som-seq-sim.readthedocs.io/en/latest/). If you are looking for support, you might want to check [this section](#i-have-a-question)).
 - To see if other users have experienced (and potentially already solved) the same issue you are having, check if there is not already a bug report existing for your bug or error in the [bug tracker](https://github.com/caterer-z-t/SOM_Seq_Sim/issues?q=label%3Abug).
 - Also make sure to search the internet (including Stack Overflow) to see if users outside of the GitHub community have discussed the issue.
 - Collect information about the bug:
@@ -95,7 +95,7 @@ This section guides you through submitting an enhancement suggestion for SOM_Seq
 #### Before Submitting an Enhancement
 
 - Make sure that you are using the latest version.
-- Read the [documentation]() carefully and find out if the functionality is already covered, maybe by an individual configuration.
+- Read the [documentation](https://som-seq-sim.readthedocs.io/en/latest/) carefully and find out if the functionality is already covered, maybe by an individual configuration.
 - Perform a [search](https://github.com/caterer-z-t/SOM_Seq_Sim/issues) to see if the enhancement has already been suggested. If it has, add a comment to the existing issue instead of opening a new one.
 - Find out whether your idea fits with the scope and aims of the project. It's up to you to make a strong case to convince the project's developers of the merits of this feature. Keep in mind that we want features that will be useful to the majority of our users and not just a small subset. If you're just targeting a minority of users, consider writing an add-on/plugin library.
 
@@ -118,6 +118,7 @@ We welcome contributions! Follow these steps to contribute:
 ```bash
 git clone https://github.com/caterer-z-t/SOM_Seq_Sim.git
 cd SOM_Seq_Sim
+pip install e ".[dev]"
 ```
 
 Please branch from the `main` branch given we have set up branch protections.
@@ -154,27 +155,16 @@ Submit a pull request and explain the changes you've made.
 ### Documentation
 
 We use [sphinx](https://www.sphinx-doc.org/en/master/index.html) for autodocumentation of docstrings, using the [napoleon extenstion](https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html) to parse [NumPy style docstrings](https://numpydoc.readthedocs.io/en/latest/format.html), implemented with a [furo](https://pradyunsg.me/furo/) theme.
-We host our documentation on [readthedocs.org](https://readthedocs.org/) at [https://pyCellPhenoX.readthedocs.io/en/](https://pyCellPhenoX.readthedocs.io/en/).
+We host our documentation on [readthedocs.org](https://readthedocs.org/) at [som-seq-sim.readthedocs.io](https://som-seq-sim.readthedocs.io/en/latest/).
 
 To build and test changes to the docs locally, run the following command:
 
 ```bash
+pip install -e ".[docs]"
 sphinx-build -b html docs build
 ```
 
 See [`docs/conf.py`](../conf.py) for full documentation configuration. 
-
-### Dev environments
-
-#### Local devcontainer
-
-Instructions for setting up a local development environment using VSCode DevContainers:
-
-1. Install [VSCode](https://code.visualstudio.com/download)
-2. Install the [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension
-3. Open the repository in VSCode
-4. Click on the green "Reopen in Container" button in the lower left corner of the window
-5. Wait for the container to build and install the required dependencies
 
 ## Code Quality
 
@@ -183,10 +173,13 @@ If you have configured your [dev environment](#dev-environments) as described ab
 
 ### Formatting
 
-We use [black](https://black.readthedocs.io/en/stable/) for formatting Python code, and [prettier](https://prettier.io/) for formatting markdown, json and yaml files.
-We include `black` in the poetry dev dependencies so it can be run manually using `black format`
-Prettier (which is not python-based) is not included in the poetry dev dependencies, but can be installed and run manually.
-Alternately, both `black format` and `prettier` will be run automatically at commit time with the pre-commit hooks installed.
+We include `black` in the dev dependencies (installed via `pip install -e ".[dev]"`), which can be run manually:
+
+```bash
+black your_file.py
+```
+
+Prettier (which is not Python-based) is not included in the dev dependencies but can be installed and run manually.
 
 ### Linting
 
@@ -203,7 +196,7 @@ When writing markdown documentation, please also ensure that each sentence is on
 ### Commit messages
 
 SOM_Seq_Sim uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) standard for commit messages to aid in automatic changelog generation.
-We prepare commit messages that follow this standard using [commitizen](https://commitizen-tools.github.io/commitizen/), which comes with the poetry dev dependencies.
+We prepare commit messages that follow this standard using [commitizen](https://commitizen-tools.github.io/commitizen/), which can be installed separately with `pip install commitizen`.
 
 ## Attribution
 This guide is based on the **contributing-gen**. [Make your own](https://github.com/bttger/contributing-gen)!

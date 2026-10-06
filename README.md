@@ -19,7 +19,12 @@
 ```bash
 git clone https://github.com/caterer-z-t/SOM_Seq_Sim.git
 cd SOM_Seq_Sim
-pip install .
+pip install -e .
+```
+
+**For development:**
+```bash
+pip install -e ".[dev]"
 ```
 
 ---
@@ -120,7 +125,7 @@ som.plot_categorical_data(output_dir="output/")
 | `-p` | Topology: `rectangular` or `hexagonal` (one or more) |
 | `-n` | Neighborhood function: `gaussian` or `bubble` (one or more) |
 | `-e` | Number of training epochs (one or more integers) |
-| `-m` | Generate component plane plots (default: `True`) |
+| `-m` | Pass `-m` to disable component plane plot generation (plots are created by default) |
 
 When more than one value is provided for any hyperparameter, the CLI performs a grid search and selects the best combination by `PVE − 100 × topographic_error`.
 
@@ -156,7 +161,7 @@ See [CHANGELOG.md](CHANGELOG.md) for a history of notable changes.
 
 If you use SOM-Seq in your research, please cite:
 
-> Caterer Z., Pernat M., Hurd V. (2024). *SOM-Seq: A Python Toolbox for Single-Cell Sequencing Simulation and Self-Organizing Map Analysis*. <!-- TODO: add journal/DOI after JOSS acceptance -->
+> Caterer Z., Pernat M., Hurd V. (2026). *SOM-Seq: A Python Toolbox for Single-Cell Sequencing Simulation and Self-Organizing Map Analysis*.
 
 A machine-readable citation is available in [CITATION.cff](CITATION.cff).
 

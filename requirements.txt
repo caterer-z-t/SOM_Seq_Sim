@@ -7,9 +7,9 @@ pytest
 scipy
 pyyaml
 simpy
-sphinx==7.1.2
-sphinx.ext.autodoc
-sphinx.ext.coverage
-sphinx.ext.napoleon
 nbsphinx
 myst_parser
+sphinx==7.1.2
+# sphinx.ext.autodoc
+# sphinx.ext.coverage
+# sphinx.ext.napoleon

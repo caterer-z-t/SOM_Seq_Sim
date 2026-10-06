@@ -28,7 +28,7 @@ dummy_dataset_params:
   prop_sex: 0.5 # proportion of feature 1 if feature 1 is categorical variable
   prop_disease: 0.5 # proportion of feature 2 if feature 2 is categorical variable
   seed: 1234
-  n_features: 1000
+  n_features: 20
 
 variance_attributes: 
   cluster_ratio: 0.7

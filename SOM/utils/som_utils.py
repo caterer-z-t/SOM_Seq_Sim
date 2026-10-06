@@ -185,7 +185,8 @@ class SOM():
         neighborhood_fnc: str,
         epochs: int,
         train_dat: pd.DataFrame,
-        other_dat: pd.DataFrame = None
+        other_dat: pd.DataFrame = None,
+        seed: int = 0
     ):
 
         """
@@ -224,14 +225,20 @@ class SOM():
         )
 
         # Save feature names and convert input data to numpy array
+        # Save feature names and convert input data to numpy array
         self.train_dat_features = train_dat.columns.tolist()
-        self.other_dat_features = other_dat.columns.tolist()
         self.train_dat = train_dat.to_numpy()
-        self.other_dat = other_dat.to_numpy()
+        if other_dat is not None:
+            self.other_dat_features = other_dat.columns.tolist()
+            self.other_dat = other_dat.to_numpy()
+        else:
+            self.other_dat_features = []
+            self.other_dat = None
 
         # Scaling and attributes
         self._scale = getattr(self, f"_{scale_method}_scale", None)
         self._unscale = getattr(self, f"_{scale_method}_unscale", None)
+        self._seed = seed
         self.train_dat_scaled, self._scaling_factors = self._scale()
         self.xdim = x_dim
         self.ydim = y_dim
@@ -245,7 +252,6 @@ class SOM():
         self.neuron_coordinates = None
         self.weights = None
         self.weights_scaled = None
-
 
     @staticmethod
     def _validate_inputs(
@@ -330,7 +336,6 @@ class SOM():
         if not isinstance(epochs, int) or epochs <= 0:
             raise ValueError("epochs must be a positive integer.")
 
-
     def train_map(self):
 
         """
@@ -355,12 +360,12 @@ class SOM():
             x=self.xdim,  # number of neurons in x-dimension
             y=self.ydim,  # number of neurons in y-dimension
             input_len=n_features,  # number of features/variables describing each observation
-            sigma=1, #related to the how many neighbors are considered during fitting process
+            sigma=max(self.xdim, self.ydim) / 2, #related to the how many neighbors are considered during fitting process
             learning_rate=0.5,  # define how much weight is adjusted
             neighborhood_function=self.neighborhood_fnc,  # form of the neighbordhood function
             topology=self.topology,  # rectangular or hexagonal (4 or 6 neighbors, respectively)
             activation_distance='euclidean',  # method for distance calculation
-            random_seed=0
+            random_seed=self._seed
         )
 
         # Principle_component_analysis for weight initialization
@@ -380,7 +385,6 @@ class SOM():
         self.neuron_coordinates = self._get_neuron_coordinates()
         self.weights_scaled = self._get_weights()
         self.weights = self._unscale(self.weights_scaled)
-
 
     def calculate_topographic_error(self) -> float:
 
@@ -423,7 +427,6 @@ class SOM():
         # Calculate the topographic error as the proportion of non-adjacent BMUs
         return topographic_error_count / len(self.train_dat_scaled)
 
-
     def calculate_percent_variance_explained(self) -> float:
 
         """
@@ -460,7 +463,6 @@ class SOM():
         pve = ((tss - wcss) / tss) * 100
 
         return pve
-
 
     def plot_component_planes(
         self,
@@ -551,7 +553,6 @@ class SOM():
                 bbox_inches='tight')
             plt.close(fig)
 
-
     def plot_categorical_data(
         self,
         output_dir: str
@@ -587,6 +588,12 @@ class SOM():
         # Check that SOM has been trained
         if self.map is None:
             raise RuntimeError("SOM has not been trained. Call `train_map` before plotting.")
+
+        # Check that other data is available
+        if self.other_dat is None:
+            raise RuntimeError(
+                "No metadata provided. Pass `other_dat` to the SOM constructor to use this method."
+            )
 
         # Make one plot per categorical feature
         for feature_idx in range(self.other_dat.shape[1]):
@@ -663,7 +670,6 @@ class SOM():
             )
             plt.close(fig)
 
-
     def plot_map_grid(
         self,
         print_neuron_idx: bool = False
@@ -720,7 +726,6 @@ class SOM():
 
         return fig, ax
 
-
     def _zscore_scale(self):
 
         """
@@ -736,7 +741,6 @@ class SOM():
         means = np.mean(self.train_dat, axis=0)
         stds = np.std(self.train_dat, axis=0)
         return (self.train_dat - means) / stds, [means, stds]
-
 
     def _minmax_scale(self):
 
@@ -754,7 +758,6 @@ class SOM():
         max_vals = np.max(self.train_dat, axis=0)
         return (self.train_dat - min_vals) / (max_vals - min_vals), [min_vals, max_vals]
 
-
     def _zscore_unscale(self, scaled_data):
 
         """
@@ -771,7 +774,6 @@ class SOM():
         means, stds = self._scaling_factors
         return scaled_data * stds + means
 
-
     def _minmax_unscale(self, scaled_data):
 
         """
@@ -787,7 +789,6 @@ class SOM():
 
         min_vals, max_vals = self._scaling_factors
         return scaled_data * (max_vals - min_vals) + min_vals
-
 
     def _get_observation_neuron_mappings(self):
 
@@ -811,7 +812,6 @@ class SOM():
         )
         return winner_neuron
 
-
     def _get_neuron_coordinates(self):
 
         """
@@ -821,24 +821,12 @@ class SOM():
             pd.DataFrame: A DataFrame containing the x and y coordinates of each neuron, where the
                 first column corresponds to x and the second column corresponds to y.
         """
-
-        HEX_CORRECTION = np.sqrt(3)/2
-
         xx, yy = self.map.get_euclidean_coordinates()
 
         x_coords = [xx[(i, j)] for i in range(self.xdim) for j in range(self.ydim)]
-        if self.topology == 'hexagonal':
-            y_coords = [
-                yy[(i, j)] * HEX_CORRECTION for i in range(self.xdim) for j in range(self.ydim)
-            ]
-        else:
-            y_coords = [yy[(i, j)] for i in range(self.xdim) for j in range(self.ydim)]
+        y_coords = [yy[(i, j)] for i in range(self.xdim) for j in range(self.ydim)]
 
-        return pd.DataFrame({
-            'x': x_coords,
-            'y': y_coords
-        })
-
+        return pd.DataFrame({"x": x_coords, "y": y_coords})
 
     def _get_weights(self):
 
@@ -854,7 +842,6 @@ class SOM():
             self.map.get_weights()[i, j, :] for i in range(self.xdim) for j in range(self.ydim)
         ]
         return pd.DataFrame(weights_scaled)
-
 
     @staticmethod
     def _draw_circle(
@@ -901,7 +888,6 @@ class SOM():
                 color='black'
                 )
 
-
     @staticmethod
     def _map_value_to_color(
         value: float,
@@ -926,7 +912,6 @@ class SOM():
 
         # Map the normalized value to a color in the gradient
         return cmap(normalized_value)
-
 
     @staticmethod
     def _add_colorbar(
@@ -971,7 +956,6 @@ class SOM():
         )
         cbar.ax.tick_params(labelsize=9)
 
-
     @staticmethod
     def _get_distinct_colors(
         categories: List[str]
@@ -994,7 +978,6 @@ class SOM():
 
         return {categories[i]: palette[i] for i in range(len(categories))}
 
-
     @staticmethod
     def _check_output_path(
         path: str
@@ -1013,30 +996,13 @@ class SOM():
         if not os.path.exists(path):
             os.makedirs(path)
 
-
-    def _are_nodes_adjacent(
-        self,
-        bmu1: int,
-        bmu2: int
-    ) -> bool:
-
-        """
-        Check if two neurons in the SOM grid are adjacent.
-
-        Args:
-            bmu1 (int): ID of the first neuron.
-            bmu2 (int): ID of the second neuron.
-
-        Returns:
-            bool: True if the neurons are neighbors, False otherwise.
-        """
+    def _are_nodes_adjacent(self, bmu1: int, bmu2: int) -> bool:
 
         coord1 = self.neuron_coordinates.iloc[bmu1, :].to_list()
         coord2 = self.neuron_coordinates.iloc[bmu2, :].to_list()
 
-        euclidean_distance = np.sqrt((coord1[0] - coord2[0]) ** 2 + (coord1[1] - coord2[1]) ** 2)
-
-        return math.isclose(
-            a=euclidean_distance,
-            b=1
+        euclidean_distance = np.sqrt(
+            (coord1[0] - coord2[0]) ** 2 + (coord1[1] - coord2[1]) ** 2
         )
+
+        return math.isclose(euclidean_distance, 1.0, abs_tol=1e-5)

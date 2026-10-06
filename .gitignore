@@ -30,3 +30,6 @@ __pycache__
 TODO.md
 
 __pycache__/
+
+som_seq_sim.egg-info/
+output/

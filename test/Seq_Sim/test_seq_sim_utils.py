@@ -853,7 +853,7 @@ def test_add_differential_cell_types():
         )
 
         # Call the add_differential_cell_types function
-        diff_cell_types = add_differential_cell_types(
+        _, diff_cell_types = add_differential_cell_types(
             celltype_df,
             dummy_data,
             n_cells,
@@ -1317,3 +1317,21 @@ def test_generate_feature_coverage():
 
         # Ensure the function was called (this ensures code coverage)
         mock_process.assert_called_once()
+
+
+def test_fold_change_affects_cell_counts():
+    """Test that fold_change actually changes cell counts for differential cell types."""
+    from Seq_Sim.utils.seq_sim_utils import generate_dummy_data_wo_interaction
+
+    data_0, diff_types = generate_dummy_data_wo_interaction(
+        n_individuals=10, fc_interact=0.0, seed=1234
+    )
+    data_05, _ = generate_dummy_data_wo_interaction(n_individuals=10, fc_interact=0.5, seed=1234)
+
+    for cell_type in diff_types:
+        count_0 = (data_0["cell_type"] == cell_type).sum()
+        count_05 = (data_05["cell_type"] == cell_type).sum()
+        assert count_05 > count_0, (
+            f"fold_change=0.5 should increase count of {cell_type} "
+            f"vs fold_change=0.0, but got {count_05} <= {count_0}"
+        )

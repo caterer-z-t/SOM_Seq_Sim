@@ -41,9 +41,8 @@ Inputs:
 - **Epochs (-e / --epochs)** *(required)*:  
         Number of training epochs for the SOM. Accepts one or more integer values.
 
-- **Component Plane Plots (-m / --plot_component_planes)** *(optional)*:  
-        Whether to generate component plane plots for each feature in the training data. Defaults
-        to `True`.
+- **Component Plane Plots (-m)** *(optional)*:  
+        Pass -m to disable component plane plot generation. By default, plots are created.
 
 Usage:
 ======
@@ -189,16 +188,24 @@ def main():
         help="Number of training epochs. Specify one or more values."
     )
     parser.add_argument(
-        '-m', '--plot_component_planes',
-        type=str,
+        "-m",
+        "--no_component_planes",
+        action="store_false",
+        dest="plot_component_planes",
         default=True,
-        help="Whether to create component plane plot for every feature in training data."
+        help="Pass -m to disable component plane plots for every feature in training data.",
+    )
+    parser.add_argument(
+        '-seed', '--seed',
+        type=int,
+        default=0,
+        help="Random seed for reproducibility."
     )
     args = parser.parse_args()
 
     # Load the data
     train_dat = pd.read_csv(args.train_dat)
-
+    other_dat = None
     if args.other_dat:
         other_dat = pd.read_csv(args.other_dat)
         # Ensure DataFrame structure even if only 1 column
@@ -232,7 +239,8 @@ def main():
                 y_dim=y_dim,
                 topology=topology,
                 neighborhood_fnc=neighborhood_fnc,
-                epochs=epochs
+                epochs=epochs,
+                seed=args.seed
             )
             som.train_map()
 
@@ -266,7 +274,8 @@ def main():
             y_dim=best_params[2],
             topology=best_params[3],
             neighborhood_fnc=best_params[4],
-            epochs=best_params[5]
+            epochs=best_params[5],
+            seed=args.seed
         )
         best_som.train_map()
 
@@ -290,7 +299,8 @@ def main():
             y_dim=args.y_dim[0],
             topology=args.topology[0],
             neighborhood_fnc=args.neighborhood_fnc[0],
-            epochs=args.epochs[0]
+            epochs=args.epochs[0],
+            seed=args.seed
         )
         som.train_map()
 

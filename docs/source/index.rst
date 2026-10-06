@@ -14,23 +14,18 @@ of this page.
    :caption: Project Overview
 
    ../README.md
-   data_overview.md
    modules
 
 .. toctree::
    :maxdepth: 2
-   :caption: Setup & Walkthroughs
+   :caption: Examples and Walkthroughs
 
-   install
-   generate_data
-   make_soms
    walkthrough
 
 .. toctree::
    :maxdepth: 2
    :caption: Resources
 
-   references.md
    Link to Github <https://github.com/caterer-z-t/SOM_Seq_Sim>
    ../CONTRIBUTING.md
    ../CODE_OF_CONDUCT.md

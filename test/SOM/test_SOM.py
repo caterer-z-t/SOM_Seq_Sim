@@ -1,4 +1,5 @@
 # Standard imports
+import math
 import os
 import sys
 
@@ -555,3 +556,107 @@ class TestSOMCheckOutputPath:
 
     def test_existing_directory_no_error(self, tmp_path):
         SOM._check_output_path(str(tmp_path))  # should not raise
+
+
+def test_topographic_error_matches_minisom():
+    """Regression test: our topographic error must match MiniSom's built-in."""
+    from sklearn.datasets import load_iris
+
+    iris = load_iris()
+    X = pd.DataFrame(iris.data, columns=[f"f{i}" for i in range(4)])
+    other = pd.DataFrame({"species": iris.target})
+
+    som = SOM(
+        train_dat=X,
+        other_dat=other,
+        scale_method="zscore",
+        x_dim=5,
+        y_dim=4,
+        topology="hexagonal",
+        neighborhood_fnc="gaussian",
+        epochs=100,
+    )
+    som.train_map()
+
+    our_te = som.calculate_topographic_error()
+    minisom_te = som.map.topographic_error(som.train_dat_scaled)
+
+    assert math.isclose(
+        our_te, minisom_te, abs_tol=1e-6
+    ), f"Topographic error mismatch: ours={our_te:.6f}, minisom={minisom_te:.6f}"
+
+
+def test_som_without_other_dat_api():
+    """SOM Python API must work when other_dat is None."""
+    import numpy as np
+    import pandas as pd
+
+    X = pd.DataFrame(np.random.randn(50, 4), columns=["a", "b", "c", "d"])
+    som = SOM(
+        train_dat=X,
+        other_dat=None,
+        scale_method="zscore",
+        x_dim=3,
+        y_dim=3,
+        topology="hexagonal",
+        neighborhood_fnc="gaussian",
+        epochs=10,
+    )
+    som.train_map()
+    assert som.calculate_topographic_error() is not None
+    assert som.calculate_percent_variance_explained() is not None
+
+
+def test_plot_categorical_data_raises_without_other_dat():
+    """plot_categorical_data must raise a clear RuntimeError when other_dat is None."""
+    import numpy as np
+    import pandas as pd
+
+    X = pd.DataFrame(np.random.randn(50, 4), columns=["a", "b", "c", "d"])
+    som = SOM(
+        train_dat=X,
+        other_dat=None,
+        scale_method="zscore",
+        x_dim=3,
+        y_dim=3,
+        topology="hexagonal",
+        neighborhood_fnc="gaussian",
+        epochs=10,
+    )
+    som.train_map()
+    with pytest.raises(RuntimeError, match="No metadata provided"):
+        som.plot_categorical_data(output_dir="/tmp/")
+
+
+def test_no_component_planes_flag(tmp_path):
+    """Passing -m must disable component plane plot generation."""
+    import subprocess, sys, os
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "SOM/som.py",
+            "-t",
+            "data/sim_data_pseudo_feature_num_samples_30_fc_0.5.csv",
+            "-o",
+            str(tmp_path),
+            "-s",
+            "zscore",
+            "-x",
+            "3",
+            "-y",
+            "3",
+            "-p",
+            "hexagonal",
+            "-n",
+            "gaussian",
+            "-e",
+            "10",
+            "-m",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, f"CLI failed: {result.stderr}"
+    png_files = [f for f in os.listdir(tmp_path) if f.endswith(".png")]
+    assert len(png_files) == 0, f"Expected no plots but found: {png_files}"

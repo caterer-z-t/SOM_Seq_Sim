@@ -344,7 +344,7 @@ def generate_dummy_data_wo_interaction(
     )
     
     # Add differential cell types
-    diff_cell_types = add_differential_cell_types(
+    celltype_df, diff_cell_types = add_differential_cell_types(
         celltype_df, dummy_data, n_cells, n_major_diff_celltypes, n_minor_diff_celltypes, fc_interact
     )
     
@@ -650,23 +650,15 @@ def add_differential_cell_types(
     Returns:
         List of differential cell types.
     """
-    # Step 1: Identify differential clusters
     diff_clusters = identify_diff_clusters(n_major_diff_celltypes, n_minor_diff_celltypes, n_cells)
-    
-    # Step 2: Generate differential cell types
     diff_cell_types = generate_diff_cell_types(diff_clusters)
-    
-    # Step 3: For each differential cell type, calculate abundance and add rows
+
     for cell_type in diff_cell_types:
         abundance = calculate_abundance(celltype_df, dummy_data, cell_type, n_cells)
-        
-        # Step 4: Calculate differential expression
         diff = calculate_diff_expression(abundance, n_cells, fc_interact)
-        
-        # Step 5: Add rows for the differential cell type
         celltype_df = add_rows_for_diff_cells(celltype_df, dummy_data, diff, cell_type)
 
-    return diff_cell_types
+    return celltype_df, diff_cell_types  # return BOTH
 
 # Function to load configuration from a YAML file
 def load_config(config_file: str) -> dict:

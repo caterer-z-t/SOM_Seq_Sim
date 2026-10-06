@@ -41,7 +41,9 @@ bibliography: paper.bib
 
 # Summary
 
-SOM-Seq is an open-source Python toolbox that integrates two complementary workflows for single-cell genomics research: synthetic sequencing data generation (`Seq_Sim`) and Self-Organizing Map (SOM) based clustering and visualization (`SOM`). The `Seq_Sim` module generates realistic pseudo-bulk single-cell datasets with configurable cell-type compositions, batch effects, disease states, and differential expression patterns, adapted from simulation approaches developed in the Zhang Lab [@inamo2024scorpio]. The `SOM` module provides a high-level Python class built on MiniSom [@vettigli2018minisom] that handles data scaling, automated hyperparameter tuning, topographic quality metrics, and publication-quality visualizations including component planes and categorical overlays. Both modules expose command-line interfaces (CLIs), making them composable within broader bioinformatics pipelines or usable as standalone tools.
+Single-cell sequencing technologies profile gene expression in individual cells, enabling researchers to identify distinct cell populations and understand how they change in disease. Analyzing these datasets requires dimensionality reduction and clustering methods to reveal biologically meaningful structure. Self-Organizing Maps (SOMs) are a class of unsupervised neural network that project high-dimensional data onto a two-dimensional grid of neurons, where neighboring neurons represent similar regions of the input space, explicitly encoding topological relationships between clusters that standard methods such as UMAP or t-SNE do not preserve. Despite this interpretive advantage, SOMs remain underutilized in the single-cell community, in part because no existing tool combines SOM-based analysis with single-cell-style simulation in a single package. Researchers wishing to benchmark SOM-based clustering must currently assemble a simulation tool and a separate SOM library themselves.
+
+SOM-Seq is an open-source Python toolbox that addresses this gap by integrating two complementary workflows: simulated single-cell dataset generation (`Seq_Sim`) and SOM-based clustering and visualization (`SOM`). The `Seq_Sim` module generates realistic simulated single-cell datasets — producing per-cell feature matrices with configurable cell-type compositions, batch effects, disease states, and differential expression patterns — providing a reproducible, ground-truth-labeled environment for benchmarking clustering methods without requiring access to patient data. This simulation approach is adapted from methods developed in the Zhang Lab [@inamo2024scorpio]. The `SOM` module provides a high-level Python class built on MiniSom [@vettigli2018minisom] that handles data scaling, automated hyperparameter tuning, topographic quality metrics, and publication-quality visualizations including component planes and categorical overlays. Both modules expose command-line interfaces (CLIs), making them composable within broader bioinformatics pipelines or usable as standalone tools.
 
 # Statement of Need
 
@@ -55,7 +57,7 @@ Together, these modules enable researchers to simulate a dataset with known stru
 
 High-dimensional single-cell RNA sequencing (scRNA-seq) data requires dimensionality reduction and clustering to reveal biologically meaningful structure [@luecken2019]. Established tools such as Seurat [@hao2021] and Scanpy [@wolf2018] are the standard for single-cell analysis, typically pairing graph-based community detection with t-SNE [@van_der_maaten2008] or UMAP [@mcinnes2018] for visualization. While powerful, these methods embed data into a continuous low-dimensional space that does not explicitly preserve the topological distances between clusters, making it difficult to reason about the relative proximity (i.e., similarity) of cell populations.
 
-At the algorithmic level, general-purpose SOM libraries such as MiniSom [@vettigli2018minisom] provide no single-cell simulation capability, while single-cell simulators such as the SCORPIO framework from the Zhang Lab [@inamo2024scorpio], on which `Seq_Sim` is based, are not paired with an SOM analysis workflow. To our knowledge, no existing package combines SOM-based clustering with single-cell-style data simulation in one tool, so researchers wishing to benchmark SOM-based clustering must currently assemble a simulation tool and a separate SOM library themselves. SOM-Seq fills this gap by integrating both capabilities behind a single, consistent API and CLI.
+At the algorithmic level, general-purpose SOM libraries such as MiniSom [@vettigli2018minisom] expose raw training routines but provide no single-cell-specific workflow: users must independently implement data scaling, select grid dimensions and neighborhood parameters, compute quality metrics such as topographic error and percent variance explained (PVE), and build visualizations suited to omics data. Similarly, single-cell simulators such as the SCORPIO framework [@inamo2024scorpio], on which `Seq_Sim` is based, are not paired with an SOM analysis workflow. While a motivated user could combine these tools manually, doing so requires non-trivial implementation effort: writing a hyperparameter search over grid dimensions and neighborhood functions, implementing the PVE and topographic error calculations, and building component plane and categorical overlay visualizations — none of which MiniSom or SCORPIO provide. SOM-Seq packages all of these steps behind a single, consistent API and CLI, reducing the expertise and implementation effort required to apply SOM-based analysis to single-cell data. To our knowledge, no existing Python package integrates this complete SOM workflow, scaling, tuning, quality metrics, and omics-specific visualization, with single-cell-style data simulation in one tool.
 
 # Software Design
 
@@ -89,24 +91,13 @@ The `SOM` module wraps MiniSom [@vettigli2018minisom] into a `SOM` Python class 
 ## Generating Sequencing Data
 
 ```bash
-python Seq_Sim/seq_sim.py \
-    --num_samples 30 \
-    --fold_change 0.5 \
-    --config_file Seq_Sim/config.yml
+python Seq_Sim/seq_sim.py --num_samples 30 --fold_change 0.5 --config_file Seq_Sim/config.yml
 ```
 
 ## Fitting a SOM
 
 ```bash
-python SOM/som.py \
-    -t data/sim_data_pseudo_feature_num_samples_30_fc_0.5.csv \
-    -c data/sim_data_latent_data_num_samples_30_fc_0.5.csv \
-    -o output/ \
-    -s zscore \
-    -x 5 -y 4 \
-    -p hexagonal \
-    -n gaussian \
-    -e 100
+python SOM/som.py -t data/sim_data_pseudo_feature_num_samples_30_fc_0.5.csv -c data/sim_data_latent_data_num_samples_30_fc_0.5.csv -o output/ -s zscore -x 5 -y 4 -p hexagonal -n gaussian -e 100
 ```
 
 ## Python API
@@ -141,7 +132,7 @@ SOM-Seq ships with a `pytest` test suite covering both modules, including input 
 
 # Research Impact Statement
 
-Beyond its origin as a course project, SOM-Seq is in active use: the `SOM` module is currently being applied to real single-cell data as part of ongoing biomedical informatics research at the University of Colorado Anschutz Medical Campus, where it is being evaluated as a topology-preserving alternative to graph-based clustering pipelines. Community-readiness is further supported by a `pytest` test suite exercising both modules, continuous integration on every push, published API documentation, an OSI-approved open-source license, and packaging for installation via PyPI, lowering the barrier for other groups to adopt or extend the software.
+Beyond its origin as a course project, the `SOM` module is actively being applied in ongoing biomedical informatics research as a topology-preserving alternative to graph-based and explainable ML clustering pipelines. Specifically, it is being evaluated on publicly available single-cell datasets — COVID-19 PBMC multi-omics data [@stephenson2021] and ulcerative colitis tissue transcriptomics [@smillie2019intra] — as a complementary benchmarking tool alongside CellPhenoX [@young2025cellphenox], a published explainable machine learning method for single-cell clinical phenotyping. The research question being addressed is whether topology-preserving SOM-based clustering identifies biologically coherent cell populations consistent with those identified by CellPhenoX on the same datasets. Reproducible example analyses are provided in the repository: `Seq_Sim/walkthrough/seq_sim_workflow.ipynb` demonstrates the full data simulation workflow, and `SOM/examples/` contains three worked examples applying the `SOM` module to the Iris dataset (`som_example_iris.ipynb`), the Titanic dataset (`som_example_titanic.ipynb`), and simulated single-cell data (`som_example_seq.ipynb`). Community-readiness is further supported by a `pytest` test suite exercising both modules, continuous integration on every push, published API documentation, an OSI-approved open-source license, and packaging for installation via `PyPI`.
 
 # Acknowledgements
 
@@ -149,6 +140,6 @@ This work originated as part of the University of Colorado Boulder course **CSCI
 
 # AI usage disclosure
 
-We used Anthropic's Claude (Sonnet 4.6) to assist with refining documentation, including adding clarity and removing redundant information. We also used Anthropic's Claude (Sonnet 5, via Claude Code) during pre-submission preparation to identify and fix two command-line interface bugs (an argument-parsing crash in the `SOM` CLI and an invalid function call in the `Seq_Sim` CLI), to add continuous integration workflows for package build validation and PyPI publishing, and to correct inconsistencies in the LICENSE, and README. All AI-assisted content and code changes were reviewed by the authors, who validated correctness and made all core design decisions.
+We used Anthropic's Claude (Sonnet 4.6) to assist with refining documentation and addressing reviewer comments, including adding clarity, removing redundant information, and drafting revised paper sections. We also used Anthropic's Claude (Sonnet 5, via Claude Code) during pre-submission preparation to identify and fix two command-line interface bugs (an argument-parsing crash in the `SOM` CLI and an invalid function call in the `Seq_Sim` CLI), to add continuous integration workflows for package build validation and PyPI publishing, and to correct inconsistencies in the LICENSE and README. During revision, Claude (Sonnet 4.6) assisted in identifying and fixing four additional bugs: an incorrect topographic error calculation for hexagonal grids, a broken fold-change effect in the simulation module, missing support for optional metadata in the CLI and API, and a non-functional `-m` plot suppression flag. All AI-assisted content and code changes were reviewed by the authors, who validated correctness and made all core design decisions.
 
 # References
