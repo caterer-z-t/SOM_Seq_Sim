@@ -57,7 +57,7 @@ docs = [
     "sphinx>=7.0",
     "sphinx-rtd-theme",
     "furo",
-    "ipython",
+    "ipython"
 ]
 
 [project.scripts]

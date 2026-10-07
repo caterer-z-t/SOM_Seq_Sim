@@ -631,32 +631,23 @@ def test_plot_categorical_data_raises_without_other_dat():
 def test_no_component_planes_flag(tmp_path):
     """Passing -m must disable component plane plot generation."""
     import subprocess, sys, os
+    import numpy as np
+    import pandas as pd
 
-    result = subprocess.run(
-        [
-            sys.executable,
-            "SOM/som.py",
-            "-t",
-            "data/sim_data_pseudo_feature_num_samples_30_fc_0.5.csv",
-            "-o",
-            str(tmp_path),
-            "-s",
-            "zscore",
-            "-x",
-            "3",
-            "-y",
-            "3",
-            "-p",
-            "hexagonal",
-            "-n",
-            "gaussian",
-            "-e",
-            "10",
-            "-m",
-        ],
-        capture_output=True,
-        text=True,
-    )
+    # Create a small temporary CSV instead of relying on pre-generated data
+    train = pd.DataFrame(np.random.randn(50, 4), columns=['a', 'b', 'c', 'd'])
+    train_path = tmp_path / "train.csv"
+    train.to_csv(train_path, index=False)
+
+    result = subprocess.run([
+        sys.executable, 'SOM/som.py',
+        '-t', str(train_path),
+        '-o', str(tmp_path),
+        '-s', 'zscore', '-x', '3', '-y', '3',
+        '-p', 'hexagonal', '-n', 'gaussian', '-e', '10',
+        '-m'
+    ], capture_output=True, text=True)
+
     assert result.returncode == 0, f"CLI failed: {result.stderr}"
-    png_files = [f for f in os.listdir(tmp_path) if f.endswith(".png")]
+    png_files = [f for f in os.listdir(tmp_path) if f.endswith('.png')]
     assert len(png_files) == 0, f"Expected no plots but found: {png_files}"
