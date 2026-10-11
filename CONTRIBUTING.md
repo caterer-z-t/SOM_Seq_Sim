@@ -118,7 +118,7 @@ We welcome contributions! Follow these steps to contribute:
 ```bash
 git clone https://github.com/caterer-z-t/SOM_Seq_Sim.git
 cd SOM_Seq_Sim
-pip install e ".[dev]"
+pip install -e ".[dev]"
 ```
 
 Please branch from the `main` branch given we have set up branch protections.
