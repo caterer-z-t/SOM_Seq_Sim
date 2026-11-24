@@ -18,12 +18,12 @@ authors:
     orcid: 0000-0003-2814-3428
     equal-contrib: true
     corresponding: true
-    affiliation: 4
+    affiliation: "4, 5"
   - name: Victoria Hurd
     orcid: 0000-0002-5548-6883
     equal-contrib: true
     corresponding: true
-    affiliation: 5
+    affiliation: 6
 affiliations:
   - name: Department of Chemical and Biological Engineering, University of Colorado Boulder, Boulder, CO, USA
     index: 1
@@ -33,15 +33,17 @@ affiliations:
     index: 3
   - name: Department of Civil, Environmental, and Architectural Engineering, University of Colorado Boulder, Boulder, CO, USA
     index: 4
-  - name: Department of Aerospace Engineering Sciences, University of Colorado Boulder, Boulder, CO, USA
+  - name: Center for Advanced Decision Support for Water and Environmental Systems (CADSWES), University of Colorado Boulder, Boulder, CO, USA
     index: 5
+  - name: Smead Department of Aerospace Engineering Sciences, University of Colorado, Boulder, Boulder, CO, USA
+    index: 6
 date: 24 April 2026
 bibliography: paper.bib
 ---
 
 # Summary
 
-Single-cell sequencing technologies profile gene expression in individual cells, enabling researchers to identify distinct cell populations and understand how they change in disease. Analyzing these datasets requires dimensionality reduction and clustering methods to reveal biologically meaningful structure. Self-Organizing Maps (SOMs) are a class of unsupervised neural network that project high-dimensional data onto a two-dimensional grid of neurons, where neighboring neurons represent similar regions of the input space, explicitly encoding topological relationships between clusters that standard methods such as UMAP or t-SNE do not preserve. Despite this interpretive advantage, SOMs remain underutilized in the single-cell community, in part because no existing tool combines SOM-based analysis with single-cell-style simulation in a single package. Researchers wishing to benchmark SOM-based clustering must currently assemble a simulation tool and a separate SOM library themselves.
+Single-cell sequencing technologies profile gene expression in individual cells, enabling researchers to identify distinct cell populations and understand how they change in disease. Analyzing these datasets requires dimensionality reduction and clustering methods to reveal biologically meaningful structure. Self-Organizing Maps (SOMs) are a class of unsupervised neural network that project high-dimensional data onto a two-dimensional grid of neurons, where neighboring neurons represent similar regions of the input space, explicitly encoding topological relationships between clusters that standard visualization methods such as Uniform Manifold Approximation and Projection (UMAP) [@mcinnes2018] or t-distributed Stochastic Neighbor Embedding (t-SNE) [@van_der_maaten2008] do not preserve. No existing tool combines SOM-based analysis with single-cell-style simulation in a single package, so researchers wishing to benchmark SOM-based clustering must currently assemble a simulation tool and a separate SOM library themselves.
 
 SOM-Seq is an open-source Python toolbox that addresses this gap by integrating two complementary workflows: simulated single-cell dataset generation (`Seq_Sim`) and SOM-based clustering and visualization (`SOM`). The `Seq_Sim` module generates realistic simulated single-cell datasets — producing per-cell feature matrices with configurable cell-type compositions, batch effects, disease states, and differential expression patterns — providing a reproducible, ground-truth-labeled environment for benchmarking clustering methods without requiring access to patient data. This simulation approach is adapted from methods developed in the Zhang Lab [@inamo2024scorpio]. The `SOM` module provides a high-level Python class built on MiniSom [@vettigli2018minisom] that handles data scaling, automated hyperparameter tuning, topographic quality metrics, and publication-quality visualizations including component planes and categorical overlays. Both modules expose command-line interfaces (CLIs), making them composable within broader bioinformatics pipelines or usable as standalone tools.
 
@@ -91,13 +93,21 @@ The `SOM` module wraps MiniSom [@vettigli2018minisom] into a `SOM` Python class 
 ## Generating Sequencing Data
 
 ```bash
-python Seq_Sim/seq_sim.py --num_samples 30 --fold_change 0.5 --config_file Seq_Sim/config.yml
+python Seq_Sim/seq_sim.py \
+    --num_samples 30 \
+    --fold_change 0.5 \
+    --config_file Seq_Sim/config.yml
 ```
 
 ## Fitting an SOM
 
 ```bash
-python SOM/som.py -t data/sim_data_pseudo_feature_num_samples_30_fc_0.5.csv -c data/sim_data_latent_data_num_samples_30_fc_0.5.csv -o output/ -s zscore -x 5 -y 4 -p hexagonal -n gaussian -e 100
+python SOM/som.py \
+    -t data/sim_data_pseudo_feature_num_samples_30_fc_0.5.csv \
+    -c data/sim_data_latent_data_num_samples_30_fc_0.5.csv \
+    -o output/ -s zscore \
+    -x 5 -y 4 -p hexagonal \
+    -n gaussian -e 100
 ```
 
 ## Python API
@@ -132,7 +142,7 @@ SOM-Seq ships with a `pytest` test suite covering both modules, including input 
 
 # Research Impact Statement
 
-Beyond its origin as a course project, the `SOM` module is actively being applied in ongoing biomedical informatics research as a topology-preserving alternative to graph-based and explainable machine learning clustering pipelines. Specifically, it is being evaluated on publicly available single-cell datasets — COVID-19 PBMC multi-omics data [@stephenson2021] and ulcerative colitis tissue transcriptomics [@smillie2019intra] — as a complementary benchmarking tool alongside CellPhenoX [@young2025cellphenox], a published explainable machine learning method for single-cell clinical phenotyping. The research question being addressed is whether topology-preserving SOM-based clustering identifies biologically coherent cell populations consistent with those identified by CellPhenoX on the same datasets. Reproducible example analyses are provided in the repository: `Seq_Sim/walkthrough/seq_sim_workflow.ipynb` demonstrates the full data simulation workflow, and `SOM/examples/` contains three worked examples applying the `SOM` module to the Iris dataset (`som_example_iris.ipynb`), the Titanic dataset (`som_example_titanic.ipynb`), and simulated single-cell data (`som_example_seq.ipynb`). Community-readiness is further supported by a `pytest` test suite exercising both modules, continuous integration on every push, published API documentation, an OSI-approved open-source license, and packaging for installation via PyPI.
+Beyond its origin as a course project, the `SOM` module is actively being applied in ongoing biomedical informatics research as a topology-preserving alternative to graph-based and explainable machine learning clustering pipelines. Specifically, it is being evaluated on publicly available single-cell datasets — COVID-19 peripheral blood mononuclear cell (PBMC) multi-omics data [@stephenson2021] and ulcerative colitis tissue transcriptomics [@smillie2019intra] — as a complementary benchmarking tool alongside CellPhenoX [@young2025cellphenox], a published explainable machine learning method for single-cell clinical phenotyping. The research question being addressed is whether topology-preserving SOM-based clustering identifies biologically coherent cell populations consistent with those identified by CellPhenoX on the same datasets. Reproducible example analyses are provided in the repository: `Seq_Sim/walkthrough/seq_sim_workflow.ipynb` demonstrates the full data simulation workflow, and `SOM/examples/` contains three worked examples applying the `SOM` module to the Iris dataset (`som_example_iris.ipynb`), the Titanic dataset (`som_example_titanic.ipynb`), and simulated single-cell data (`som_example_seq.ipynb`). Community-readiness is further supported by a `pytest` test suite exercising both modules, continuous integration on every push, published API documentation, an MIT-licensed open-source codebase, and packaging for installation via PyPI.
 
 # Acknowledgements
 
