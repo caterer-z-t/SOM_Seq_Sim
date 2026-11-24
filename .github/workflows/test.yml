@@ -28,6 +28,7 @@ jobs:
       - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v2
         with:
+          miniconda-version: "latest"
           python-version: 3.12
           auto-update-conda: true
           environment-file: env.yml
